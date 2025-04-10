@@ -1,0 +1,55 @@
+{
+  "name": "@tracktor/map",
+  "description": "A react library to easily display map with multiple tools",
+  "private": false,
+  "license": "UNLICENSED",
+  "version": "0.1.5",
+  "type": "module",
+  "main": "dist/main.umd.cjs",
+  "module": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/main.js",
+      "require": "./dist/main.umd.cjs"
+    }
+  },
+  "scripts": {
+    "example": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@mui/icons-material": "^5.17.1",
+    "@mui/x-license": "^7.2.1",
+    "@tracktor/design-system": "^3.11.4",
+    "mapbox-gl": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/mapbox-gl": "^3.4.1",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint-config-react-tracktor": "^1.10.0",
+    "globals": "^15.15.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.3",
+    "vite-plugin-dts": "^4.5.3",
+    "vite-plugin-css-injected-by-js": "^3.5.2"
+  },
+  "peerDependencies": {
+    "@mui/x-license": "*",
+    "@tracktor/design-system": "*",
+    "mapbox-gl": ">=3.0.0",
+    "react": "18.x",
+    "react-dom": "18.x"
+  }
+}
