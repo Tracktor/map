@@ -18,26 +18,26 @@ const ReactMarkerExample = ({ name }: { name: string }) => (
   </ThemeProvider>
 );
 
-const App = () => {
-  const markers = [
-    {
-      id: `1`,
-      lat: 48.844039,
-      lng: 2.489326,
-      name: "marker A",
-      type: "worksite",
-    },
-    {
-      IconComponent: ReactMarkerExample,
-      iconProps: { name: "toto" },
-      id: `2`,
-      lat: 48.854039,
-      lng: 2.499326,
-      name: "marker B",
-      type: "agency",
-    },
-  ];
+const markers = [
+  {
+    id: `1`,
+    lat: 48.844039,
+    lng: 2.489326,
+    name: "marker A",
+    type: "worksite",
+  },
+  {
+    IconComponent: ReactMarkerExample,
+    iconProps: { name: "toto" },
+    id: `2`,
+    lat: 48.854039,
+    lng: 2.499326,
+    name: "marker B",
+    type: "agency",
+  },
+];
 
+const App = () => {
   // console.warning if no .env found
   if (!import.meta.env.VITE_MUI_LICENSE_KEY || !import.meta.env.VITE_MAPBOX_ACCESS_TOKEN) {
     console.warn(
@@ -46,7 +46,7 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme="light">
+    <ThemeProvider theme="dark">
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
         <MarkerMap
           markers={markers}

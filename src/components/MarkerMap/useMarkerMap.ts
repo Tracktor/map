@@ -29,6 +29,8 @@ const useMarkerMap = ({
   markers,
   loading,
   center,
+  openPopup,
+  onMapClick,
   flyToDuration = 5000,
   fitBoundDuration = 1000,
   fitBounds = true,
@@ -37,18 +39,23 @@ const useMarkerMap = ({
   mapStyle = "mapbox://styles/mapbox/streets-v12?optimize=true",
   zoom = 6,
   zoomFlyFrom = 3,
-  openPopup,
-  onMapClick,
 }: MarkerMapProps) => {
   const { palette } = useTheme();
   const [loadingMapBox, setLoadingMapBox] = useState<boolean>(true);
+  const [webGLSupported, setWebGLSupported] = useState<boolean>(true);
   const mapContainer = useRef<ComponentRef<"div"> | null>(null);
   const map = useRef<Map | null>(null);
   const markersAreInvalid = !markers || markers.some((marker) => marker.lat === undefined || marker.lng === undefined);
 
   // Initialize the Mapbox map only once when the component mounts
   useEffect(() => {
-    if (map.current || !mapContainer.current || loading || !isWebGLSupported()) {
+    if (!isWebGLSupported()) {
+      setWebGLSupported(false);
+      setLoadingMapBox(false);
+      return;
+    }
+
+    if (map.current || !mapContainer.current || loading) {
       return;
     }
 
@@ -191,6 +198,7 @@ const useMarkerMap = ({
     map,
     mapContainer,
     markers,
+    webGLSupported,
   };
 };
 

@@ -59,7 +59,7 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * ```
  */
 const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%", ...props }: MarkerMapProps) => {
-  const { loading, mapContainer } = useMarkerMap(props);
+  const { loading, mapContainer, webGLSupported } = useMarkerMap(props);
 
   return (
     <>
@@ -74,7 +74,15 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
           },
         }}
       />
-      <MapContainer ref={mapContainer} loading={loading} height={height} width={width} containerStyle={containerStyle} square={square} />
+      <MapContainer
+        ref={mapContainer}
+        loading={loading}
+        height={height}
+        width={width}
+        containerStyle={containerStyle}
+        square={square}
+        error={!webGLSupported && "WebGL is not enabled in your browser. This technology is required to display the interactive map."}
+      />
     </>
   );
 };

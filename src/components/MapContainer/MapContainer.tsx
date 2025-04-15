@@ -7,6 +7,7 @@ interface MapBoxProps {
   loading?: boolean;
   containerStyle?: SxProps;
   square?: boolean;
+  error?: string | boolean;
 }
 
 /**
@@ -32,11 +33,17 @@ interface MapBoxProps {
  * />
  * ```
  */
-const MapContainer = ({ containerStyle, square, loading = false, height = 300, width = "100%" }: MapBoxProps, ref: Ref<HTMLElement>) => (
+const MapContainer = (
+  { containerStyle, square, error, loading = false, height = 300, width = "100%" }: MapBoxProps,
+  ref: Ref<HTMLElement>,
+) => (
   <Box sx={{ position: "relative" }} height={height}>
     <Box
       sx={{
+        alignItems: "center",
         borderRadius: square ? 0 : 1,
+        display: "flex",
+        justifyContent: "center",
         left: 0,
         position: "absolute",
         top: 0,
@@ -46,7 +53,10 @@ const MapContainer = ({ containerStyle, square, loading = false, height = 300, w
       ref={ref}
       width={width}
       height={height}
-    />
+    >
+      {error && <Box textAlign="center">{error}</Box>}
+    </Box>
+
     {loading && (
       <Skeleton
         sx={{
@@ -54,6 +64,7 @@ const MapContainer = ({ containerStyle, square, loading = false, height = 300, w
           position: "absolute",
           top: 0,
           zIndex: 0,
+          ...containerStyle,
         }}
         width={width}
         height={height}
