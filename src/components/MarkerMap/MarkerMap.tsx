@@ -1,7 +1,7 @@
 import { GlobalStyles } from "@tracktor/design-system";
-import MapBox from "@/components/MapBox/MapBox";
+import MapContainer from "@/components/MapContainer/MapContainer.tsx";
 import useMarkerMap from "@/components/MarkerMap/useMarkerMap";
-import { MarkerMapProps } from "@/types/MarkerMap.tsx";
+import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
 
 /**
  * MarkerMap is a reusable React component that displays an interactive Mapbox map
@@ -74,7 +74,7 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
           },
         }}
       />
-      <MapBox ref={mapContainer} loading={loading} height={height} width={width} containerStyle={containerStyle} square={square} />
+      <MapContainer ref={mapContainer} loading={loading} height={height} width={width} containerStyle={containerStyle} square={square} />
     </>
   );
 };

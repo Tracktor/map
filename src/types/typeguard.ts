@@ -58,15 +58,3 @@ export const isClickedFeature = (feature: unknown): feature is ClickedFeature =>
 
   return "id" in properties && properties.id !== undefined;
 };
-
-export const isValidLatLng = (lat: number, lng: number): boolean =>
-  Number.isFinite(lat) && Number.isFinite(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
-
-export const isWebGLSupported = () => {
-  try {
-    const canvas = document.createElement("canvas");
-    return !!(window.WebGLRenderingContext && (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")));
-  } catch (e) {
-    return false;
-  }
-};

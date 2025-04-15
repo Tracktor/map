@@ -1,11 +1,11 @@
 import { MapMouseEvent, Map } from "mapbox-gl";
-import { MutableRefObject } from "react";
-import { MarkerProps } from "@/types/Markers.tsx";
+import { RefObject } from "react";
+import { MarkerProps } from "@/types/MarkerProps.ts";
 import { isClickedFeature, isFeatureGeometry } from "@/types/typeguard";
 import addPopup from "@/utils/addPopup";
 
 export interface HandleMapClickProps {
-  map: MutableRefObject<Map | null>;
+  map: RefObject<Map | null>;
   markers: MarkerProps[];
   event: MapMouseEvent;
 }

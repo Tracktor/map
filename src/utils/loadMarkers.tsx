@@ -1,10 +1,10 @@
 import { Palette } from "@tracktor/design-system";
 import type { FeatureCollection } from "geojson";
 import { Map, Marker, GeoJSONSource } from "mapbox-gl";
-import React, { MutableRefObject } from "react";
+import React, { RefObject } from "react";
 import { createRoot } from "react-dom/client";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
-import { MarkerProps } from "@/types/Markers.tsx";
+import { MarkerProps } from "@/types/MarkerProps.ts";
 
 interface CustomMarkerMapProps {
   geometry: {
@@ -29,7 +29,7 @@ interface GenerateMarkersProps {
 }
 
 interface LoadMarkersProps {
-  map: MutableRefObject<Map | null>;
+  map: RefObject<Map | null>;
   palette: Palette;
   setLoadingMapBox: (loading: boolean) => void;
   markers: MarkerProps[];

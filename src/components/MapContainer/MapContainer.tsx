@@ -10,7 +10,7 @@ interface MapBoxProps {
 }
 
 /**
- * MapBox is a styled container component for rendering a Mapbox map with loading and layout support.
+ * MapContainer is a styled container component for rendering a Mapbox map with loading and layout support.
  *
  * It provides a flexible layout with customizable size, border radius (for square or rounded containers),
  * and an optional loading skeleton while the map is initializing.
@@ -22,7 +22,7 @@ interface MapBoxProps {
  *
  * @example
  * ```tsx
- * <MapBox
+ * <MapContainer
  *   height={400}
  *   width="100%"
  *   loading={isLoading}
@@ -32,7 +32,7 @@ interface MapBoxProps {
  * />
  * ```
  */
-const MapBox = ({ containerStyle, square, loading = false, height = 300, width = "100%" }: MapBoxProps, ref: Ref<HTMLElement>) => (
+const MapContainer = ({ containerStyle, square, loading = false, height = 300, width = "100%" }: MapBoxProps, ref: Ref<HTMLElement>) => (
   <Box sx={{ position: "relative" }} height={height}>
     <Box
       sx={{
@@ -63,4 +63,4 @@ const MapBox = ({ containerStyle, square, loading = false, height = 300, width =
   </Box>
 );
 
-export default forwardRef(MapBox);
+export default forwardRef(MapContainer);

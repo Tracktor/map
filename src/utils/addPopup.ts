@@ -1,11 +1,11 @@
 import { Popup, Map } from "mapbox-gl";
-import { MutableRefObject, ReactNode } from "react";
+import { RefObject, ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 
 interface AddPopupProps {
   coordinates?: [number, number];
   tooltip?: ReactNode;
-  map: MutableRefObject<Map | null>;
+  map: RefObject<Map | null>;
 }
 
 /**

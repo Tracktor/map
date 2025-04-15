@@ -1,6 +1,6 @@
 import { SxProps, ThemeOptions } from "@tracktor/design-system";
 import { LngLatLike } from "mapbox-gl";
-import { MarkerProps } from "@/types/Markers.tsx";
+import { MarkerProps } from "@/types/MarkerProps.ts";
 
 export interface MarkerMapProps {
   /**

@@ -1,11 +1,12 @@
 import { useTheme } from "@tracktor/design-system";
 import { Map, MapMouseEvent, LngLatBounds } from "mapbox-gl";
 import { ComponentRef, useEffect, useRef, useState } from "react";
-import { MarkerMapProps } from "@/types/MarkerMap.tsx";
-import { isValidLatLng, isWebGLSupported } from "@/types/typeguard";
+import { isValidLatLng } from "@/main.ts";
+import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
 import addPopup from "@/utils/addPopup";
 import coordinateConverter from "@/utils/coordinateConverter";
 import { handleMapClick } from "@/utils/handleMapClick";
+import isWebGLSupported from "@/utils/isWebGLSupported.ts";
 import { loadMarkers } from "@/utils/loadMarkers.tsx";
 import mapOptions from "@/utils/mapOptions";
 

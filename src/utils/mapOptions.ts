@@ -1,7 +1,7 @@
 import { LngLatLike } from "mapbox-gl";
 import { RefObject } from "react";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
-import { MarkerProps } from "@/types/Markers.tsx";
+import { MarkerProps } from "@/types/MarkerProps.ts";
 import coordinateConverter from "@/utils/coordinateConverter";
 
 interface MapOptionsProps {
