@@ -19,8 +19,8 @@
     "example": "vite",
     "build": "tsc && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "publish": "yarn build && npm publish"
+    "prepublishOnly": "yarn build",
+    "preview": "vite preview"
   },
   "files": [
     "dist"
