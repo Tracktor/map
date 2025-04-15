@@ -14,8 +14,6 @@ export const isWebGLSupported = (): boolean => {
     // Return true if we got a valid WebGLRenderingContext
     return gl instanceof WebGLRenderingContext;
   } catch (e) {
-    // Handle any exceptions
-    console.warn("Error checking WebGL support:", e);
     return false;
   }
 };
