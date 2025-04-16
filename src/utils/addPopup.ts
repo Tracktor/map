@@ -70,9 +70,9 @@ const createCloseButton = (popup: Popup): HTMLButtonElement => {
  *   )
  * });
  */
-const addPopup = ({ map, tooltip, coordinates }: AddPopupProps) => {
+const addPopup = ({ map, tooltip, coordinates }: AddPopupProps): Popup | null => {
   if (!coordinates || !tooltip || !map.current || !Array.isArray(coordinates) || coordinates.length !== 2) {
-    return;
+    return null;
   }
 
   const popupContainer = document.createElement("div");
@@ -93,12 +93,16 @@ const addPopup = ({ map, tooltip, coordinates }: AddPopupProps) => {
     .addTo(map.current);
 
   popup.on("close", () => {
-    root.unmount();
+    queueMicrotask(() => {
+      root.unmount();
+    });
   });
 
   const closeButton = createCloseButton(popup);
   popupContainer.appendChild(closeButton);
   popupContainer.appendChild(contentContainer);
+
+  return popup;
 };
 
 export default addPopup;

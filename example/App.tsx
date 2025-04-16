@@ -45,6 +45,10 @@ const App = () => {
     );
   }
 
+  const handleMapClick = (lng: number, lat: number): void => {
+    console.log("Map clicked at:", { lat, lng });
+  };
+
   return (
     <ThemeProvider theme="dark">
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
@@ -56,6 +60,7 @@ const App = () => {
             marginLeft: 3,
             marginTop: 3,
           }}
+          onMapClick={handleMapClick}
         />
       </MapProvider>
     </ThemeProvider>
