@@ -1,10 +1,10 @@
 import { LngLatBounds, Map } from "mapbox-gl";
-import { MutableRefObject, useEffect } from "react";
+import { RefObject, useEffect } from "react";
 import { isValidLatLng } from "@/main.ts";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 type UseAnimationMapProps = {
-  map: MutableRefObject<Map | null>;
+  map: RefObject<Map | null>;
   disableFlyTo?: boolean;
   flyToDuration?: number;
   zoom?: number;

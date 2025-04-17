@@ -1,10 +1,25 @@
 import HomeIcon from "@mui/icons-material/Home";
-import { Avatar, Paper, Stack, ThemeProvider, Typography } from "@tracktor/design-system";
+import { Avatar, Card, CardContent, Paper, Stack, ThemeProvider, Typography } from "@tracktor/design-system";
 import MarkerMap from "@/components/MarkerMap/MarkerMap";
 import MapProvider from "@/context/MapProvider.tsx";
 
+const TooltipExample = ({ name }: { name: string }) => (
+  <ThemeProvider theme="light">
+    <Card>
+      <CardContent>
+        <Typography variant="h6" color="black">
+          Hello world
+        </Typography>
+        <Typography color="grey.500" variant="body2">
+          I m a tooltip {name}
+        </Typography>
+      </CardContent>
+    </Card>
+  </ThemeProvider>
+);
+
 const ReactMarkerExample = ({ name }: { name: string }) => (
-  <ThemeProvider>
+  <ThemeProvider theme="light">
     <Paper elevation={2} sx={{ borderRadius: 5, paddingBottom: 0.5, paddingLeft: 1, paddingRight: 1, paddingTop: 0.5 }}>
       <Stack direction="row" spacing={1} alignItems="center">
         <Avatar size="small">
@@ -24,6 +39,7 @@ const markers = [
     lat: 48.844039,
     lng: 2.489326,
     name: "marker A",
+    Tooltip: <TooltipExample name="a" />,
     type: "worksite",
   },
   {
@@ -50,9 +66,10 @@ const App = () => {
   };
 
   return (
-    <ThemeProvider theme="dark">
+    <ThemeProvider theme="light">
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
         <MarkerMap
+          openPopup="1"
           markers={markers}
           height={600}
           width={600}

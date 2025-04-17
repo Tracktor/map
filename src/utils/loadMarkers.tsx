@@ -135,6 +135,9 @@ const loadStandardMarkers = (map: Map, sourceId: string, standardMarkers: Custom
       map.addLayer({
         filter: ["==", "id", id],
         id: layerId,
+        layout: {
+          visibility: "visible",
+        },
         paint: markerStyle,
         source: sourceId,
         type: "circle",
@@ -236,13 +239,14 @@ export const loadMarkers = ({ map, setLoadingMapBox, palette, markers }: LoadMar
   const layer = geoJSONMarkers(markers);
 
   const standardMarkers = layer.features.filter((marker) => marker.properties?.IconComponent === undefined);
+
+  if (standardMarkers.length) {
+    loadStandardMarkers(map.current, "markerProps", standardMarkers, palette);
+  }
+
   const reactMarkers = layer.features.filter((marker) => marker.properties?.IconComponent);
 
   if (reactMarkers.length) {
     loadReactMarkers(map.current, reactMarkers);
-  }
-
-  if (standardMarkers.length) {
-    loadStandardMarkers(map.current, "markerProps", standardMarkers, palette);
   }
 };

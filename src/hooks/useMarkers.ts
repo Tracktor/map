@@ -1,11 +1,11 @@
 import { Palette } from "@tracktor/design-system";
 import { Map } from "mapbox-gl";
-import { MutableRefObject, useEffect } from "react";
+import { RefObject, useEffect } from "react";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 import { loadMarkers } from "@/utils/loadMarkers.tsx";
 
 type UseInitializeMapProps = {
-  map: MutableRefObject<Map | null>;
+  map: RefObject<Map | null>;
   markers?: MarkerProps[];
   palette: Palette;
   setLoadingMapBox: (loading: boolean) => void;

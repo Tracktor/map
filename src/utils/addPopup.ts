@@ -82,6 +82,8 @@ const addPopup = ({ map, tooltip, coordinates }: AddPopupProps): Popup | null =>
   const contentContainer = document.createElement("div");
   contentContainer.style.padding = "10px";
 
+  popupContainer.style.zIndex = "1000";
+
   const root = createRoot(contentContainer);
   root.render(tooltip);
 
@@ -100,6 +102,7 @@ const addPopup = ({ map, tooltip, coordinates }: AddPopupProps): Popup | null =>
 
   const closeButton = createCloseButton(popup);
   popupContainer.appendChild(closeButton);
+
   popupContainer.appendChild(contentContainer);
 
   return popup;

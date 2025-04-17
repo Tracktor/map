@@ -1,10 +1,10 @@
 import { LngLatLike, Map } from "mapbox-gl";
-import { MutableRefObject, useEffect } from "react";
+import { RefObject, useEffect } from "react";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG, isValidLatLng } from "@/main.ts";
 import coordinateConverter from "@/utils/coordinateConverter.ts";
 
 type UseMapCenterProps = {
-  map: MutableRefObject<Map | null>;
+  map: RefObject<Map | null>;
   center?: LngLatLike | number[] | undefined;
 };
 

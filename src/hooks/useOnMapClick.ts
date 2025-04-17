@@ -1,8 +1,8 @@
 import { Map } from "mapbox-gl";
-import { MutableRefObject, useEffect } from "react";
+import { RefObject, useEffect } from "react";
 
 type UseCorrectedMapClickProps = {
-  map: MutableRefObject<Map | null>;
+  map: RefObject<Map | null>;
   onMapClick?: (lng: number, lat: number) => void;
 };
 
