@@ -3,7 +3,7 @@
   "description": "A react library to easily display map with multiple tools",
   "private": false,
   "license": "UNLICENSED",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "type": "module",
   "main": "dist/main.umd.cjs",
   "module": "dist/main.js",
