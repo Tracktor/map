@@ -3,6 +3,7 @@ import { RefObject, useEffect, useRef } from "react";
 import { MarkerProps } from "@/types/MarkerProps";
 import addPopup from "@/utils/addPopup";
 import getFeature from "@/utils/getFeature";
+import { CustomMarkerMapProps } from "@/utils/loadMarkers.tsx";
 
 type UsePopupsProps = {
   map: RefObject<Map | null>;
@@ -59,6 +60,27 @@ const usePopups = ({ openPopup, map, markers }: UsePopupsProps) => {
 
         if (marker) {
           const coordinates: [number, number] = [Number(marker.lng) || 0, Number(marker.lat) || 0];
+
+          // Easiest way to handle click events from marker & from geojson
+          if (typeof marker.onClick === "function") {
+            const markerProps: CustomMarkerMapProps = {
+              geometry: {
+                coordinates,
+                type: "Point",
+              },
+              properties: {
+                description: marker.name,
+                id: marker.id,
+                name: marker.name,
+                onClick: marker.onClick,
+                size: marker.size || 1,
+                zIndex: marker.zIndex || 1,
+              },
+              type: "Feature",
+            };
+
+            marker.onClick(markerProps);
+          }
 
           requestAnimationFrame(() => {
             const popup = addPopup({
