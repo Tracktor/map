@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { CustomMarkerMapProps } from "@/utils/loadMarkers.tsx";
 
 export interface MarkerProps {
   /**
@@ -43,7 +44,7 @@ export interface MarkerProps {
   /**
    * Function to call when the marker is clicked.
    */
-  onClick?: () => void;
+  onClick?: (markerData?: CustomMarkerMapProps) => void;
 
   /**
    * Optional type/category of the marker (e.g., 'restaurant', 'user', etc.).
