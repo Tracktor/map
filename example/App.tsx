@@ -2,6 +2,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Avatar, Card, CardContent, Paper, Stack, ThemeProvider, Typography } from "@tracktor/design-system";
 import MarkerMap from "@/components/MarkerMap/MarkerMap";
 import MapProvider from "@/context/MapProvider.tsx";
+import { MarkerProps } from "@/types/MarkerProps.ts";
 
 const TooltipExample = ({ name }: { name: string }) => (
   <ThemeProvider theme="light">
@@ -33,12 +34,15 @@ const ReactMarkerExample = ({ name }: { name: string }) => (
   </ThemeProvider>
 );
 
-const markers = [
+const markers: MarkerProps[] = [
   {
     id: `1`,
     lat: 48.844039,
     lng: 2.489326,
     name: "marker A",
+    onClick: (element) => {
+      console.log("Marker A clicked", element);
+    },
     Tooltip: <TooltipExample name="a" />,
     type: "worksite",
   },
@@ -49,6 +53,9 @@ const markers = [
     lat: 48.854039,
     lng: 2.499326,
     name: "marker B",
+    onClick: (element) => {
+      console.log("Marker B clicked", element);
+    },
     type: "agency",
   },
 ];
