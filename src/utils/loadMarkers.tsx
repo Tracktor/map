@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
-interface CustomMarkerMapProps {
+export interface CustomMarkerMapProps {
   geometry: {
     coordinates: number[];
     type: string;
@@ -19,6 +19,7 @@ interface CustomMarkerMapProps {
     name?: string;
     IconComponent?: React.ComponentType<any>;
     iconProps?: Record<string, any>;
+    onClick?: (markerData?: CustomMarkerMapProps) => void;
   };
   type: string;
 }
@@ -162,7 +163,7 @@ const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
   existingMarkers.forEach((el) => el.remove());
 
   reactMarkers.forEach((marker) => {
-    const { IconComponent, iconProps } = marker.properties || {};
+    const { IconComponent, iconProps, onClick } = marker.properties || {};
     const { coordinates } = marker.geometry;
 
     if (IconComponent && coordinates.length >= 2) {
@@ -178,6 +179,13 @@ const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
       }
 
       markerContainer.appendChild(contentContainer);
+
+      const handleClick = () => {
+        onClick?.(marker);
+      };
+
+      markerContainer.addEventListener("click", handleClick);
+
       new Marker(markerContainer).setLngLat([coordinates[0], coordinates[1]]).addTo(map);
     }
   });
@@ -209,6 +217,7 @@ const geoJSONMarkers = (markers: MarkerProps[]) => ({
         iconProps: marker.iconProps,
         id: marker.id || `{marker-${index}}`,
         name: marker.name,
+        onClick: marker.onClick,
         size: marker.size || 1,
         zIndex: marker.zIndex || 0,
       },
