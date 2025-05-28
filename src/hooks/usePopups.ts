@@ -20,7 +20,7 @@ const usePopups = ({ openPopup, map, markers }: UsePopupsProps) => {
     const mapInstance = map.current;
     const canvas = mapInstance.getCanvas();
 
-    // Clean up existing popup
+    // Clean up the existing popup
     if (popupRef.current) {
       popupRef.current.remove();
       popupRef.current = null;

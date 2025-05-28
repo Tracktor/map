@@ -1,5 +1,5 @@
 import { SxProps, ThemeOptions } from "@tracktor/design-system";
-import { LngLatLike } from "mapbox-gl";
+import { LngLatLike, MapboxOptions } from "mapbox-gl";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 export interface MarkerMapProps {
@@ -107,4 +107,8 @@ export interface MarkerMapProps {
    * The theme of Map. If not set, it will use the theme of the parent ThemeProvider.
    */
   theme?: "dark" | "light" | ThemeOptions;
+  /**
+   * A style's projection property sets which projection a map is rendered in.
+   */
+  projection?: MapboxOptions["projection"];
 }

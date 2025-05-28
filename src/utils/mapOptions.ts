@@ -1,4 +1,4 @@
-import { LngLatLike } from "mapbox-gl";
+import { LngLatLike, MapboxOptions } from "mapbox-gl";
 import { RefObject } from "react";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
 import { MarkerProps } from "@/types/MarkerProps.ts";
@@ -10,6 +10,7 @@ interface MapOptionsProps {
   markers?: MarkerProps[];
   mapStyle: string;
   zoomFlyFrom?: number;
+  projection?: MapboxOptions["projection"];
 }
 
 /**

@@ -36,6 +36,7 @@ const useMarkerMap = ({
   fitBounds = true,
   disableFlyTo = false,
   fitBoundsPadding = 50,
+  projection = "mercator",
   mapStyle = "mapbox://styles/mapbox/streets-v12?optimize=true",
   zoom = 6,
   zoomFlyFrom = 3,
@@ -64,10 +65,10 @@ const useMarkerMap = ({
       mapContainer.current.innerHTML = "";
     }
 
-    const options = mapOptions({ center, mapContainer, mapStyle, markers, zoomFlyFrom });
+    const options = mapOptions({ center, mapContainer, mapStyle, markers, projection, zoomFlyFrom });
 
     map.current = new Map(options);
-  }, [center, loading, mapStyle, markers, zoomFlyFrom]);
+  }, [center, loading, mapStyle, markers, projection, zoomFlyFrom]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
   usePopups({ map, markers, openPopup });
@@ -75,7 +76,7 @@ const useMarkerMap = ({
   useCorrectedMapClick({ map, onMapClick });
   useAnimationMap({ disableFlyTo, fitBoundDuration, fitBounds, fitBoundsPadding, flyToDuration, map, markers, zoom });
 
-  // Cleanup the map instance on component unmount
+  // Cleanup the map instance on a component unmount
   useEffect(
     () => () => {
       if (map.current) {
