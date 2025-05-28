@@ -85,6 +85,7 @@ const App = () => {
             marginTop: 3,
           }}
           onMapClick={handleMapClick}
+          // baseMapView="dark"
         />
       </MapProvider>
     </ThemeProvider>

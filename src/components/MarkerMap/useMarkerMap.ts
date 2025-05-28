@@ -2,7 +2,6 @@ import { useTheme } from "@tracktor/design-system";
 import { Map } from "mapbox-gl";
 import { ComponentRef, useEffect, useRef, useState } from "react";
 import useAnimationMap from "@/hooks/useAnimationMap.ts";
-import useMapCenter from "@/hooks/useMapCenter.ts";
 import useMarkers from "@/hooks/useMarkers.ts";
 import useCorrectedMapClick from "@/hooks/useOnMapClick";
 import usePopups from "@/hooks/usePopups.ts";
@@ -37,7 +36,8 @@ const useMarkerMap = ({
   disableFlyTo = false,
   fitBoundsPadding = 50,
   projection,
-  mapStyle = "mapbox://styles/mapbox/streets-v12?optimize=true",
+  mapStyle,
+  baseMapView = "default",
   zoom = 6,
   zoomFlyFrom = 3,
 }: MarkerMapProps) => {
@@ -65,14 +65,14 @@ const useMarkerMap = ({
       mapContainer.current.innerHTML = "";
     }
 
-    const options = mapOptions({ center, mapContainer, mapStyle, markers, projection, zoomFlyFrom });
+    const options = mapOptions({ baseMapView, center, mapContainer, mapStyle, markers, projection, zoomFlyFrom });
 
     map.current = new Map(options);
-  }, [center, loading, mapStyle, markers, projection, zoomFlyFrom]);
+  }, [center, loading, mapStyle, markers, projection, zoomFlyFrom, baseMapView]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
   usePopups({ map, markers, openPopup });
-  useMapCenter({ center, map });
+  // useMapCenter({ center, map });
   useCorrectedMapClick({ map, onMapClick });
   useAnimationMap({ disableFlyTo, fitBoundDuration, fitBounds, fitBoundsPadding, flyToDuration, map, markers, zoom });
 
