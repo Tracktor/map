@@ -11,7 +11,7 @@ interface MapOptionsProps {
   mapStyle?: string;
   zoomFlyFrom?: number;
   projection?: MapboxOptions["projection"];
-  baseMapView?: "default" | "satellite" | "streets" | "dark";
+  baseMapView: "default" | "satellite" | "streets" | "dark" | "3d";
 }
 
 const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" | "3d"): string => {
