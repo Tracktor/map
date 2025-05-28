@@ -53,11 +53,11 @@ const useMarkerMap = ({
     if (!isWebGLSupported()) {
       setWebGLSupported(false);
       setLoadingMapBox(false);
-      return;
+      return undefined;
     }
 
     if (map.current || !mapContainer.current || loading) {
-      return;
+      return undefined;
     }
 
     // Clean up container if needed
@@ -65,14 +65,66 @@ const useMarkerMap = ({
       mapContainer.current.innerHTML = "";
     }
 
-    const options = mapOptions({ baseMapView, center, mapContainer, mapStyle, markers, projection, zoomFlyFrom });
+    const options = mapOptions({
+      baseMapView,
+      center,
+      mapContainer,
+      mapStyle,
+      markers,
+      projection,
+      zoomFlyFrom,
+    });
 
-    map.current = new Map(options);
+    // Initialize map
+    map.current = new Map({
+      ...options,
+      // natif zoom have weird behavior, so we customize it with container ref
+      doubleClickZoom: false,
+      scrollZoom: false,
+    });
+
+    const mapInstance = map.current;
+    const canvas = mapInstance.getCanvas();
+
+    const handleDoubleClick = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const lngLat = mapInstance.unproject([x, y]);
+
+      mapInstance.flyTo({ center: lngLat, zoom: mapInstance.getZoom() + 1 });
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault(); // Empêche le comportement natif
+
+      const delta = event.deltaY;
+      const zoomChange = delta > 0 ? -2 : 2;
+      const newZoom = mapInstance.getZoom() + zoomChange;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const lngLat = mapInstance.unproject([x, y]);
+
+      mapInstance.flyTo({
+        center: lngLat,
+        zoom: newZoom,
+      });
+    };
+
+    canvas.addEventListener("dblclick", handleDoubleClick);
+    canvas.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      canvas.removeEventListener("dblclick", handleDoubleClick);
+    };
   }, [center, loading, mapStyle, markers, projection, zoomFlyFrom, baseMapView]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
   usePopups({ map, markers, openPopup });
-  // useMapCenter({ center, map });
   useCorrectedMapClick({ map, onMapClick });
   useAnimationMap({ disableFlyTo, fitBoundDuration, fitBounds, fitBoundsPadding, flyToDuration, map, markers, zoom });
 
