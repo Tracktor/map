@@ -116,5 +116,5 @@ export interface MarkerMapProps {
   /**
    * Optional base map view
    */
-  baseMapView?: "default" | "satellite" | "streets" | "dark";
+  baseMapView?: "default" | "satellite" | "streets" | "dark" | "3d";
 }
