@@ -78,14 +78,15 @@ const useMarkerMap = ({
     // Initialize map
     map.current = new Map({
       ...options,
+      // natif zoom have weird behavior, so we customize it with container ref
       doubleClickZoom: false,
-      scrollZoom: true,
+      scrollZoom: false,
     });
 
     const mapInstance = map.current;
+    const canvas = mapInstance.getCanvas();
 
     const handleDoubleClick = (event: MouseEvent) => {
-      const canvas = mapInstance.getCanvas();
       const rect = canvas.getBoundingClientRect();
 
       const x = event.clientX - rect.left;
@@ -96,8 +97,26 @@ const useMarkerMap = ({
       mapInstance.flyTo({ center: lngLat, zoom: mapInstance.getZoom() + 1 });
     };
 
-    const canvas = mapInstance.getCanvas();
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault(); // Empêche le comportement natif
+
+      const delta = event.deltaY;
+      const zoomChange = delta > 0 ? -2 : 2;
+      const newZoom = mapInstance.getZoom() + zoomChange;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const lngLat = mapInstance.unproject([x, y]);
+
+      mapInstance.flyTo({
+        center: lngLat,
+        zoom: newZoom,
+      });
+    };
+
     canvas.addEventListener("dblclick", handleDoubleClick);
+    canvas.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       canvas.removeEventListener("dblclick", handleDoubleClick);
