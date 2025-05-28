@@ -107,8 +107,14 @@ export interface MarkerMapProps {
    * The theme of Map. If not set, it will use the theme of the parent ThemeProvider.
    */
   theme?: "dark" | "light" | ThemeOptions;
+
   /**
-   * A style's projection property sets which projection a map is rendered in.
+   * Coordinate projection to use for the map (default is 'mercator').
    */
   projection?: MapboxOptions["projection"];
+
+  /**
+   * Optional base map view
+   */
+  baseMapView?: "default" | "satellite" | "streets" | "dark" | "3d";
 }

@@ -1,5 +1,5 @@
 import { LngLatBounds, Map } from "mapbox-gl";
-import { RefObject, useEffect } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import { isValidLatLng } from "@/main.ts";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
@@ -24,20 +24,23 @@ const useAnimationMap = ({
   fitBoundDuration,
   fitBoundsPadding,
 }: UseAnimationMapProps) => {
+  const hasFlown = useRef(false);
+
   // Animate camera or fit map bounds depending on props
   useEffect(() => {
     if (!map.current) return;
 
-    // Optionally animate camera fly-to
-    if (!disableFlyTo) {
+    // Fly to only once
+    if (!disableFlyTo && !hasFlown.current) {
       map.current.flyTo({
         duration: flyToDuration,
         zoom,
       });
+      hasFlown.current = true;
     }
 
-    // If enabled and multiple valid markers exist, fit the map to show all markers
-    if (!fitBounds || !markers?.length || markers?.length < 2) return;
+    // Fit bounds logic
+    if (!fitBounds || !markers?.length || markers.length < 2) return;
 
     const bounds = new LngLatBounds();
 
@@ -52,7 +55,6 @@ const useAnimationMap = ({
     for (let i = 0; i < validMarkers.length; i += 1) {
       const lng = Number(validMarkers[i].lng);
       const lat = Number(validMarkers[i].lat);
-
       bounds.extend([lng, lat]);
     }
 

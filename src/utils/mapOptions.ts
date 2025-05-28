@@ -8,10 +8,25 @@ interface MapOptionsProps {
   center?: LngLatLike | number[];
   mapContainer?: RefObject<HTMLDivElement | null>;
   markers?: MarkerProps[];
-  mapStyle: string;
+  mapStyle?: string;
   zoomFlyFrom?: number;
   projection?: MapboxOptions["projection"];
+  baseMapView?: "default" | "satellite" | "streets" | "dark";
 }
+
+const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" | "3d"): string => {
+  switch (options) {
+    case "satellite":
+      return "mapbox://styles/mapbox/satellite-v9";
+    case "dark":
+      return "mapbox://styles/mapbox/dark-v10";
+    case "3d":
+      return "mapbox://styles/mapbox/streets-v12?optimize=true";
+    case "streets":
+    default:
+      return "mapbox://styles/mapbox/streets-v11";
+  }
+};
 
 /**
  * Generates configuration options for initializing a Mapbox map
@@ -46,7 +61,7 @@ interface MapOptionsProps {
  *   zoomFlyFrom: 12
  * });
  */
-const mapOptions = ({ mapStyle, mapContainer, zoomFlyFrom, markers, center }: MapOptionsProps) => {
+const mapOptions = ({ mapStyle, mapContainer, zoomFlyFrom, markers, center, baseMapView }: MapOptionsProps) => {
   const mapCenter = center
     ? coordinateConverter(center)
     : {
@@ -59,7 +74,7 @@ const mapOptions = ({ mapStyle, mapContainer, zoomFlyFrom, markers, center }: Ma
     container: mapContainer?.current || "",
     cooperativeGestures: true,
     failIfMajorPerformanceCaveat: false,
-    style: mapStyle,
+    style: mapStyle || getBaseMapStyle(baseMapView),
     zoom: zoomFlyFrom,
   };
 };
