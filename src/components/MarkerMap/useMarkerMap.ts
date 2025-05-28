@@ -36,7 +36,7 @@ const useMarkerMap = ({
   fitBounds = true,
   disableFlyTo = false,
   fitBoundsPadding = 50,
-  projection = "mercator",
+  projection,
   mapStyle = "mapbox://styles/mapbox/streets-v12?optimize=true",
   zoom = 6,
   zoomFlyFrom = 3,
