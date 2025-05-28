@@ -53,11 +53,11 @@ const useMarkerMap = ({
     if (!isWebGLSupported()) {
       setWebGLSupported(false);
       setLoadingMapBox(false);
-      return;
+      return undefined;
     }
 
     if (map.current || !mapContainer.current || loading) {
-      return;
+      return undefined;
     }
 
     // Clean up container if needed
@@ -65,14 +65,47 @@ const useMarkerMap = ({
       mapContainer.current.innerHTML = "";
     }
 
-    const options = mapOptions({ baseMapView, center, mapContainer, mapStyle, markers, projection, zoomFlyFrom });
+    const options = mapOptions({
+      baseMapView,
+      center,
+      mapContainer,
+      mapStyle,
+      markers,
+      projection,
+      zoomFlyFrom,
+    });
 
-    map.current = new Map(options);
+    // Initialize map
+    map.current = new Map({
+      ...options,
+      doubleClickZoom: false,
+      scrollZoom: true,
+    });
+
+    const mapInstance = map.current;
+
+    const handleDoubleClick = (event: MouseEvent) => {
+      const canvas = mapInstance.getCanvas();
+      const rect = canvas.getBoundingClientRect();
+
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const lngLat = mapInstance.unproject([x, y]);
+
+      mapInstance.flyTo({ center: lngLat, zoom: mapInstance.getZoom() + 1 });
+    };
+
+    const canvas = mapInstance.getCanvas();
+    canvas.addEventListener("dblclick", handleDoubleClick);
+
+    return () => {
+      canvas.removeEventListener("dblclick", handleDoubleClick);
+    };
   }, [center, loading, mapStyle, markers, projection, zoomFlyFrom, baseMapView]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
   usePopups({ map, markers, openPopup });
-  // useMapCenter({ center, map });
   useCorrectedMapClick({ map, onMapClick });
   useAnimationMap({ disableFlyTo, fitBoundDuration, fitBounds, fitBoundsPadding, flyToDuration, map, markers, zoom });
 
