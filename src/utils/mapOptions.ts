@@ -12,6 +12,8 @@ interface MapOptionsProps {
   zoomFlyFrom?: number;
   projection?: MapboxOptions["projection"];
   baseMapView: "default" | "satellite" | "streets" | "dark" | "3d";
+  cooperativeGestures?: boolean;
+  doubleClickZoom?: boolean;
 }
 
 const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" | "3d"): string => {
@@ -44,6 +46,10 @@ const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" 
  * @param {number} [params.zoomFlyFrom] - Initial zoom level for fly-to animation
  * @param {MarkerProps[]} [params.markers] - Array of marker definitions
  * @param {LngLatLike|number[]} [params.center] - Optional center coordinates (either as LngLat object or [lng, lat] array)
+ * @param {MapboxOptions["projection"]} [params.projection] - Optional coordinate projection
+ * @param {string} [params.baseMapView] - Optional base map view type (default, satellite, streets, dark, 3d)
+ * @param {boolean} [params.cooperativeGestures=true] - Enable cooperative gestures (default: true)
+ * @param {boolean} [params.doubleClickZoom=true] - Enable double-click zoom (default: true)
  *
  * @returns {Object} Mapbox-compatible configuration object with:
  *   - center: Calculated center coordinates
@@ -61,7 +67,16 @@ const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" 
  *   zoomFlyFrom: 12
  * });
  */
-const mapOptions = ({ mapStyle, mapContainer, zoomFlyFrom, markers, center, baseMapView }: MapOptionsProps) => {
+const mapOptions = ({
+  mapStyle,
+  mapContainer,
+  zoomFlyFrom,
+  markers,
+  center,
+  baseMapView,
+  doubleClickZoom,
+  cooperativeGestures,
+}: MapOptionsProps) => {
   const mapCenter = center
     ? coordinateConverter(center)
     : {
@@ -72,7 +87,8 @@ const mapOptions = ({ mapStyle, mapContainer, zoomFlyFrom, markers, center, base
   return {
     center: mapCenter,
     container: mapContainer?.current || "",
-    cooperativeGestures: true,
+    cooperativeGestures,
+    doubleClickZoom,
     failIfMajorPerformanceCaveat: false,
     style: mapStyle || getBaseMapStyle(baseMapView),
     zoom: zoomFlyFrom,

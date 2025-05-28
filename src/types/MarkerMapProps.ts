@@ -121,5 +121,10 @@ export interface MarkerMapProps {
   /**
    * Optional key to activate zoom on scroll without restriction (default is true).
    */
-  isScrollZoomRestricted?: boolean;
+  cooperativeGestures?: boolean;
+
+  /**
+   * Optional key to activate double click zoom (default is true).
+   */
+  doubleClickZoom?: boolean;
 }

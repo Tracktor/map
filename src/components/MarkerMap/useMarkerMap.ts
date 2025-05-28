@@ -40,7 +40,8 @@ const useMarkerMap = ({
   baseMapView = "default",
   zoom = 6,
   zoomFlyFrom = 3,
-  isScrollZoomRestricted = true,
+  cooperativeGestures = true,
+  doubleClickZoom = true,
 }: MarkerMapProps) => {
   const { palette } = useTheme();
   const [loadingMapBox, setLoadingMapBox] = useState<boolean>(true);
@@ -64,6 +65,8 @@ const useMarkerMap = ({
     const options = mapOptions({
       baseMapView,
       center,
+      cooperativeGestures,
+      doubleClickZoom,
       mapContainer,
       mapStyle,
       markers,
@@ -71,11 +74,7 @@ const useMarkerMap = ({
       zoomFlyFrom,
     });
 
-    map.current = new Map({
-      ...options,
-      cooperativeGestures: !!isScrollZoomRestricted,
-      doubleClickZoom: true,
-    });
+    map.current = new Map(options);
 
     map.current.resize();
     setLoadingMapBox(false);
@@ -86,7 +85,7 @@ const useMarkerMap = ({
         map.current = null;
       }
     };
-  }, [mapStyle, projection, zoomFlyFrom, baseMapView, loading, center, markers, isScrollZoomRestricted]);
+  }, [baseMapView, center, cooperativeGestures, doubleClickZoom, loading, mapStyle, markers, projection, zoomFlyFrom]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
   usePopups({ map, markers, openPopup });

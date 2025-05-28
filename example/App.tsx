@@ -86,7 +86,7 @@ const App = () => {
           }}
           onMapClick={handleMapClick}
           baseMapView="3d"
-          isScrollZoomRestricted={false}
+          // cooperativeGestures={false}
         />
       </MapProvider>
     </ThemeProvider>
