@@ -8,7 +8,6 @@ import usePopups from "@/hooks/usePopups.ts";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
 import isWebGLSupported from "@/utils/isWebGLSupported";
 import mapOptions from "@/utils/mapOptions";
-import isMac from "@/utils/os.ts";
 
 export const DEFAULT_CENTER_LNG = 2.333;
 export const DEFAULT_CENTER_LAT = 46.8677;
@@ -41,7 +40,7 @@ const useMarkerMap = ({
   baseMapView = "default",
   zoom = 6,
   zoomFlyFrom = 3,
-  zoomActivationKey = "alt",
+  isScrollZoomRestricted = true,
 }: MarkerMapProps) => {
   const { palette } = useTheme();
   const [loadingMapBox, setLoadingMapBox] = useState<boolean>(true);
@@ -62,11 +61,6 @@ const useMarkerMap = ({
       return undefined;
     }
 
-    // Clean up container if needed
-    if (mapContainer.current.innerHTML !== "") {
-      mapContainer.current.innerHTML = "";
-    }
-
     const options = mapOptions({
       baseMapView,
       center,
@@ -77,75 +71,22 @@ const useMarkerMap = ({
       zoomFlyFrom,
     });
 
-    // Initialize map
     map.current = new Map({
       ...options,
-      // natif zoom have weird behavior, so we customize it with container ref
-      doubleClickZoom: false,
-      scrollZoom: false,
+      cooperativeGestures: !!isScrollZoomRestricted,
+      doubleClickZoom: true,
     });
 
-    const mapInstance = map.current;
-    const canvas = mapInstance.getCanvas();
-
-    const handleDoubleClick = (event: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-
-      const lngLat = mapInstance.unproject([x, y]);
-
-      mapInstance.flyTo({ center: lngLat, zoom: mapInstance.getZoom() + 1 });
-    };
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-
-      const isModifierPressed = (() => {
-        switch (zoomActivationKey) {
-          case "alt":
-            return isMac() ? event.metaKey : event.altKey;
-          case "meta":
-            return event.metaKey;
-          case "ctrl":
-            return event.ctrlKey;
-          case "shift":
-            return event.shiftKey;
-          case null:
-          case undefined:
-            return true;
-          default:
-            return true;
-        }
-      })();
-
-      if (!isModifierPressed) {
-        return;
-      }
-
-      const delta = event.deltaY;
-      const zoomChange = delta > 0 ? -2 : 2;
-      const newZoom = mapInstance.getZoom() + zoomChange;
-
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const lngLat = mapInstance.unproject([x, y]);
-
-      mapInstance.flyTo({
-        center: lngLat,
-        zoom: newZoom,
-      });
-    };
-
-    canvas.addEventListener("dblclick", handleDoubleClick);
-    canvas.addEventListener("wheel", handleWheel, { passive: false });
+    map.current.resize();
+    setLoadingMapBox(false);
 
     return () => {
-      canvas.removeEventListener("dblclick", handleDoubleClick);
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
     };
-  }, [center, loading, mapStyle, markers, projection, zoomFlyFrom, baseMapView, zoomActivationKey]);
+  }, [mapStyle, projection, zoomFlyFrom, baseMapView, loading, center, markers, isScrollZoomRestricted]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
   usePopups({ map, markers, openPopup });

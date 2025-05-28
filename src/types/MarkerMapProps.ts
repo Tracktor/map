@@ -119,7 +119,7 @@ export interface MarkerMapProps {
   baseMapView?: "default" | "satellite" | "streets" | "dark" | "3d";
 
   /**
-   * Optional modifier key to require for map interactions (e.g., "alt", "meta", "ctrl", "shift").
+   * Optional key to activate zoom on scroll without restriction (default is true).
    */
-  zoomActivationKey?: "alt" | "meta" | "ctrl" | "shift" | false;
+  isScrollZoomRestricted?: boolean;
 }

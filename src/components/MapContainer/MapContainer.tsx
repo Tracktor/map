@@ -42,7 +42,6 @@ const MapContainer = (
       sx={{
         alignItems: "center",
         borderRadius: square ? 0 : 1,
-        display: "flex",
         justifyContent: "center",
         left: 0,
         position: "absolute",
