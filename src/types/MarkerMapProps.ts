@@ -117,4 +117,9 @@ export interface MarkerMapProps {
    * Optional base map view
    */
   baseMapView?: "default" | "satellite" | "streets" | "dark" | "3d";
+
+  /**
+   * Optional modifier key to require for map interactions (e.g., "alt", "meta", "ctrl", "shift").
+   */
+  zoomActivationKey?: "alt" | "meta" | "ctrl" | "shift" | false;
 }

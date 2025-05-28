@@ -85,7 +85,9 @@ const App = () => {
             marginTop: 3,
           }}
           onMapClick={handleMapClick}
+          // you can switch between different map styles
           // baseMapView="dark"
+          // zoomActivationKey={false}
         />
       </MapProvider>
     </ThemeProvider>

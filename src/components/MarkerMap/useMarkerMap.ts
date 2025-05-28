@@ -8,6 +8,7 @@ import usePopups from "@/hooks/usePopups.ts";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
 import isWebGLSupported from "@/utils/isWebGLSupported";
 import mapOptions from "@/utils/mapOptions";
+import isMac from "@/utils/os.ts";
 
 export const DEFAULT_CENTER_LNG = 2.333;
 export const DEFAULT_CENTER_LAT = 46.8677;
@@ -40,6 +41,7 @@ const useMarkerMap = ({
   baseMapView = "default",
   zoom = 6,
   zoomFlyFrom = 3,
+  zoomActivationKey = "alt",
 }: MarkerMapProps) => {
   const { palette } = useTheme();
   const [loadingMapBox, setLoadingMapBox] = useState<boolean>(true);
@@ -98,7 +100,29 @@ const useMarkerMap = ({
     };
 
     const handleWheel = (event: WheelEvent) => {
-      event.preventDefault(); // Empêche le comportement natif
+      event.preventDefault();
+
+      const isModifierPressed = (() => {
+        switch (zoomActivationKey) {
+          case "alt":
+            return isMac() ? event.metaKey : event.altKey;
+          case "meta":
+            return event.metaKey;
+          case "ctrl":
+            return event.ctrlKey;
+          case "shift":
+            return event.shiftKey;
+          case null:
+          case undefined:
+            return true;
+          default:
+            return true;
+        }
+      })();
+
+      if (!isModifierPressed) {
+        return;
+      }
 
       const delta = event.deltaY;
       const zoomChange = delta > 0 ? -2 : 2;
@@ -121,7 +145,7 @@ const useMarkerMap = ({
     return () => {
       canvas.removeEventListener("dblclick", handleDoubleClick);
     };
-  }, [center, loading, mapStyle, markers, projection, zoomFlyFrom, baseMapView]);
+  }, [center, loading, mapStyle, markers, projection, zoomFlyFrom, baseMapView, zoomActivationKey]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
   usePopups({ map, markers, openPopup });
