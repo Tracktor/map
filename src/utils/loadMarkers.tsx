@@ -86,10 +86,11 @@ export const generateMarkers = ({ palette, type }: GenerateMarkersProps): object
 /**
  * Loads standard circle markers onto a Mapbox GL map
  *
- * Handles GeoJSON data management including:
+ * Handles GeoJSON data management including
  * - Source creation/updating
  * - Layer styling application
  * - Dynamic property updates
+ * - zIndex management for layer ordering
  *
  * @param {Map} map - Mapbox GL map instance
  * @param {string} sourceId - Unique identifier for the marker source
@@ -123,27 +124,37 @@ const loadStandardMarkers = (map: Map, sourceId: string, standardMarkers: Custom
     });
   }
 
-  geoJsonData.features.forEach((marker) => {
+  // Sort markers by zIndex before adding layers
+  const sortedMarkers = [...geoJsonData.features].sort((a, b) => {
+    const zIndexA = a.properties?.zIndex || 0;
+    const zIndexB = b.properties?.zIndex || 0;
+    return zIndexA - zIndexB;
+  });
+
+  // Remove all existing marker layers to recreate them in the correct order
+  const existingLayers = map.getStyle().layers;
+  existingLayers?.forEach((layer) => {
+    if (layer.id.startsWith("marker-") && map.getLayer(layer.id)) {
+      map.removeLayer(layer.id);
+    }
+  });
+
+  // Recreate layers in zIndex order
+  sortedMarkers.forEach((marker) => {
     const { description: markerType, id } = marker.properties || {};
     const markerStyle = generateMarkers({ palette, type: markerType });
     const layerId = `marker-${id}`;
 
-    if (map.getLayer(layerId)) {
-      Object.entries(markerStyle || {}).forEach(([key, value]) => {
-        map.setPaintProperty(layerId, key as any, value);
-      });
-    } else {
-      map.addLayer({
-        filter: ["==", "id", id],
-        id: layerId,
-        layout: {
-          visibility: "visible",
-        },
-        paint: markerStyle,
-        source: sourceId,
-        type: "circle",
-      });
-    }
+    map.addLayer({
+      filter: ["==", "id", id],
+      id: layerId,
+      layout: {
+        visibility: "visible",
+      },
+      paint: markerStyle,
+      source: sourceId,
+      type: "circle",
+    });
   });
 };
 
@@ -154,6 +165,7 @@ const loadStandardMarkers = (map: Map, sourceId: string, standardMarkers: Custom
  * - Dynamic React component rendering
  * - Clean DOM management (removes previous markers)
  * - Position synchronization with map
+ * - zIndex support for marker layering
  *
  * @param {Map} map - Mapbox GL map instance
  * @param {CustomMarkerMapProps[]} reactMarkers - Array of React-based marker definitions
@@ -162,14 +174,26 @@ const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
   const existingMarkers = document.querySelectorAll(".react-custom-marker");
   existingMarkers.forEach((el) => el.remove());
 
-  reactMarkers.forEach((marker) => {
-    const { IconComponent, iconProps, onClick } = marker.properties || {};
+  // Trier les markers par zIndex pour assurer l'ordre correct
+  const sortedReactMarkers = [...reactMarkers].sort((a, b) => {
+    const zIndexA = a.properties?.zIndex || 0;
+    const zIndexB = b.properties?.zIndex || 0;
+    return zIndexA - zIndexB;
+  });
+
+  sortedReactMarkers.forEach((marker) => {
+    const { IconComponent, iconProps, onClick, zIndex } = marker.properties || {};
     const { coordinates } = marker.geometry;
 
     if (IconComponent && coordinates.length >= 2) {
       const markerContainer = document.createElement("div");
       markerContainer.className = "react-custom-marker";
       markerContainer.style.position = "absolute";
+
+      // Add zIndex if provided
+      if (zIndex !== undefined) {
+        markerContainer.style.zIndex = zIndex.toString();
+      }
 
       const contentContainer = document.createElement("div");
       const root = createRoot(contentContainer);
@@ -194,7 +218,7 @@ const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
 /**
  * Converts generic marker data into GeoJSON format
  *
- * Performs data normalization including:
+ * Performs data normalization including
  * - Coordinate validation and fallbacks
  * - Property merging
  * - Default value assignment
@@ -234,6 +258,7 @@ const geoJSONMarkers = (markers: MarkerProps[]) => ({
  * - Marker type classification
  * - Parallel loading of different marker types
  * - Loading state management
+ * - zIndex-based ordering
  *
  * @param {Object} params - Configuration parameters
  * @param {MutableRefObject<Map|null>} params.map - React ref to Mapbox GL instance
