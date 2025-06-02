@@ -32,7 +32,6 @@ interface GenerateMarkersProps {
 interface LoadMarkersProps {
   map: RefObject<Map | null>;
   palette: Palette;
-  setLoadingMapBox: (loading: boolean) => void;
   markers: MarkerProps[];
 }
 
@@ -262,13 +261,13 @@ const geoJSONMarkers = (markers: MarkerProps[]) => ({
  *
  * @param {Object} params - Configuration parameters
  * @param {MutableRefObject<Map|null>} params.map - React ref to Mapbox GL instance
- * @param {function} params.setLoadingMapBox - Loading state callback
  * @param {Palette} params.palette - Design system color palette
  * @param {MarkerProps[]} params.markers - Array of marker definitions
  */
-export const loadMarkers = ({ map, setLoadingMapBox, palette, markers }: LoadMarkersProps) => {
-  setLoadingMapBox(false);
-  if (!map.current) return;
+export const loadMarkers = ({ map, palette, markers }: LoadMarkersProps) => {
+  if (!map.current) {
+    return;
+  }
 
   const layer = geoJSONMarkers(markers);
 
