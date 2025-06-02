@@ -63,7 +63,7 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
   const { loading, mapContainer } = useMarkerMap(props);
 
   return (
-    <>
+    <Box sx={{ height, position: "relative", width, ...containerStyle }}>
       <GlobalStyles
         styles={{
           ".mapboxgl-popup-content": {
@@ -75,50 +75,49 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
           },
         }}
       />
-      <Box sx={{ height, position: "relative", width, ...containerStyle }}>
-        {mapboxgl.supported() ? (
-          <Box
-            sx={{
-              alignItems: "center",
-              borderRadius: square ? 0 : 1,
-              height,
-              justifyContent: "center",
-              left: 0,
-              position: "absolute",
-              top: 0,
-              width,
-              zIndex: 1,
-            }}
-            ref={mapContainer}
-          />
-        ) : (
-          <Box
-            sx={{
-              left: "50%",
-              position: "absolute",
-              textAlign: "center",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            WebGL is not enabled in your browser. This technology is required to display the interactive map.
-          </Box>
-        )}
+      {mapboxgl.supported() ? (
+        <Box
+          sx={{
+            alignItems: "center",
+            borderRadius: square ? 0 : 1,
+            height,
+            justifyContent: "center",
+            left: 0,
+            position: "absolute",
+            top: 0,
+            width,
+            zIndex: 1,
+          }}
+          ref={mapContainer}
+        />
+      ) : (
+        <Box
+          sx={{
+            left: "50%",
+            position: "absolute",
+            textAlign: "center",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          WebGL is not enabled in your browser. This technology is required to display the interactive map.
+        </Box>
+      )}
 
-        {loading && (
-          <Skeleton
-            sx={{
-              inset: 0,
-              position: "absolute",
-              zIndex: 0,
-            }}
-            width={width}
-            height={height}
-            variant={square ? "rectangular" : "rounded"}
-          />
-        )}
-      </Box>
-    </>
+      {/* Loading skeleton */}
+      {loading && (
+        <Skeleton
+          sx={{
+            inset: 0,
+            position: "absolute",
+            zIndex: 0,
+          }}
+          width={width}
+          height={height}
+          variant={square ? "rectangular" : "rounded"}
+        />
+      )}
+    </Box>
   );
 };
 
