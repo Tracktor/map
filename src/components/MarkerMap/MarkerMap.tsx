@@ -1,5 +1,6 @@
-import { GlobalStyles } from "@tracktor/design-system";
-import MapContainer from "@/components/MapContainer/MapContainer.tsx";
+import { Box, GlobalStyles, Skeleton } from "@tracktor/design-system";
+import mapboxgl from "mapbox-gl";
+import { ReactElement } from "react";
 import useMarkerMap from "@/components/MarkerMap/useMarkerMap";
 import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
 
@@ -39,7 +40,7 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * @param {(lng: number, lat: number) => void} [props.onMapClick] - Callback triggered when the map is clicked.
  * @param {"light" | "dark" | ThemeOptions} [props.theme] - Optional theme override for map rendering.
  *
- * @returns {JSX.Element} The rendered map component with optional markers and behavior.
+ * @returns {ReactElement} The rendered map component with optional markers and behavior.
  *
  * @example
  * ```tsx
@@ -58,8 +59,8 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * />
  * ```
  */
-const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%", ...props }: MarkerMapProps) => {
-  const { loading, mapContainer, webGLSupported } = useMarkerMap(props);
+const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
+  const { loading, mapContainer } = useMarkerMap(props);
 
   return (
     <>
@@ -74,15 +75,49 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
           },
         }}
       />
-      <MapContainer
-        ref={mapContainer}
-        loading={loading}
-        height={height}
-        width={width}
-        containerStyle={containerStyle}
-        square={square}
-        error={!webGLSupported && "WebGL is not enabled in your browser. This technology is required to display the interactive map."}
-      />
+      <Box sx={{ height, position: "relative", width, ...containerStyle }}>
+        {mapboxgl.supported() ? (
+          <Box
+            sx={{
+              alignItems: "center",
+              borderRadius: square ? 0 : 1,
+              height,
+              justifyContent: "center",
+              left: 0,
+              position: "absolute",
+              top: 0,
+              width,
+              zIndex: 1,
+            }}
+            ref={mapContainer}
+          />
+        ) : (
+          <Box
+            sx={{
+              left: "50%",
+              position: "absolute",
+              textAlign: "center",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            WebGL is not enabled in your browser. This technology is required to display the interactive map.
+          </Box>
+        )}
+
+        {loading && (
+          <Skeleton
+            sx={{
+              inset: 0,
+              position: "absolute",
+              zIndex: 0,
+            }}
+            width={width}
+            height={height}
+            variant={square ? "rectangular" : "rounded"}
+          />
+        )}
+      </Box>
     </>
   );
 };

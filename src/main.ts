@@ -13,8 +13,6 @@ export * from "@/components/MarkerMap/MarkerMap";
 // Utils
 export { default as isValidLatLng } from "@/utils/isValidLatLng";
 export * from "@/utils/isValidLatLng";
-export { default as isWebGLSupported } from "@/utils/isWebGLSupported";
-export * from "@/utils/isWebGLSupported";
 
 // Types
 export * from "@/types/MarkerProps";

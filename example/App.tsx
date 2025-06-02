@@ -76,17 +76,17 @@ const App = () => {
     <ThemeProvider theme="light">
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
         <MarkerMap
+          cooperativeGestures
           openPopup="1"
           markers={markers}
           height={600}
           width={600}
+          onMapClick={handleMapClick}
+          baseMapView="3d"
           containerStyle={{
             marginLeft: 3,
             marginTop: 3,
           }}
-          onMapClick={handleMapClick}
-          baseMapView="3d"
-          // cooperativeGestures={false}
         />
       </MapProvider>
     </ThemeProvider>
