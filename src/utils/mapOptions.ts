@@ -76,7 +76,7 @@ const mapOptions = ({
   baseMapView,
   doubleClickZoom,
   cooperativeGestures,
-}: MapOptionsProps) => {
+}: MapOptionsProps): object => {
   const mapCenter = center
     ? coordinateConverter(center)
     : {

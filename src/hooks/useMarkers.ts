@@ -15,7 +15,9 @@ type UseInitializeMapProps = {
 const useMarkers = ({ map, markers, markersAreInvalid, palette, setLoadingMapBox }: UseInitializeMapProps) => {
   // Add or refresh markers when the map or marker data changes
   useEffect(() => {
-    if (!map.current || markersAreInvalid) return;
+    if (!map.current || markersAreInvalid) {
+      return;
+    }
 
     const handleLoadMarkers = () => {
       markers && loadMarkers({ map, markers, palette, setLoadingMapBox });
