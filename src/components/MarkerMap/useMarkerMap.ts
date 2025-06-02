@@ -86,6 +86,12 @@ const useMarkerMap = ({
   useEffect(
     () => () => {
       if (map.current) {
+        const container = mapContainer.current;
+
+        if (container) {
+          container.innerHTML = "";
+        }
+
         map.current.remove();
         map.current = null;
       }
