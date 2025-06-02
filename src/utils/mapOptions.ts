@@ -1,4 +1,4 @@
-import { LngLatLike, MapboxOptions } from "mapbox-gl";
+import { LngLatLike, MapOptions } from "mapbox-gl";
 import { RefObject } from "react";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
 import { MarkerProps } from "@/types/MarkerProps.ts";
@@ -10,7 +10,7 @@ interface MapOptionsProps {
   markers?: MarkerProps[];
   mapStyle?: string;
   zoomFlyFrom?: number;
-  projection?: MapboxOptions["projection"];
+  projection?: MapOptions["projection"];
   baseMapView: "default" | "satellite" | "streets" | "dark" | "3d";
   cooperativeGestures?: boolean;
   doubleClickZoom?: boolean;
@@ -46,12 +46,12 @@ const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" 
  * @param {number} [params.zoomFlyFrom] - Initial zoom level for fly-to animation
  * @param {MarkerProps[]} [params.markers] - Array of marker definitions
  * @param {LngLatLike|number[]} [params.center] - Optional center coordinates (either as LngLat object or [lng, lat] array)
- * @param {MapboxOptions["projection"]} [params.projection] - Optional coordinate projection
+ * @param {MapOptions["projection"]} [params.projection] - Optional coordinate projection
  * @param {string} [params.baseMapView] - Optional base map view type (default, satellite, streets, dark, 3d)
  * @param {boolean} [params.cooperativeGestures=true] - Enable cooperative gestures (default: true)
  * @param {boolean} [params.doubleClickZoom=true] - Enable double-click zoom (default: true)
  *
- * @returns {Object} Mapbox-compatible configuration object with:
+ * @returns {MapOptions} Mapbox-compatible configuration object with:
  *   - center: Calculated center coordinates
  *   - container: Validated container reference
  *   - cooperativeGestures: Enabled by default
@@ -76,7 +76,7 @@ const mapOptions = ({
   baseMapView,
   doubleClickZoom,
   cooperativeGestures,
-}: MapOptionsProps): object => {
+}: MapOptionsProps): MapOptions => {
   const mapCenter = center
     ? coordinateConverter(center)
     : {
