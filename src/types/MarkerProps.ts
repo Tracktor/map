@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ComponentType, ReactNode } from "react";
 import { CustomMarkerMapProps } from "@/utils/loadMarkers.tsx";
 
 export interface MarkerProps {
@@ -60,7 +60,7 @@ export interface MarkerProps {
    * Optional custom React component to use as the marker icon.
    * Overrides iconImage if provided.
    */
-  IconComponent?: React.ComponentType<any>;
+  IconComponent?: ComponentType<any>;
 
   /**
    * Optional props to pass to the IconComponent.
