@@ -55,11 +55,11 @@ const useMarkerMap = ({
     if (!isWebGLSupported()) {
       setWebGLSupported(false);
       setLoadingMapBox(false);
-      return undefined;
+      return;
     }
 
     if (map.current || !mapContainer.current || loading) {
-      return undefined;
+      return;
     }
 
     const options = mapOptions({
@@ -78,13 +78,6 @@ const useMarkerMap = ({
 
     map.current.resize();
     setLoadingMapBox(false);
-
-    return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
-    };
   }, [baseMapView, center, cooperativeGestures, doubleClickZoom, loading, mapStyle, markers, projection, zoomFlyFrom]);
 
   useMarkers({ map, markers, markersAreInvalid, palette, setLoadingMapBox });
@@ -92,7 +85,7 @@ const useMarkerMap = ({
   useCorrectedMapClick({ map, onMapClick });
   useAnimationMap({ disableFlyTo, fitBoundDuration, fitBounds, fitBoundsPadding, flyToDuration, map, markers, zoom });
 
-  // Cleanup the map instance on a component unmount
+  // Clean up the map instance on a component unmount
   useEffect(
     () => () => {
       if (map.current) {
