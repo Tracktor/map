@@ -1,5 +1,5 @@
 import { SxProps, ThemeOptions } from "@tracktor/design-system";
-import { LngLatLike, MapboxOptions } from "mapbox-gl";
+import { LngLatLike, MapOptions } from "mapbox-gl";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 export interface MarkerMapProps {
@@ -111,7 +111,7 @@ export interface MarkerMapProps {
   /**
    * Coordinate projection to use for the map (default is 'mercator').
    */
-  projection?: MapboxOptions["projection"];
+  projection?: MapOptions["projection"];
 
   /**
    * Optional base map view
