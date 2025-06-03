@@ -1,6 +1,6 @@
 import { Box, GlobalStyles, Skeleton } from "@tracktor/design-system";
 import mapboxgl from "mapbox-gl";
-import { ReactElement } from "react";
+import { memo, ReactElement } from "react";
 import useMarkerMap from "@/components/MarkerMap/useMarkerMap";
 import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
 
@@ -121,4 +121,4 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
   );
 };
 
-export default MarkerMap;
+export default memo(MarkerMap);

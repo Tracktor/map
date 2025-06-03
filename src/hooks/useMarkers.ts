@@ -1,6 +1,6 @@
 import { Palette } from "@tracktor/design-system";
 import { Map } from "mapbox-gl";
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useEffect } from "react";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 import { loadMarkers } from "@/utils/loadMarkers.tsx";
 
@@ -12,38 +12,12 @@ type UseInitializeMapProps = {
   markersAreInvalid: boolean;
 };
 
-/**
- * Checks if markers have NOT changed to avoid unnecessary re-renders
- */
-const markersHaveNotChanged = (newMarkers: MarkerProps[], prevMarkers?: MarkerProps[]): boolean => {
-  if (!prevMarkers || newMarkers.length !== prevMarkers.length) {
-    return false;
-  }
-
-  return !newMarkers.some((marker, index) => {
-    const prev = prevMarkers[index];
-    return (
-      marker.id !== prev.id ||
-      marker.lat !== prev.lat ||
-      marker.lng !== prev.lng ||
-      marker.zIndex !== prev.zIndex ||
-      marker.type !== prev.type
-    );
-  });
-};
-
 const useMarkers = ({ map, markers, markersAreInvalid, palette, setLoadingMapBox }: UseInitializeMapProps) => {
-  // Store a previous markers array to detect changes
-  const previousMarkersRef = useRef<MarkerProps[]>(undefined);
-
-  // Add or refresh markers when the map or marker data changes
+  // Add or refresh markers
   useEffect(() => {
-    if (!map.current || markersAreInvalid || !markers || markersHaveNotChanged(markers, previousMarkersRef.current)) {
+    if (!map.current || markersAreInvalid || !markers) {
       return;
     }
-
-    // Store a copy of current markers for the next comparison
-    previousMarkersRef.current = [...markers];
 
     const handleLoadMarkers = () => {
       loadMarkers({ map, markers, palette });
