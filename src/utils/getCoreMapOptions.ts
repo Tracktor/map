@@ -51,7 +51,7 @@ const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" 
  *   - zoom: Initial zoom level
  *
  * @example
- * const options = getMapOptions({
+ * const options = getCoreMapOptions({
  *   mapStyle: 'mapbox://styles/mapbox/streets-v11',
  *   markers: [{ lat: 48.8584, lng: 2.2945 }],
  *   zoomFlyFrom: 12
