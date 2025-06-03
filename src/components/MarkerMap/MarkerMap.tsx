@@ -83,8 +83,10 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
             height,
             justifyContent: "center",
             left: 0,
+            overflow: "hidden",
             position: "absolute",
             top: 0,
+            visibility: loading ? "hidden" : "visible",
             width,
             zIndex: 1,
           }}
@@ -110,7 +112,7 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
           sx={{
             inset: 0,
             position: "absolute",
-            zIndex: 0,
+            zIndex: 2,
           }}
           width={width}
           height={height}

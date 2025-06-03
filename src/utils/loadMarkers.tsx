@@ -270,7 +270,6 @@ export const loadMarkers = ({ map, palette, markers }: LoadMarkersProps) => {
   }
 
   const layer = geoJSONMarkers(markers);
-
   const standardMarkers = layer.features.filter((marker) => marker.properties?.IconComponent === undefined);
 
   if (standardMarkers.length) {
