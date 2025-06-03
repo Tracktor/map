@@ -9,13 +9,16 @@ type UsePopupsProps = {
   map: RefObject<Map | null>;
   markers?: MarkerProps[];
   openPopup: string | number | undefined;
+  isMapInitialized: boolean;
 };
 
-const usePopups = ({ openPopup, map, markers }: UsePopupsProps) => {
+const usePopups = ({ openPopup, map, markers, isMapInitialized }: UsePopupsProps) => {
   const popupRef = useRef<Popup | null>(null);
 
   useEffect(() => {
-    if (!map.current || !markers) return undefined;
+    if (!map.current || !markers || !isMapInitialized) {
+      return undefined;
+    }
 
     const mapInstance = map.current;
     const canvas = mapInstance.getCanvas();
@@ -104,7 +107,7 @@ const usePopups = ({ openPopup, map, markers }: UsePopupsProps) => {
         popupRef.current = null;
       }
     };
-  }, [map, markers, openPopup]);
+  }, [isMapInitialized, map, markers, openPopup]);
 };
 
 export default usePopups;

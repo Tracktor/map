@@ -69,6 +69,11 @@ export interface MarkerMapProps {
   disableFlyTo?: boolean;
 
   /**
+   * Disables the animation
+   */
+  disableAnimation?: boolean;
+
+  /**
    * Duration of the fly animation in milliseconds.
    */
   flyToDuration?: number;

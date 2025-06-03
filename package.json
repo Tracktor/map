@@ -3,7 +3,7 @@
   "description": "A react library to easily display map with multiple tools",
   "private": false,
   "license": "UNLICENSED",
-  "version": "0.5.11",
+  "version": "0.6.0",
   "type": "module",
   "main": "dist/main.umd.cjs",
   "module": "dist/main.js",
@@ -29,6 +29,7 @@
     "@mui/icons-material": "^5.17.1",
     "@mui/x-license": "^7.2.1",
     "@tracktor/design-system": "^3.11.4",
+    "@tracktor/react-utils": "^1.22.3",
     "mapbox-gl": "^3.12.0"
   },
   "devDependencies": {
@@ -43,8 +44,8 @@
     "react-dom": "^18.3.1",
     "typescript": "~5.7.2",
     "vite": "^6.2.3",
-    "vite-plugin-dts": "^4.5.3",
-    "vite-plugin-css-injected-by-js": "^3.5.2"
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vite-plugin-dts": "^4.5.3"
   },
   "peerDependencies": {
     "@mui/icons-material": "*",

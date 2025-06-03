@@ -48,19 +48,19 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  *   center={[2.3488, 48.8534]}
  *   zoom={13}
  *   fitBounds
- *   markers={[
- *     { id: 1, lat: 48.8534, lng: 2.3488, name: "Marker 1" },
- *     { id: 2, lat: 48.8566, lng: 2.3522, name: "Marker 2" },
- *   ]}
  *   openPopupOnHover
  *   popupMaxWidth="250px"
  *   mapStyle="mapbox://styles/mapbox/light-v10"
  *   theme="light"
+ *   markers={[
+ *    { id: 1, lat: 48.8534, lng: 2.3488, name: "Marker 1" },
+ *    { id: 2, lat: 48.8566, lng: 2.3522, name: "Marker 2" },
+ *   ]}
  * />
  * ```
  */
 const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
-  const { loading, mapContainer } = useMarkerMap(props);
+  const { loading, containerRef } = useMarkerMap(props);
 
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
@@ -77,20 +77,20 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
       />
       {mapboxgl.supported() ? (
         <Box
+          ref={containerRef}
           sx={{
             alignItems: "center",
             borderRadius: square ? 0 : 1,
+            display: loading ? "none" : "block",
             height,
             justifyContent: "center",
             left: 0,
             overflow: "hidden",
             position: "absolute",
             top: 0,
-            visibility: loading ? "hidden" : "visible",
             width,
             zIndex: 1,
           }}
-          ref={mapContainer}
         />
       ) : (
         <Box
@@ -109,14 +109,15 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
       {/* Loading skeleton */}
       {loading && (
         <Skeleton
+          width={width}
+          height={height}
+          variant={square ? "rectangular" : "rounded"}
           sx={{
+            // backgroundColor: "#ece7e4",
             inset: 0,
             position: "absolute",
             zIndex: 2,
           }}
-          width={width}
-          height={height}
-          variant={square ? "rectangular" : "rounded"}
         />
       )}
     </Box>

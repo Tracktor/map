@@ -4,11 +4,14 @@ import { RefObject, useEffect } from "react";
 type UseCorrectedMapClickProps = {
   map: RefObject<Map | null>;
   onMapClick?: (lng: number, lat: number) => void;
+  isMapInitialized?: boolean;
 };
 
-const useCorrectedMapClick = ({ map, onMapClick }: UseCorrectedMapClickProps) => {
+const useCorrectedMapClick = ({ map, onMapClick, isMapInitialized }: UseCorrectedMapClickProps) => {
   useEffect(() => {
-    if (!map.current || !onMapClick) return;
+    if (!map.current || !onMapClick || !isMapInitialized) {
+      return;
+    }
 
     const canvas = map.current.getCanvas();
 
@@ -19,7 +22,7 @@ const useCorrectedMapClick = ({ map, onMapClick }: UseCorrectedMapClickProps) =>
     };
 
     canvas.addEventListener("click", handleClick);
-  }, [map, onMapClick]);
+  }, [isMapInitialized, map, onMapClick]);
 };
 
 export default useCorrectedMapClick;

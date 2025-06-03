@@ -8,20 +8,18 @@ type UseInitializeMapProps = {
   map: RefObject<Map | null>;
   markers?: MarkerProps[];
   palette: Palette;
-  setLoadingMapBox: (loading: boolean) => void;
-  markersAreInvalid: boolean;
+  isMapInitialized: boolean;
 };
 
-const useMarkers = ({ map, markers, markersAreInvalid, palette, setLoadingMapBox }: UseInitializeMapProps) => {
+const useMarkers = ({ map, markers, palette, isMapInitialized }: UseInitializeMapProps) => {
   // Add or refresh markers
   useEffect(() => {
-    if (!map.current || markersAreInvalid || !markers) {
+    if (!map.current || !markers || !isMapInitialized) {
       return;
     }
 
     const handleLoadMarkers = () => {
       loadMarkers({ map, markers, palette });
-      setLoadingMapBox(false); //
     };
 
     // If the map is already loaded, immediately add markers
@@ -31,7 +29,7 @@ const useMarkers = ({ map, markers, markersAreInvalid, palette, setLoadingMapBox
     } else {
       map.current.once("load", handleLoadMarkers);
     }
-  }, [map, markers, markersAreInvalid, palette, setLoadingMapBox]);
+  }, [map, markers, palette, isMapInitialized]);
 };
 
 export default useMarkers;
