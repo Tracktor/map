@@ -73,10 +73,9 @@ const App = () => {
   };
 
   return (
-    <ThemeProvider theme="light">
+    <ThemeProvider theme="dark">
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
         <MarkerMap
-          cooperativeGestures
           openPopup="1"
           markers={markers}
           height={600}

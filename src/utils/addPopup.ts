@@ -76,15 +76,13 @@ const addPopup = ({ map, tooltip, coordinates }: AddPopupProps): Popup | null =>
   }
 
   const popupContainer = document.createElement("div");
+  const contentContainer = document.createElement("div");
+  const root = createRoot(contentContainer);
+
   popupContainer.style.position = "relative";
   popupContainer.style.overflow = "hidden";
-
-  const contentContainer = document.createElement("div");
-  contentContainer.style.padding = "10px";
-
   popupContainer.style.zIndex = "1000";
 
-  const root = createRoot(contentContainer);
   root.render(tooltip);
 
   const popup = new Popup({

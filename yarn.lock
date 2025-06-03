@@ -1728,6 +1728,11 @@
     "@emotion/styled" "^11.13.0"
     "@mui/material" "~6.2.0"
 
+"@tracktor/react-utils@^1.22.3":
+  version "1.22.3"
+  resolved "https://registry.yarnpkg.com/@tracktor/react-utils/-/react-utils-1.22.3.tgz#b17b149d98e95b6be625d045444cdce384000a27"
+  integrity sha512-hSmlMdEwkJQlWfpht8+4e+TfNigf5O50D3OmfZx986Nm8AWPCWDrYQxAPb0C67n2kFr868kPoZooqXxLbLMFoA==
+
 "@types/argparse@1.0.38":
   version "1.0.38"
   resolved "https://registry.yarnpkg.com/@types/argparse/-/argparse-1.0.38.tgz#a81fd8606d481f873a3800c6ebae4f1d768a56a9"

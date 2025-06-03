@@ -1,34 +1,41 @@
+import { useDebounce } from "@tracktor/react-utils";
 import { LngLatBounds, Map } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
-import { isValidLatLng } from "@/main.ts";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 type UseAnimationMapProps = {
   map: RefObject<Map | null>;
   disableFlyTo?: boolean;
+  disableAnimation: boolean | undefined;
   flyToDuration?: number;
   zoom?: number;
   fitBounds?: boolean;
-  markers?: MarkerProps[];
   fitBoundDuration?: number;
   fitBoundsPadding?: number;
+  isMapInitialized: boolean;
+  markers?: MarkerProps[];
 };
 
 const useAnimationMap = ({
   map,
   disableFlyTo,
+  disableAnimation,
   flyToDuration,
   zoom,
   fitBounds,
   markers,
   fitBoundDuration,
   fitBoundsPadding,
+  isMapInitialized,
 }: UseAnimationMapProps) => {
   const hasFlown = useRef(false);
+  const debouncedMarkers = useDebounce(markers, 150);
 
-  // Animate camera or fit map bounds depending on props
+  // Animation logic with debounced markers
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || !isMapInitialized || disableAnimation) {
+      return;
+    }
 
     // Fly to only once
     if (!disableFlyTo && !hasFlown.current) {
@@ -39,30 +46,34 @@ const useAnimationMap = ({
       hasFlown.current = true;
     }
 
-    // Fit bounds logic
-    if (!fitBounds || !markers?.length || markers.length < 2) return;
+    // Fit bounds logic - markers are already valid
+    if (!fitBounds || !debouncedMarkers?.length || debouncedMarkers.length < 2) {
+      return;
+    }
 
     const bounds = new LngLatBounds();
 
-    const validMarkers = markers.filter((marker) => {
-      const lng = Number(marker.lng);
-      const lat = Number(marker.lat);
-      return isValidLatLng(lat, lng);
+    // Markers are already valid, forEach is optimal for this case
+    debouncedMarkers.forEach((marker) => {
+      bounds.extend([Number(marker.lng), Number(marker.lat)]);
     });
-
-    if (validMarkers.length < 2) return;
-
-    for (let i = 0; i < validMarkers.length; i += 1) {
-      const lng = Number(validMarkers[i].lng);
-      const lat = Number(validMarkers[i].lat);
-      bounds.extend([lng, lat]);
-    }
 
     map.current.fitBounds(bounds, {
       duration: fitBoundDuration,
       padding: fitBoundsPadding,
     });
-  }, [markers, fitBounds, fitBoundsPadding, flyToDuration, zoom, fitBoundDuration, disableFlyTo, map]);
+  }, [
+    debouncedMarkers,
+    fitBounds,
+    fitBoundsPadding,
+    flyToDuration,
+    zoom,
+    fitBoundDuration,
+    disableFlyTo,
+    map,
+    isMapInitialized,
+    disableAnimation,
+  ]);
 };
 
 export default useAnimationMap;
