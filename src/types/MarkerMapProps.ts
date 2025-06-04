@@ -34,7 +34,7 @@ export interface MarkerMapProps {
   zoomFlyFrom?: number;
 
   /**
-   * Maximum width of popups in pixels or other CSS unit.
+   * Maximum width of popups in pixels or another CSS unit.
    */
   popupMaxWidth?: string;
 
@@ -131,7 +131,7 @@ export interface MarkerMapProps {
   cooperativeGestures?: boolean;
 
   /**
-   * Optional key to activate double click zoom (default is true).
+   * Optional key to activate double-click zoom (default is true).
    */
   doubleClickZoom?: boolean;
 }

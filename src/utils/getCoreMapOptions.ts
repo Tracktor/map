@@ -1,7 +1,6 @@
-import { LngLatLike, MapOptions } from "mapbox-gl";
+import { MapOptions } from "mapbox-gl";
 
 interface MapOptionsProps {
-  center?: LngLatLike | number[];
   mapStyle?: string;
   zoomFlyFrom?: number;
   projection?: MapOptions["projection"];

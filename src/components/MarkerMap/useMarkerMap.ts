@@ -144,6 +144,7 @@ const useMarkerMap = ({
   usePopups({ isMapInitialized, map, markers: markersMemo, openPopup });
   useCorrectedMapClick({ isMapInitialized, map, onMapClick });
   useAnimationMap({
+    center,
     disableAnimation,
     disableFlyTo,
     fitBoundDuration,

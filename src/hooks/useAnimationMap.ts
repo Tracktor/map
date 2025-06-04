@@ -1,7 +1,9 @@
 import { useDebounce } from "@tracktor/react-utils";
-import { LngLatBounds, Map } from "mapbox-gl";
+import { LngLatBounds, LngLatLike, Map } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
+import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap.ts";
 import { MarkerProps } from "@/types/MarkerProps.ts";
+import coordinateConverter from "@/utils/coordinateConverter.ts";
 
 type UseAnimationMapProps = {
   map: RefObject<Map | null>;
@@ -14,6 +16,7 @@ type UseAnimationMapProps = {
   fitBoundsPadding?: number;
   isMapInitialized: boolean;
   markers?: MarkerProps[];
+  center?: LngLatLike | number[];
 };
 
 const useAnimationMap = ({
@@ -27,6 +30,7 @@ const useAnimationMap = ({
   fitBoundDuration,
   fitBoundsPadding,
   isMapInitialized,
+  center,
 }: UseAnimationMapProps) => {
   const hasFlown = useRef(false);
   const debouncedMarkers = useDebounce(markers, 150);
@@ -46,8 +50,14 @@ const useAnimationMap = ({
       hasFlown.current = true;
     }
 
-    // Fit bounds logic - markers are already valid
+    // Set center if no markers are present
     if (!fitBounds || !debouncedMarkers?.length || debouncedMarkers.length < 2) {
+      const mapCenter = coordinateConverter(center) || {
+        lat: DEFAULT_CENTER_LAT,
+        lng: DEFAULT_CENTER_LNG,
+      };
+
+      map.current.setCenter(mapCenter);
       return;
     }
 
@@ -73,6 +83,7 @@ const useAnimationMap = ({
     map,
     isMapInitialized,
     disableAnimation,
+    center,
   ]);
 };
 
