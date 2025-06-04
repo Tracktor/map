@@ -81,7 +81,6 @@ const App = () => {
           height={600}
           width={600}
           onMapClick={handleMapClick}
-          baseMapView="3d"
           containerStyle={{
             marginLeft: 3,
             marginTop: 3,

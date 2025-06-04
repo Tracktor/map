@@ -1,4 +1,4 @@
-import { SxProps, ThemeOptions } from "@tracktor/design-system";
+import { SxProps } from "@tracktor/design-system";
 import { LngLatLike, MapOptions } from "mapbox-gl";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
@@ -109,9 +109,10 @@ export interface MarkerMapProps {
   onMapClick?: (lng: number, lat: number) => void;
 
   /**
-   * The theme of Map. If not set, it will use the theme of the parent ThemeProvider.
+   * The theme of Map.
+   * @default "light"
    */
-  theme?: "dark" | "light" | ThemeOptions;
+  theme?: "dark" | "light";
 
   /**
    * Coordinate projection to use for the map (default is 'mercator').
@@ -120,8 +121,9 @@ export interface MarkerMapProps {
 
   /**
    * Optional base map view
+   * @default "default"
    */
-  baseMapView?: "default" | "satellite" | "streets" | "dark" | "3d";
+  baseMapView?: "default" | "satellite" | "streets" | "3d";
 
   /**
    * Optional key to activate zoom on scroll without restriction (default is true).

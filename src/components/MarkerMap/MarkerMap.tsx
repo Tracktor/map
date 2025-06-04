@@ -38,7 +38,7 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * @param {boolean} [props.openPopupOnHover] - If true, opens the popup on marker hover instead of click.
  * @param {MarkerProps[]} [props.markers] - Array of marker objects to render on the map.
  * @param {(lng: number, lat: number) => void} [props.onMapClick] - Callback triggered when the map is clicked.
- * @param {"light" | "dark" | ThemeOptions} [props.theme] - Optional theme override for map rendering.
+ * @param {"light" | "dark"} [props.theme] - Optional theme override for map rendering.
  *
  * @returns {ReactElement} The rendered map component with optional markers and behavior.
  *
@@ -59,7 +59,7 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * />
  * ```
  */
-const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
+const MarkerMap = ({ containerStyle, square, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
   const { loading, containerRef } = useMarkerMap(props);
 
   return (
@@ -113,7 +113,6 @@ const MarkerMap = ({ containerStyle, square, theme, height = 300, width = "100%"
           height={height}
           variant={square ? "rectangular" : "rounded"}
           sx={{
-            // backgroundColor: "#ece7e4",
             inset: 0,
             position: "absolute",
             zIndex: 2,

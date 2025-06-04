@@ -33,6 +33,7 @@ const useMarkerMap = ({
   openPopup,
   onMapClick,
   projection,
+  theme,
   mapStyle,
   baseMapView = "default",
   zoom = 6,
@@ -68,9 +69,10 @@ const useMarkerMap = ({
         doubleClickZoom,
         mapStyle,
         projection,
+        theme: theme || palette.mode,
         zoomFlyFrom,
       }),
-    [baseMapView, cooperativeGestures, doubleClickZoom, mapStyle, projection, zoomFlyFrom],
+    [baseMapView, cooperativeGestures, doubleClickZoom, mapStyle, palette.mode, projection, theme, zoomFlyFrom],
   );
 
   const cleanupMap = useCallback(() => {

@@ -5,22 +5,28 @@ interface MapOptionsProps {
   mapStyle?: string;
   zoomFlyFrom?: number;
   projection?: MapOptions["projection"];
-  baseMapView: "default" | "satellite" | "streets" | "dark" | "3d";
+  baseMapView?: "default" | "satellite" | "streets" | "3d";
   cooperativeGestures?: boolean;
   doubleClickZoom?: boolean;
+  theme?: "light" | "dark";
 }
 
-const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" | "3d"): string => {
-  switch (options) {
+const getBaseMapStyle = (baseMapView?: "default" | "satellite" | "streets" | "3d", theme?: "dark" | "light"): string => {
+  const isDarkTheme = theme === "dark";
+
+  switch (baseMapView) {
     case "satellite":
-      return "mapbox://styles/mapbox/satellite-v9";
-    case "dark":
-      return "mapbox://styles/mapbox/dark-v10";
+      return "mapbox://styles/mapbox/satellite-v9"; // No light/dark variants
+
     case "3d":
-      return "mapbox://styles/mapbox/streets-v12?optimize=true";
+      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v12?optimize=true";
+
     case "streets":
+      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v11";
+
+    case "default":
     default:
-      return "mapbox://styles/mapbox/streets-v11";
+      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v11";
   }
 };
 
@@ -60,6 +66,7 @@ const getBaseMapStyle = (options?: "default" | "satellite" | "streets" | "dark" 
 const getCoreMapOptions = ({
   mapStyle,
   zoomFlyFrom,
+  theme,
   baseMapView,
   doubleClickZoom,
   cooperativeGestures,
@@ -67,7 +74,7 @@ const getCoreMapOptions = ({
   cooperativeGestures,
   doubleClickZoom,
   failIfMajorPerformanceCaveat: false,
-  style: mapStyle || getBaseMapStyle(baseMapView),
+  style: mapStyle || getBaseMapStyle(baseMapView, theme),
   zoom: zoomFlyFrom,
 });
 
