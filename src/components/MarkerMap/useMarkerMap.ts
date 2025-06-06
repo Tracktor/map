@@ -6,7 +6,6 @@ import useMarkers from "@/hooks/useMarkers.ts";
 import useCorrectedMapClick from "@/hooks/useOnMapClick";
 import usePopups from "@/hooks/usePopups.ts";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
-import coordinateConverter from "@/utils/coordinateConverter.ts";
 import getCoreMapOptions from "@/utils/getCoreMapOptions.ts";
 import isValidLatLng from "@/utils/isValidLatLng.ts";
 
@@ -23,7 +22,6 @@ export const DEFAULT_CENTER_LAT = 46.8677;
  * - Adds popups to specific markers when requested
  * - Adjusts the map center or fits bounds based on markers
  * - Handles map click events with a provided callback
- * - Supports customizable flyTo behavior, zoom levels, and map style
  */
 const useMarkerMap = ({
   markers,
@@ -39,11 +37,8 @@ const useMarkerMap = ({
   baseMapView = "default",
   zoom = 6,
   fitBoundsPadding = 50,
-  zoomFlyFrom = 3,
-  flyToDuration = 5000,
   fitBoundDuration = 1000,
   fitBounds = true,
-  disableFlyTo = false,
   cooperativeGestures = true,
   doubleClickZoom = true,
 }: MarkerMapProps) => {
@@ -71,9 +66,8 @@ const useMarkerMap = ({
         mapStyle,
         projection,
         theme: theme || palette.mode,
-        zoomFlyFrom,
       }),
-    [baseMapView, cooperativeGestures, doubleClickZoom, mapStyle, palette.mode, projection, theme, zoomFlyFrom],
+    [baseMapView, cooperativeGestures, doubleClickZoom, mapStyle, palette.mode, projection, theme],
   );
 
   const cleanupMap = useCallback(() => {
@@ -116,23 +110,6 @@ const useMarkerMap = ({
   }, [initializeMap]);
 
   /**
-   * Update center separately without recreating the map
-   */
-  useEffect(() => {
-    if (!map.current || !isMapInitialized) {
-      return;
-    }
-
-    const mapCenter = coordinateConverter(center) || {
-      lat: DEFAULT_CENTER_LAT,
-      lng: DEFAULT_CENTER_LNG,
-    };
-
-    // Update center smoothly without recreation
-    map.current.setCenter(mapCenter);
-  }, [center, isMapInitialized]);
-
-  /**
    * Update zoom separately if needed
    */
   useEffect(() => {
@@ -162,21 +139,18 @@ const useMarkerMap = ({
   useCorrectedMapClick({ isMapInitialized, map, onMapClick });
 
   /**
-   * Handle map animations such as flyTo and fitBounds
+   * Handle map animations such as fitBounds
    */
   useAnimationMap({
     center,
     disableAnimation,
-    disableFlyTo,
     fitBoundDuration,
     fitBounds,
     fitBoundsAnimationKey,
     fitBoundsPadding,
-    flyToDuration,
     isMapInitialized,
     map,
     markers: markersMemo,
-    zoom,
   });
 
   /**

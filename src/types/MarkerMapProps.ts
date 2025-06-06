@@ -29,11 +29,6 @@ export interface MarkerMapProps {
   zoom?: number;
 
   /**
-   * Zoom level to use during fly animations.
-   */
-  zoomFlyFrom?: number;
-
-  /**
    * Maximum width of popups in pixels or another CSS unit.
    */
   popupMaxWidth?: string;
@@ -64,19 +59,9 @@ export interface MarkerMapProps {
   containerStyle?: SxProps;
 
   /**
-   * Disables the animation when flying to a point.
-   */
-  disableFlyTo?: boolean;
-
-  /**
    * Disables the animation
    */
   disableAnimation?: boolean;
-
-  /**
-   * Duration of the fly animation in milliseconds.
-   */
-  flyToDuration?: number;
 
   /**
    * Duration of the fit bounds animation in milliseconds.

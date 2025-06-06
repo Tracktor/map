@@ -1,16 +1,13 @@
 import { useDebounce } from "@tracktor/react-utils";
 import { LngLatBounds, LngLatLike, Map } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
-import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap.ts";
+import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/main.ts";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 import coordinateConverter from "@/utils/coordinateConverter.ts";
 
 type UseAnimationMapProps = {
   map: RefObject<Map | null>;
-  disableFlyTo?: boolean;
   disableAnimation: boolean | undefined;
-  flyToDuration?: number;
-  zoom?: number;
   fitBounds?: boolean;
   fitBoundDuration?: number;
   fitBoundsPadding?: number;
@@ -33,12 +30,22 @@ const serializeQueryKey = (key: unknown): string => {
   return JSON.stringify(key);
 };
 
+/**
+ * Determines the duration for fitting bounds based on the provided parameters.
+ * @param fitBoundDuration
+ * @param markers
+ */
+const getFitBoundDuration = (fitBoundDuration?: number, markers?: MarkerProps[]) => {
+  if (markers && markers?.length <= 1) {
+    return 100; // No animation for single marker or no markers
+  }
+
+  return fitBoundDuration;
+};
+
 const useAnimationMap = ({
   map,
-  disableFlyTo,
   disableAnimation,
-  flyToDuration,
-  zoom,
   fitBounds,
   markers,
   fitBoundDuration,
@@ -47,33 +54,29 @@ const useAnimationMap = ({
   center,
   fitBoundsAnimationKey,
 }: UseAnimationMapProps) => {
-  const hasFlown = useRef(false);
   const debouncedMarkers = useDebounce(markers);
   const previousSerializedKey = useRef<string | number | undefined>(undefined);
 
-  // Animation logic
+  /**
+   * Center map if no markers are present or if fitBounds is false.
+   */
   useEffect(() => {
-    if (!map.current || !isMapInitialized || disableAnimation) {
-      return;
-    }
-
-    // Fly to only once
-    if (!disableFlyTo && !hasFlown.current) {
-      map.current.flyTo({
-        duration: flyToDuration,
-        zoom,
-      });
-      hasFlown.current = true;
-    }
-
     // Set center if no markers are present
-    if (!fitBounds || !debouncedMarkers?.length || debouncedMarkers.length < 2) {
+    if (!fitBounds || !debouncedMarkers?.length) {
       const mapCenter = coordinateConverter(center) || {
         lat: DEFAULT_CENTER_LAT,
         lng: DEFAULT_CENTER_LNG,
       };
 
-      map.current.setCenter(mapCenter);
+      map.current?.setCenter(mapCenter);
+    }
+  }, [center, debouncedMarkers?.length, fitBounds, map]);
+
+  /**
+   * fitBounds the map to the markers' bounds with animation.
+   */
+  useEffect(() => {
+    if (!map.current || !isMapInitialized || disableAnimation || fitBounds === false || !debouncedMarkers?.length) {
       return;
     }
 
@@ -96,24 +99,11 @@ const useAnimationMap = ({
       bounds.extend([Number(marker.lng), Number(marker.lat)]);
     });
 
-    map.current.fitBounds(bounds, {
-      duration: fitBoundDuration,
+    map.current?.fitBounds(bounds, {
+      duration: getFitBoundDuration(fitBoundDuration, debouncedMarkers),
       padding: fitBoundsPadding,
     });
-  }, [
-    center,
-    debouncedMarkers,
-    disableAnimation,
-    disableFlyTo,
-    fitBoundDuration,
-    fitBounds,
-    fitBoundsAnimationKey,
-    fitBoundsPadding,
-    flyToDuration,
-    isMapInitialized,
-    map,
-    zoom,
-  ]);
+  }, [debouncedMarkers, disableAnimation, fitBoundDuration, fitBounds, fitBoundsAnimationKey, fitBoundsPadding, isMapInitialized, map]);
 };
 
 export default useAnimationMap;

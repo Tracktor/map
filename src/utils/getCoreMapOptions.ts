@@ -2,7 +2,6 @@ import { MapOptions } from "mapbox-gl";
 
 interface MapOptionsProps {
   mapStyle?: string;
-  zoomFlyFrom?: number;
   projection?: MapOptions["projection"];
   baseMapView?: "default" | "satellite" | "streets" | "3d";
   cooperativeGestures?: boolean;
@@ -40,7 +39,6 @@ const getBaseMapStyle = (baseMapView?: "default" | "satellite" | "streets" | "3d
  *
  * @param {Object} params - Configuration parameters
  * @param {string} params.mapStyle - Mapbox style URL or specification
- * @param {number} [params.zoomFlyFrom] - Initial zoom level for fly-to animation
  * @param {MarkerProps[]} [params.markers] - Array of marker definitions
  * @param {LngLatLike|number[]} [params.center] - Optional center coordinates (either as LngLat object or [lng, lat] array)
  * @param {MapOptions["projection"]} [params.projection] - Optional coordinate projection
@@ -59,12 +57,10 @@ const getBaseMapStyle = (baseMapView?: "default" | "satellite" | "streets" | "3d
  * const options = getCoreMapOptions({
  *   mapStyle: 'mapbox://styles/mapbox/streets-v11',
  *   markers: [{ lat: 48.8584, lng: 2.2945 }],
- *   zoomFlyFrom: 12
  * });
  */
 const getCoreMapOptions = ({
   mapStyle,
-  zoomFlyFrom,
   theme,
   baseMapView,
   doubleClickZoom,
@@ -74,7 +70,6 @@ const getCoreMapOptions = ({
   doubleClickZoom,
   failIfMajorPerformanceCaveat: false,
   style: mapStyle || getBaseMapStyle(baseMapView, theme),
-  zoom: zoomFlyFrom,
 });
 
 export default getCoreMapOptions;

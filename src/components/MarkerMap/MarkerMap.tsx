@@ -23,15 +23,12 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * @param {LngLatLike | number[]} [props.center] - Initial center of the map [lng, lat].
  * @param {string} [props.mapStyle] - Mapbox style URL or identifier (e.g. "mapbox://styles/mapbox/streets-v11").
  * @param {number} [props.zoom] - Initial zoom level of the map.
- * @param {number} [props.zoomFlyFrom] - Zoom level to use before initiating a flyTo animation.
  * @param {string} [props.popupMaxWidth] - Maximum width of popups (e.g., "200px").
  * @param {number | string} [props.width="100%"] - Width of the map container.
  * @param {number | string} [props.height=300] - Height of the map container.
  * @param {boolean} [props.loading] - Optional flag indicating if the map is in loading state.
  * @param {string} [props.markerImageURL] - URL of a custom image used for default marker icons.
  * @param {SxProps} [props.containerStyle] - Style object (MUI `sx`) to customize the map container.
- * @param {boolean} [props.disableFlyTo] - If true, disables flyTo animation when focusing on a marker.
- * @param {number} [props.flyToDuration] - Duration of fly animation in milliseconds.
  * @param {number} [props.fitBoundDuration] - Duration of fitBounds animation in milliseconds.
  * @param {boolean} [props.square] - If true, forces the map container to be a square.
  * @param {number | string} [props.openPopup] - ID of the marker whose popup should be open by default.
