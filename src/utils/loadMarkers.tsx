@@ -1,7 +1,7 @@
 import { Palette } from "@tracktor/design-system";
 import type { FeatureCollection } from "geojson";
 import { Map, Marker, GeoJSONSource } from "mapbox-gl";
-import React, { RefObject } from "react";
+import React, { ComponentType, RefObject } from "react";
 import { createRoot } from "react-dom/client";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
 import { MarkerProps } from "@/types/MarkerProps.ts";
@@ -16,10 +16,11 @@ export interface CustomMarkerMapProps {
     id?: string | number;
     size: number;
     zIndex: number;
+    pointerEvents?: string;
     name?: string;
-    IconComponent?: React.ComponentType<any>;
     iconProps?: Record<string, any>;
     onClick?: (markerData?: CustomMarkerMapProps) => void;
+    IconComponent?: ComponentType<any>;
   };
   type: string;
 }
@@ -181,7 +182,7 @@ const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
   });
 
   sortedReactMarkers.forEach((marker) => {
-    const { IconComponent, iconProps, onClick, zIndex } = marker.properties || {};
+    const { IconComponent, iconProps, onClick, zIndex, pointerEvents } = marker.properties || {};
     const { coordinates } = marker.geometry;
 
     if (IconComponent && coordinates.length >= 2) {
@@ -192,6 +193,11 @@ const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
       // Add zIndex if provided
       if (zIndex !== undefined) {
         markerContainer.style.zIndex = zIndex.toString();
+      }
+
+      // Add pointerEvents if provided
+      if (pointerEvents !== undefined) {
+        markerContainer.style.pointerEvents = pointerEvents.toString();
       }
 
       const contentContainer = document.createElement("div");
@@ -241,6 +247,7 @@ const geoJSONMarkers = (markers: MarkerProps[]) => ({
         id: marker.id || `{marker-${index}}`,
         name: marker.name,
         onClick: marker.onClick,
+        pointerEvents: marker.pointerEvents || "auto",
         size: marker.size || 1,
         zIndex: marker.zIndex || 0,
       },

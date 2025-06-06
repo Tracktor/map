@@ -84,6 +84,11 @@ export interface MarkerMapProps {
   fitBoundDuration?: number;
 
   /**
+   * Optional key to trigger fitBounds animation.
+   */
+  fitBoundsAnimationKey?: unknown;
+
+  /**
    * Forces the map container to be square.
    */
   square?: boolean;

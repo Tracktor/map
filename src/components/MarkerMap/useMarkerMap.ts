@@ -35,6 +35,7 @@ const useMarkerMap = ({
   projection,
   theme,
   mapStyle,
+  fitBoundsAnimationKey,
   baseMapView = "default",
   zoom = 6,
   fitBoundsPadding = 50,
@@ -107,12 +108,16 @@ const useMarkerMap = ({
     setIsMapInitialized(true);
   }, [cleanupMap, coreMapOptions, loading]);
 
-  // Initialize/recreate the map when core options change
+  /**
+   * Initialize/recreate the map when core options change
+   */
   useEffect(() => {
     initializeMap();
   }, [initializeMap]);
 
-  // Update center separately without recreating the map
+  /**
+   * Update center separately without recreating the map
+   */
   useEffect(() => {
     if (!map.current || !isMapInitialized) {
       return;
@@ -127,7 +132,9 @@ const useMarkerMap = ({
     map.current.setCenter(mapCenter);
   }, [center, isMapInitialized]);
 
-  // Update zoom separately if needed
+  /**
+   * Update zoom separately if needed
+   */
   useEffect(() => {
     if (!map.current || !isMapInitialized || zoom === undefined) {
       return;
@@ -139,16 +146,31 @@ const useMarkerMap = ({
     }
   }, [zoom, isMapInitialized]);
 
-  // Initialize hooks
+  /**
+   * Initialize markers
+   */
   useMarkers({ isMapInitialized, map, markers: markersMemo, palette });
+
+  /**
+   * Handle popups
+   */
   usePopups({ isMapInitialized, map, markers: markersMemo, openPopup });
+
+  /**
+   * Handle map click events
+   */
   useCorrectedMapClick({ isMapInitialized, map, onMapClick });
+
+  /**
+   * Handle map animations such as flyTo and fitBounds
+   */
   useAnimationMap({
     center,
     disableAnimation,
     disableFlyTo,
     fitBoundDuration,
     fitBounds,
+    fitBoundsAnimationKey,
     fitBoundsPadding,
     flyToDuration,
     isMapInitialized,
@@ -157,7 +179,9 @@ const useMarkerMap = ({
     zoom,
   });
 
-  // Clean up on unmounting
+  /**
+   * Clean up on unmounting
+   */
   useEffect(() => cleanupMap, [cleanupMap]);
 
   return {

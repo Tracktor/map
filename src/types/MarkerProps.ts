@@ -42,6 +42,11 @@ export interface MarkerProps {
   zIndex?: number;
 
   /**
+   * Pointer events control for the marker.
+   */
+  pointerEvents?: string;
+
+  /**
    * Function to call when the marker is clicked.
    */
   onClick?: (markerData?: CustomMarkerMapProps) => void;
@@ -57,13 +62,13 @@ export interface MarkerProps {
   name?: string;
 
   /**
+   * Optional props to pass to the IconComponent.
+   */
+  iconProps?: Record<string, any>;
+
+  /**
    * Optional custom React component to use as the marker icon.
    * Overrides iconImage if provided.
    */
   IconComponent?: ComponentType<any>;
-
-  /**
-   * Optional props to pass to the IconComponent.
-   */
-  iconProps?: Record<string, any>;
 }

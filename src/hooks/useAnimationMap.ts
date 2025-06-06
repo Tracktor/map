@@ -17,6 +17,20 @@ type UseAnimationMapProps = {
   isMapInitialized: boolean;
   markers?: MarkerProps[];
   center?: LngLatLike | number[];
+  fitBoundsAnimationKey?: unknown;
+};
+
+/**
+ * Serializes a query key to a string for comparison purposes.
+ * @param key
+ */
+const serializeQueryKey = (key: unknown): string => {
+  if (typeof key === "string" || typeof key === "number") {
+    return String(key);
+  }
+
+  // For arrays or objects, we can use JSON.stringify
+  return JSON.stringify(key);
 };
 
 const useAnimationMap = ({
@@ -31,11 +45,13 @@ const useAnimationMap = ({
   fitBoundsPadding,
   isMapInitialized,
   center,
+  fitBoundsAnimationKey,
 }: UseAnimationMapProps) => {
   const hasFlown = useRef(false);
-  const debouncedMarkers = useDebounce(markers, 150);
+  const debouncedMarkers = useDebounce(markers);
+  const previousSerializedKey = useRef<string | number | undefined>(undefined);
 
-  // Animation logic with debounced markers
+  // Animation logic
   useEffect(() => {
     if (!map.current || !isMapInitialized || disableAnimation) {
       return;
@@ -61,9 +77,21 @@ const useAnimationMap = ({
       return;
     }
 
+    // If fitBoundsAnimationKey is provided, check if it has changed
+    if (fitBoundsAnimationKey !== undefined) {
+      const currentSerializedKey = serializeQueryKey(fitBoundsAnimationKey);
+
+      // If the serialized key has not changed, skip the fitBounds logic
+      if (previousSerializedKey.current === currentSerializedKey) {
+        return;
+      }
+
+      // Update the previous serialized key
+      previousSerializedKey.current = currentSerializedKey;
+    }
+
     const bounds = new LngLatBounds();
 
-    // Markers are already valid, forEach is optimal for this case
     debouncedMarkers.forEach((marker) => {
       bounds.extend([Number(marker.lng), Number(marker.lat)]);
     });
@@ -73,17 +101,18 @@ const useAnimationMap = ({
       padding: fitBoundsPadding,
     });
   }, [
+    center,
     debouncedMarkers,
+    disableAnimation,
+    disableFlyTo,
+    fitBoundDuration,
     fitBounds,
+    fitBoundsAnimationKey,
     fitBoundsPadding,
     flyToDuration,
-    zoom,
-    fitBoundDuration,
-    disableFlyTo,
-    map,
     isMapInitialized,
-    disableAnimation,
-    center,
+    map,
+    zoom,
   ]);
 };
 
