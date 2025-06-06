@@ -1,4 +1,3 @@
-import { useDebounce } from "@tracktor/react-utils";
 import { LngLatBounds, LngLatLike, Map } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/main.ts";
@@ -54,7 +53,6 @@ const useAnimationMap = ({
   center,
   fitBoundsAnimationKey,
 }: UseAnimationMapProps) => {
-  const debouncedMarkers = useDebounce(markers);
   const previousSerializedKey = useRef<string | number | undefined>(undefined);
 
   /**
@@ -62,7 +60,7 @@ const useAnimationMap = ({
    */
   useEffect(() => {
     // Set center if no markers are present
-    if (!fitBounds || !debouncedMarkers?.length) {
+    if (!fitBounds || !markers?.length) {
       const mapCenter = coordinateConverter(center) || {
         lat: DEFAULT_CENTER_LAT,
         lng: DEFAULT_CENTER_LNG,
@@ -70,13 +68,13 @@ const useAnimationMap = ({
 
       map.current?.setCenter(mapCenter);
     }
-  }, [center, debouncedMarkers?.length, fitBounds, map]);
+  }, [center, markers?.length, fitBounds, map]);
 
   /**
    * fitBounds the map to the markers' bounds with animation.
    */
   useEffect(() => {
-    if (!map.current || !isMapInitialized || disableAnimation || fitBounds === false || !debouncedMarkers?.length) {
+    if (!map.current || !isMapInitialized || disableAnimation || fitBounds === false || !markers?.length) {
       return;
     }
 
@@ -95,15 +93,15 @@ const useAnimationMap = ({
 
     const bounds = new LngLatBounds();
 
-    debouncedMarkers.forEach((marker) => {
+    markers.forEach((marker) => {
       bounds.extend([Number(marker.lng), Number(marker.lat)]);
     });
 
     map.current?.fitBounds(bounds, {
-      duration: getFitBoundDuration(fitBoundDuration, debouncedMarkers),
+      duration: getFitBoundDuration(fitBoundDuration, markers),
       padding: fitBoundsPadding,
     });
-  }, [debouncedMarkers, disableAnimation, fitBoundDuration, fitBounds, fitBoundsAnimationKey, fitBoundsPadding, isMapInitialized, map]);
+  }, [markers, disableAnimation, fitBoundDuration, fitBounds, fitBoundsAnimationKey, fitBoundsPadding, isMapInitialized, map]);
 };
 
 export default useAnimationMap;

@@ -1,4 +1,5 @@
 import { useTheme } from "@tracktor/design-system";
+import { useDebounce } from "@tracktor/react-utils";
 import mapboxgl, { Map } from "mapbox-gl";
 import { ComponentRef, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import useAnimationMap from "@/hooks/useAnimationMap.ts";
@@ -44,18 +45,19 @@ const useMarkerMap = ({
 }: MarkerMapProps) => {
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const { palette } = useTheme();
+  const debouncedMarkers = useDebounce(markers);
   const containerRef = useRef<ComponentRef<"div"> | string>("");
   const map = useRef<Map | null>(null);
 
-  const markersMemo = useMemo(() => {
-    if (!markers) {
+  const memoMarkers = useMemo(() => {
+    if (!debouncedMarkers) {
       return [];
     }
 
-    return markers.filter(
+    return debouncedMarkers.filter(
       (marker) => marker.lat !== undefined && marker.lng !== undefined && isValidLatLng(Number(marker.lat), Number(marker.lng)),
     );
-  }, [markers]);
+  }, [debouncedMarkers]);
 
   const coreMapOptions = useMemo(
     () =>
@@ -126,12 +128,12 @@ const useMarkerMap = ({
   /**
    * Initialize markers
    */
-  useMarkers({ isMapInitialized, map, markers: markersMemo, palette });
+  useMarkers({ isMapInitialized, map, markers: memoMarkers, palette });
 
   /**
    * Handle popups
    */
-  usePopups({ isMapInitialized, map, markers: markersMemo, openPopup });
+  usePopups({ isMapInitialized, map, markers: memoMarkers, openPopup });
 
   /**
    * Handle map click events
@@ -150,7 +152,7 @@ const useMarkerMap = ({
     fitBoundsPadding,
     isMapInitialized,
     map,
-    markers: markersMemo,
+    markers: memoMarkers,
   });
 
   /**
@@ -163,7 +165,7 @@ const useMarkerMap = ({
     isMapInitialized,
     loading,
     map,
-    markers: markersMemo,
+    markers: memoMarkers,
   };
 };
 
