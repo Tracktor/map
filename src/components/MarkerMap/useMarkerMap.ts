@@ -128,7 +128,7 @@ const useMarkerMap = ({
   /**
    * Initialize markers
    */
-  useMarkers({ isMapInitialized, map, markers: memoMarkers, palette });
+  useMarkers({ center, fitBounds, isMapInitialized, map, markers: memoMarkers, palette });
 
   /**
    * Handle popups
@@ -144,7 +144,6 @@ const useMarkerMap = ({
    * Handle map animations such as fitBounds
    */
   useAnimationMap({
-    center,
     disableAnimation,
     fitBoundDuration,
     fitBounds,

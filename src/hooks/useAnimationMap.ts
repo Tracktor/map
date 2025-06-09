@@ -1,8 +1,6 @@
-import { LngLatBounds, LngLatLike, Map } from "mapbox-gl";
+import { LngLatBounds, Map } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
-import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/main.ts";
 import { MarkerProps } from "@/types/MarkerProps.ts";
-import coordinateConverter from "@/utils/coordinateConverter.ts";
 
 type UseAnimationMapProps = {
   map: RefObject<Map | null>;
@@ -12,7 +10,6 @@ type UseAnimationMapProps = {
   fitBoundsPadding?: number;
   isMapInitialized: boolean;
   markers?: MarkerProps[];
-  center?: LngLatLike | number[];
   fitBoundsAnimationKey?: unknown;
 };
 
@@ -50,31 +47,15 @@ const useAnimationMap = ({
   fitBoundDuration,
   fitBoundsPadding,
   isMapInitialized,
-  center,
   fitBoundsAnimationKey,
 }: UseAnimationMapProps) => {
   const previousSerializedKey = useRef<string | number | undefined>(undefined);
 
   /**
-   * Center map if no markers are present or if fitBounds is false.
-   */
-  useEffect(() => {
-    // Set center if no markers are present
-    if (!fitBounds || !markers?.length) {
-      const mapCenter = coordinateConverter(center) || {
-        lat: DEFAULT_CENTER_LAT,
-        lng: DEFAULT_CENTER_LNG,
-      };
-
-      map.current?.setCenter(mapCenter);
-    }
-  }, [center, markers?.length, fitBounds, map]);
-
-  /**
    * fitBounds the map to the markers' bounds with animation.
    */
   useEffect(() => {
-    if (!map.current || !isMapInitialized || disableAnimation || fitBounds === false || !markers?.length) {
+    if (!map.current || !isMapInitialized || disableAnimation || fitBounds === false || !markers?.length || markers?.length <= 1) {
       return;
     }
 
