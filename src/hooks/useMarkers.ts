@@ -40,8 +40,6 @@ const useMarkers = ({ map, markers, palette, isMapInitialized, fitBounds, center
     };
 
     const handleLoadMarkers = () => {
-      console.log("A");
-
       centerMap();
       loadMarkers({ map, markers, palette });
     };
