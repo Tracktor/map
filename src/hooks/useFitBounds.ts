@@ -2,7 +2,7 @@ import { LngLatBounds, Map } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
-type UseAnimationMapProps = {
+type useFitBoundsProps = {
   map: RefObject<Map | null>;
   disableAnimation: boolean | undefined;
   fitBounds?: boolean;
@@ -39,7 +39,7 @@ const getFitBoundDuration = (fitBoundDuration?: number, markers?: MarkerProps[])
   return fitBoundDuration;
 };
 
-const useAnimationMap = ({
+const useFitBounds = ({
   map,
   disableAnimation,
   fitBounds,
@@ -48,13 +48,14 @@ const useAnimationMap = ({
   fitBoundsPadding,
   isMapInitialized,
   fitBoundsAnimationKey,
-}: UseAnimationMapProps) => {
+}: useFitBoundsProps) => {
   const previousSerializedKey = useRef<string | number | undefined>(undefined);
 
   /**
    * fitBounds the map to the markers' bounds with animation.
    */
   useEffect(() => {
+    // If the map is not initialized, or if animation is disabled, or if fitBounds is false, or if there are no markers or only one marker, skip the fitBounds logic
     if (!map.current || !isMapInitialized || disableAnimation || fitBounds === false || !markers?.length || markers?.length <= 1) {
       return;
     }
@@ -85,4 +86,4 @@ const useAnimationMap = ({
   }, [markers, disableAnimation, fitBoundDuration, fitBounds, fitBoundsAnimationKey, fitBoundsPadding, isMapInitialized, map]);
 };
 
-export default useAnimationMap;
+export default useFitBounds;

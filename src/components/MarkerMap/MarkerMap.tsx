@@ -56,8 +56,8 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * />
  * ```
  */
-const MarkerMap = ({ containerStyle, square, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
-  const { loading, containerRef } = useMarkerMap(props);
+const MarkerMap = ({ containerStyle, square, loading, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
+  const { containerRef } = useMarkerMap(props);
 
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
@@ -78,13 +78,13 @@ const MarkerMap = ({ containerStyle, square, height = 300, width = "100%", ...pr
           sx={{
             alignItems: "center",
             borderRadius: square ? 0 : 1,
-            display: loading ? "none" : "block",
             height,
             justifyContent: "center",
             left: 0,
             overflow: "hidden",
             position: "absolute",
             top: 0,
+            visibility: loading ? "hidden !important" : "visible",
             width,
             zIndex: 1,
           }}

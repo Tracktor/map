@@ -2,7 +2,7 @@ import { useTheme } from "@tracktor/design-system";
 import { useDebounce } from "@tracktor/react-utils";
 import mapboxgl, { Map } from "mapbox-gl";
 import { ComponentRef, useEffect, useMemo, useRef, useState, useCallback } from "react";
-import useAnimationMap from "@/hooks/useAnimationMap.ts";
+import useFitBounds from "@/hooks/useFitBounds.ts";
 import useMarkers from "@/hooks/useMarkers.ts";
 import useCorrectedMapClick from "@/hooks/useOnMapClick";
 import usePopups from "@/hooks/usePopups.ts";
@@ -26,7 +26,6 @@ export const DEFAULT_CENTER_LAT = 46.8677;
  */
 const useMarkerMap = ({
   markers,
-  loading,
   center,
   disableAnimation,
   openPopup,
@@ -87,7 +86,7 @@ const useMarkerMap = ({
   }, []);
 
   const initializeMap = useCallback(() => {
-    if (!mapboxgl.supported() || loading) {
+    if (!mapboxgl.supported()) {
       return;
     }
 
@@ -102,7 +101,7 @@ const useMarkerMap = ({
 
     map.current.resize();
     setIsMapInitialized(true);
-  }, [cleanupMap, coreMapOptions, loading]);
+  }, [cleanupMap, coreMapOptions]);
 
   /**
    * Initialize/recreate the map when core options change
@@ -141,9 +140,9 @@ const useMarkerMap = ({
   useCorrectedMapClick({ isMapInitialized, map, onMapClick });
 
   /**
-   * Handle map animations such as fitBounds
+   * Handle fit bounds logic
    */
-  useAnimationMap({
+  useFitBounds({
     disableAnimation,
     fitBoundDuration,
     fitBounds,
@@ -162,7 +161,6 @@ const useMarkerMap = ({
   return {
     containerRef,
     isMapInitialized,
-    loading,
     map,
     markers: memoMarkers,
   };
