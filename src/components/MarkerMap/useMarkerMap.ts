@@ -73,15 +73,15 @@ const useMarkerMap = ({
 
   const cleanupMap = useCallback(() => {
     if (map.current) {
-      const container = containerRef.current;
-
-      if (container && typeof container !== "string") {
-        container.innerHTML = "";
-      }
-
       map.current.remove();
       map.current = null;
       setIsMapInitialized(false);
+    }
+
+    const container = containerRef.current;
+
+    if (container && typeof container !== "string" && container instanceof HTMLElement) {
+      container.innerHTML = "";
     }
   }, []);
 
@@ -93,10 +93,15 @@ const useMarkerMap = ({
     // Clean up an existing map if it exists
     cleanupMap();
 
-    // Create a new map instance
+    const container = containerRef.current;
+
+    if (!container || typeof container === "string") {
+      return;
+    }
+
     map.current = new Map({
       ...coreMapOptions,
-      container: containerRef.current,
+      container,
     });
 
     map.current.resize();
