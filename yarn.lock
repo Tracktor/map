@@ -1736,10 +1736,10 @@
     argparse "~1.0.9"
     string-argv "~0.3.1"
 
-"@tracktor/design-system@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@tracktor/design-system/-/design-system-4.0.0.tgz#2a7157b4e96966d20d7dd5e95ef7dc502506a8d6"
-  integrity sha512-2djnebDezXzqw/AuWv+YRw8DQvKLAT7/Cd+OXA5BEwDKRxWa0qVYn4hVBXyyge8QaZBImVIMUsH6u7AJ7l223w==
+"@tracktor/design-system@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@tracktor/design-system/-/design-system-4.3.1.tgz#26d3e7bd7d1664ae80c263323bcf1073d2cf87a4"
+  integrity sha512-dLtwLfjf92Noa6Nf+cyCd4rDfAQGTUWk7ahrA7+145qPncKnk78izMkI42TUlpQ0U7Tbdzx4ViaAWyJMPVNNjQ==
   dependencies:
     "@emotion/react" "^11.0.0"
     "@emotion/styled" "^11.0.0"

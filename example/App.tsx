@@ -1,37 +1,34 @@
 import HomeIcon from "@mui/icons-material/Home";
-import { Avatar, Card, CardContent, Paper, Stack, ThemeProvider, Typography } from "@tracktor/design-system";
+import { Avatar, Card, CardContent, Paper, Stack, ThemeProvider, Typography, Chip } from "@tracktor/design-system";
 import MarkerMap from "@/components/MarkerMap/MarkerMap";
 import MapProvider from "@/context/MapProvider.tsx";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 const TooltipExample = ({ name }: { name: string }) => (
-  <ThemeProvider theme="light">
-    <Card>
-      <CardContent>
-        <Typography variant="h6" color="black">
-          Hello world
-        </Typography>
-        <Typography color="grey.500" variant="body2">
-          I m a tooltip {name}
-        </Typography>
-      </CardContent>
-    </Card>
-  </ThemeProvider>
+  <Card>
+    <CardContent>
+      <Typography variant="h6" color="black">
+        Hello world
+      </Typography>
+      <Typography color="grey.500" variant="body2">
+        I m a tooltip {name}
+      </Typography>
+    </CardContent>
+  </Card>
 );
 
 const ReactMarkerExample = ({ name }: { name: string }) => (
-  <ThemeProvider theme="light">
-    <Paper elevation={2} sx={{ borderRadius: 5, paddingBottom: 0.5, paddingLeft: 1, paddingRight: 1, paddingTop: 0.5 }}>
-      <Stack direction="row" spacing={1} alignItems="center">
-        <Avatar size="small">
-          <HomeIcon fontSize="small" />
-        </Avatar>
-        <Typography variant="h6" pr={0.5}>
-          {name}
-        </Typography>
-      </Stack>
-    </Paper>
-  </ThemeProvider>
+  <Paper elevation={2} sx={{ borderRadius: 5, p: 1 }}>
+    <Stack direction="row" spacing={1} alignItems="center">
+      <Avatar size="small">
+        <HomeIcon fontSize="small" />
+      </Avatar>
+      <Typography variant="h6" pr={0.5}>
+        {name}
+      </Typography>
+      <Chip label="React marker" size="xSmall" variant="outlined-rounded" color="info" />
+    </Stack>
+  </Paper>
 );
 
 const markers: MarkerProps[] = [

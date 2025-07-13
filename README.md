@@ -20,7 +20,7 @@ This library depends on:
 
 - `@tracktor/design-system` for theming and styling
 - `mapbox-gl` for map rendering
-- React 18+
+- React 19+
 
 ## 🔧 Usage
 

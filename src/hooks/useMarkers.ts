@@ -1,4 +1,4 @@
-import { Palette } from "@tracktor/design-system";
+import { Palette, useTheme } from "@tracktor/design-system";
 import { LngLatLike, Map } from "mapbox-gl";
 import { RefObject, useEffect } from "react";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/constants/coordinates.ts";
@@ -16,6 +16,8 @@ type UseInitializeMapProps = {
 };
 
 const useMarkers = ({ map, markers, palette, isMapInitialized, fitBounds, center }: UseInitializeMapProps) => {
+  const theme = useTheme();
+
   // Add or refresh markers
   useEffect(() => {
     if (!map.current || !markers || !isMapInitialized) {
@@ -41,7 +43,7 @@ const useMarkers = ({ map, markers, palette, isMapInitialized, fitBounds, center
 
     const handleLoadMarkers = () => {
       centerMap();
-      loadMarkers({ map, markers, palette });
+      loadMarkers({ map, markers, palette, theme });
     };
 
     // If the map is already loaded, immediately add markers
@@ -51,7 +53,7 @@ const useMarkers = ({ map, markers, palette, isMapInitialized, fitBounds, center
     } else {
       map.current.once("load", handleLoadMarkers);
     }
-  }, [center, fitBounds, isMapInitialized, map, markers, palette]);
+  }, [center, fitBounds, isMapInitialized, map, markers, palette, theme]);
 };
 
 export default useMarkers;

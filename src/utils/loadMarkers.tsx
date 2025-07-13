@@ -1,7 +1,7 @@
-import { Palette } from "@tracktor/design-system";
+import { Palette, Theme, ThemeProvider } from "@tracktor/design-system";
 import type { FeatureCollection } from "geojson";
 import { Map, Marker, GeoJSONSource } from "mapbox-gl";
-import React, { ComponentType, RefObject } from "react";
+import { ComponentType, RefObject } from "react";
 import { createRoot } from "react-dom/client";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
 import { MarkerProps } from "@/types/MarkerProps.ts";
@@ -23,6 +23,7 @@ export interface CustomMarkerMapProps {
     IconComponent?: ComponentType<any>;
   };
   type: string;
+  theme?: Theme;
 }
 
 interface GenerateMarkersProps {
@@ -34,6 +35,7 @@ interface LoadMarkersProps {
   map: RefObject<Map | null>;
   palette: Palette;
   markers: MarkerProps[];
+  theme: Theme;
 }
 
 /**
@@ -166,11 +168,13 @@ const loadStandardMarkers = (map: Map, sourceId: string, standardMarkers: Custom
  * - Clean DOM management (removes previous markers)
  * - Position synchronization with map
  * - zIndex support for marker layering
+ * - Theme support for consistent styling
  *
  * @param {Map} map - Mapbox GL map instance
  * @param {CustomMarkerMapProps[]} reactMarkers - Array of React-based marker definitions
+ * @param {Theme} theme - Design system theme for styling
  */
-const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
+const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[], theme: Theme) => {
   const existingMarkers = document.querySelectorAll(".react-custom-marker");
   existingMarkers.forEach((el) => el.remove());
 
@@ -204,7 +208,12 @@ const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
       const root = createRoot(contentContainer);
 
       if (IconComponent) {
-        root.render(React.createElement(IconComponent, iconProps || {}));
+        root.render(
+          <ThemeProvider theme={theme}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <IconComponent {...iconProps} />
+          </ThemeProvider>,
+        );
       }
 
       markerContainer.appendChild(contentContainer);
@@ -271,7 +280,7 @@ const geoJSONMarkers = (markers: MarkerProps[]) => ({
  * @param {Palette} params.palette - Design system color palette
  * @param {MarkerProps[]} params.markers - Array of marker definitions
  */
-export const loadMarkers = ({ map, palette, markers }: LoadMarkersProps) => {
+export const loadMarkers = ({ map, palette, markers, theme }: LoadMarkersProps) => {
   if (!map.current) {
     return;
   }
@@ -286,6 +295,6 @@ export const loadMarkers = ({ map, palette, markers }: LoadMarkersProps) => {
   const reactMarkers = layer.features.filter((marker) => marker.properties?.IconComponent);
 
   if (reactMarkers.length) {
-    loadReactMarkers(map.current, reactMarkers);
+    loadReactMarkers(map.current, reactMarkers, theme);
   }
 };
