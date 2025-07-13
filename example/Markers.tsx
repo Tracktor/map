@@ -29,12 +29,14 @@ export const ReactMarkerExample = ({ name }: { name: string }) => (
   </Paper>
 );
 
-export const lotOfMarkers: MarkerProps[] = Array.from({ length: 250 }, (_, i) => {
+const randomOffset = () => (Math.random() - 0.5) * 0.01;
+
+export const lotOfMarkers: MarkerProps[] = Array.from({ length: 150 }, (_, i) => {
   const id = `${i + 1}`;
   const baseLat = 48.844039;
   const baseLng = 2.489326;
-  const lat = baseLat + i * 0.001;
-  const lng = baseLng + i * 0.001;
+  const lat = baseLat + randomOffset();
+  const lng = baseLng + randomOffset();
   const isWorksite = i % 2 === 0;
 
   return {
