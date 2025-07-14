@@ -1,8 +1,7 @@
-import { Palette, Theme, ThemeProvider } from "@tracktor/design-system";
+import { Palette } from "@tracktor/design-system";
 import type { FeatureCollection } from "geojson";
 import { Map, Marker, GeoJSONSource } from "mapbox-gl";
-import { ComponentType, ReactPortal, RefObject } from "react";
-import { createPortal } from "react-dom";
+import { ComponentType, RefObject } from "react";
 import { createRoot } from "react-dom/client";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
 import { MarkerProps } from "@/types/MarkerProps.ts";
@@ -24,7 +23,6 @@ export interface CustomMarkerMapProps {
     IconComponent?: ComponentType<any>;
   };
   type: string;
-  theme?: Theme;
 }
 
 interface GenerateMarkersProps {
@@ -36,7 +34,6 @@ interface LoadMarkersProps {
   map: RefObject<Map | null>;
   palette: Palette;
   markers: MarkerProps[];
-  theme: Theme;
 }
 
 /**
@@ -173,61 +170,56 @@ const loadStandardMarkers = (map: Map, sourceId: string, standardMarkers: Custom
  *
  * @param {Map} map - Mapbox GL map instance
  * @param {CustomMarkerMapProps[]} reactMarkers - Array of React-based marker definitions
- * @param {Theme} theme - Design system theme for styling
  */
-const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[], theme: Theme) => {
+const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
   const existingMarkers = document.querySelectorAll(".react-custom-marker");
   existingMarkers.forEach((el) => el.remove());
 
+  // Trier les markers par zIndex pour assurer l'ordre correct
   const sortedReactMarkers = [...reactMarkers].sort((a, b) => {
-    const zA = a.properties?.zIndex || 0;
-    const zB = b.properties?.zIndex || 0;
-    return zA - zB;
+    const zIndexA = a.properties?.zIndex || 0;
+    const zIndexB = b.properties?.zIndex || 0;
+    return zIndexA - zIndexB;
   });
 
-  const markerPortals: ReactPortal[] = [];
-
-  sortedReactMarkers.forEach((marker, index) => {
+  sortedReactMarkers.forEach((marker) => {
     const { IconComponent, iconProps, onClick, zIndex, pointerEvents } = marker.properties || {};
     const { coordinates } = marker.geometry;
 
-    if (!IconComponent || coordinates.length < 2) return;
+    if (IconComponent && coordinates.length >= 2) {
+      const markerContainer = document.createElement("div");
+      markerContainer.className = "react-custom-marker";
+      markerContainer.style.position = "absolute";
 
-    const markerContainer = document.createElement("div");
-    markerContainer.className = "react-custom-marker";
-    markerContainer.style.position = "absolute";
-    if (zIndex !== undefined) markerContainer.style.zIndex = zIndex.toString();
-    if (pointerEvents !== undefined) markerContainer.style.pointerEvents = pointerEvents.toString();
+      // Add zIndex if provided
+      if (zIndex !== undefined) {
+        markerContainer.style.zIndex = zIndex.toString();
+      }
 
-    markerContainer.addEventListener("click", () => {
-      onClick?.(marker);
-    });
+      // Add pointerEvents if provided
+      if (pointerEvents !== undefined) {
+        markerContainer.style.pointerEvents = pointerEvents.toString();
+      }
 
-    new Marker(markerContainer).setLngLat([coordinates[0], coordinates[1]]).addTo(map);
+      const contentContainer = document.createElement("div");
+      const root = createRoot(contentContainer);
 
-    const portal = createPortal(
-      <ThemeProvider theme={theme}>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <IconComponent {...iconProps} />
-      </ThemeProvider>,
-      markerContainer,
-      `marker-${index}`,
-    );
-    markerPortals.push(portal);
+      if (IconComponent) {
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        root.render(<IconComponent {...iconProps} />);
+      }
+
+      markerContainer.appendChild(contentContainer);
+
+      const handleClick = () => {
+        onClick?.(marker);
+      };
+
+      markerContainer.addEventListener("click", handleClick);
+
+      new Marker(markerContainer).setLngLat([coordinates[0], coordinates[1]]).addTo(map);
+    }
   });
-
-  const reactRootContainerId = "react-marker-root";
-  let reactRootContainer = document.getElementById(reactRootContainerId);
-
-  if (!reactRootContainer) {
-    reactRootContainer = document.createElement("div");
-    reactRootContainer.id = reactRootContainerId;
-    document.body.appendChild(reactRootContainer);
-  }
-
-  const root = createRoot(reactRootContainer);
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  root.render(<>{markerPortals}</>);
 };
 
 /**
@@ -281,7 +273,7 @@ const geoJSONMarkers = (markers: MarkerProps[]) => ({
  * @param {Palette} params.palette - Design system color palette
  * @param {MarkerProps[]} params.markers - Array of marker definitions
  */
-export const loadMarkers = ({ map, palette, markers, theme }: LoadMarkersProps) => {
+export const loadMarkers = ({ map, palette, markers }: LoadMarkersProps) => {
   if (!map.current) {
     return;
   }
@@ -296,6 +288,6 @@ export const loadMarkers = ({ map, palette, markers, theme }: LoadMarkersProps) 
   const reactMarkers = layer.features.filter((marker) => marker.properties?.IconComponent);
 
   if (reactMarkers.length) {
-    loadReactMarkers(map.current, reactMarkers, theme);
+    loadReactMarkers(map.current, reactMarkers);
   }
 };
