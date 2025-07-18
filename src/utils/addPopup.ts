@@ -27,6 +27,7 @@ const createCloseButton = (popup: Popup): HTMLButtonElement => {
   closeButton.style.padding = "0";
   closeButton.style.margin = "10px";
   closeButton.style.cursor = "pointer";
+  closeButton.style.color = "currentColor";
   closeButton.type = "button";
   closeButton.setAttribute("aria-label", "Close popup");
   closeButton.removeAttribute("aria-hidden");

@@ -47,6 +47,7 @@ const useMarkerMap = ({
   const debouncedMarkers = useDebounce(markers);
   const containerRef = useRef<ComponentRef<"div"> | string>("");
   const map = useRef<Map | null>(null);
+  const currentTheme = theme || palette.mode;
 
   const memoMarkers = useMemo(() => {
     if (!debouncedMarkers) {
@@ -66,9 +67,9 @@ const useMarkerMap = ({
         doubleClickZoom,
         mapStyle,
         projection,
-        theme: theme || palette.mode,
+        theme: currentTheme,
       }),
-    [baseMapView, cooperativeGestures, doubleClickZoom, mapStyle, palette.mode, projection, theme],
+    [baseMapView, cooperativeGestures, currentTheme, doubleClickZoom, mapStyle, projection],
   );
 
   const cleanupMap = useCallback(() => {
@@ -165,6 +166,7 @@ const useMarkerMap = ({
 
   return {
     containerRef,
+    currentTheme,
     isMapInitialized,
     map,
     markers: memoMarkers,

@@ -57,7 +57,7 @@ import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
  * ```
  */
 const MarkerMap = ({ containerStyle, square, loading, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
-  const { containerRef } = useMarkerMap(props);
+  const { containerRef, currentTheme } = useMarkerMap(props);
 
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
@@ -69,6 +69,9 @@ const MarkerMap = ({ containerStyle, square, loading, height = 300, width = "100
             boxShadow: "none!important",
             padding: "0px 0px!important",
             width: "fit-content!important",
+          },
+          ".mapboxgl-popup-tip": {
+            borderTopColor: currentTheme === "dark" ? "#1e1e1e !important" : '#ffffff !important"',
           },
         }}
       />

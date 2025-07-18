@@ -1,6 +1,6 @@
 import { Map } from "mapbox-gl";
 import { RefObject } from "react";
-import { isClickedFeature, isFeatureGeometry } from "@/types/typeguard";
+import { isClickedFeature, isFeatureGeometry } from "@/utils/typeguard";
 
 interface GetFeatureProps {
   map: RefObject<Map | null>;

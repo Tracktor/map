@@ -1,18 +1,16 @@
 import HomeIcon from "@mui/icons-material/Home";
-import { Avatar, Card, CardContent, Chip, Paper, Stack, Typography } from "@tracktor/design-system";
+import { Avatar, Card, CardContent, Chip, Paper, Stack, ThemeProvider, Typography } from "@tracktor/design-system";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 export const TooltipExample = ({ name }: { name: string }) => (
-  <Card>
-    <CardContent>
-      <Typography variant="h6" color="black">
-        Hello world
-      </Typography>
-      <Typography color="grey.500" variant="body2">
-        I m a tooltip {name}
-      </Typography>
-    </CardContent>
-  </Card>
+  <ThemeProvider theme="dark">
+    <Card>
+      <CardContent>
+        <Typography variant="h6">Hello world</Typography>
+        <Typography variant="body2">I m a tooltip {name}</Typography>
+      </CardContent>
+    </Card>
+  </ThemeProvider>
 );
 
 export const ReactMarkerExample = ({ name }: { name: string }) => (

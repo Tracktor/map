@@ -55,27 +55,27 @@ const markers = [
 
 ### MarkerMap Props
 
-| Prop               | Type                             | Description                                                             |
-|--------------------|----------------------------------|-------------------------------------------------------------------------|
-| `markers`          | `MarkerProps[]`                  | List of markers to display                                              |
-| `center`           | `LngLatLike` or `[number, number]` | Initial map center coordinates                                         |
-| `zoom`             | `number`                         | Initial zoom level                                                      |
-| `fitBounds`        | `boolean`                        | Automatically fit the map to the bounds of all markers                 |
-| `fitBoundsPadding` | `number`                         | Padding around markers when fitting bounds                             |
-| `zoomFlyFrom`      | `number`                         | Zoom level to fly in from                                              |
-| `popupMaxWidth`    | `string`                         | Max width for popups                                                   |
-| `width`            | `number` or `string`             | Map width                                                               |
-| `height`           | `number` or `string`             | Map height                                                              |
-| `loading`          | `boolean`                        | Whether to show a loading state                                        |
-| `markerImageURL`   | `string`                         | Default marker image URL                                               |
-| `containerStyle`   | `SxProps`                        | Custom styles for the map container                                    |
-| `disableFlyTo`     | `boolean`                        | Disable flyTo animation on marker click                                |
-| `flyToDuration`    | `number`                         | Duration of the flyTo animation                                        |
-| `fitBoundDuration` | `number`                         | Duration of the fitBounds animation                                    |
-| `square`           | `boolean`                        | Forces the map to be square-shaped                                     |
-| `openPopup`        | `number` or `string`             | ID of the marker with an open popup                                    |
-| `openPopupOnHover` | `boolean`                        | Automatically open popups on marker hover                              |
-| `onMapClick`       | `(lng: number, lat: number) => void` | Callback triggered when clicking on the map                         |
+| Prop               | Type                                 | Description                                            |
+|--------------------|--------------------------------------|--------------------------------------------------------|
+| `markers`          | `MarkerProps[]`                      | List of markers to display                             |
+| `center`           | `LngLatLike` or `[number, number]`   | Initial map center coordinates                         |
+| `zoom`             | `number`                             | Initial zoom level                                     |
+| `fitBounds`        | `boolean`                            | Automatically fit the map to the bounds of all markers |
+| `fitBoundsPadding` | `number`                             | Padding around markers when fitting bounds             |
+| `zoomFlyFrom`      | `number`                             | Zoom level to fly in from                              |
+| `popupMaxWidth`    | `string`                             | Max width for popups                                   |
+| `width`            | `number` or `string`                 | Map width                                              |
+| `height`           | `number` or `string`                 | Map height                                             |
+| `loading`          | `boolean`                            | Whether to show a loading state                        |
+| `markerImageURL`   | `string`                             | Default marker image URL                               |
+| `containerStyle`   | `SxProps`                            | Custom styles for the map container                    |
+| `disableFlyTo`     | `boolean`                            | Disable flyTo animation on marker click                |
+| `flyToDuration`    | `number`                             | Duration of the flyTo animation                        |
+| `fitBoundDuration` | `number`                             | Duration of the fitBounds animation                    |
+| `square`           | `boolean`                            | Forces the map to be square-shaped                     |
+| `openPopup`        | `number` or `string`                 | ID of the marker with an open popup                    |
+| `openPopupOnHover` | `boolean`                            | Automatically open popups on marker hover              |
+| `onMapClick`       | `(lng: number, lat: number) => void` | Callback triggered when clicking on the map            |
 
 ### MarkerProps
 
@@ -93,9 +93,6 @@ const markers = [
 | `name`      | `string`             | Name of the marker                                            |
 | `Icon`      | `ReactNode`          | Custom React component to render instead of default image     |
 
-## 🖼 Visual Example
-
-<img src="./src/assets/example.png" alt="MarkerMap Example" width="400" />
 
 ## 🧑‍💻 Contributing
 
