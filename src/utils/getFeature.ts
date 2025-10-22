@@ -1,10 +1,10 @@
-import { Map } from "mapbox-gl";
+import { Map as MapboxMap, PointLike } from "mapbox-gl";
 import { RefObject } from "react";
 import { isClickedFeature, isFeatureGeometry } from "@/utils/typeguard";
 
 interface GetFeatureProps {
-  map: RefObject<Map | null>;
-  point: any;
+  map: RefObject<MapboxMap | null>;
+  point: PointLike;
 }
 
 /**
@@ -33,7 +33,7 @@ const getFeature = ({ map, point }: GetFeatureProps) => {
 
   if (features && features.length > 0) {
     const clickedFeature = features[0];
-    if (!isClickedFeature(clickedFeature) || !isFeatureGeometry(clickedFeature.geometry)) {
+    if (!(isClickedFeature(clickedFeature) && isFeatureGeometry(clickedFeature.geometry))) {
       return null;
     }
     const { geometry } = clickedFeature;

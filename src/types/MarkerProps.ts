@@ -1,7 +1,7 @@
 import { ComponentType, ReactNode } from "react";
 import { CustomMarkerMapProps } from "@/utils/loadMarkers.tsx";
 
-export interface MarkerProps {
+export interface MarkerProps<T = Record<string, unknown>> {
   /**
    * Optional unique identifier for the marker.
    */
@@ -64,11 +64,13 @@ export interface MarkerProps {
   /**
    * Optional props to pass to the IconComponent.
    */
-  iconProps?: Record<string, any>;
+  iconProps?: T;
 
   /**
    * Optional custom React component to use as the marker icon.
    * Overrides iconImage if provided.
    */
+
+  // biome-ignore lint/suspicious/noExplicitAny: <Icons can receive any props depending on context>
   IconComponent?: ComponentType<any>;
 }

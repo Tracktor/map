@@ -1,7 +1,7 @@
 import { useTheme } from "@tracktor/design-system";
 import { useDebounce } from "@tracktor/react-utils";
-import mapboxgl, { Map } from "mapbox-gl";
-import { ComponentRef, useEffect, useMemo, useRef, useState, useCallback } from "react";
+import mapboxgl, { Map as MapboxMap } from "mapbox-gl";
+import { ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useFitBounds from "@/hooks/useFitBounds.ts";
 import useMarkers from "@/hooks/useMarkers.ts";
 import useCorrectedMapClick from "@/hooks/useOnMapClick";
@@ -46,7 +46,7 @@ const useMarkerMap = ({
   const { palette } = useTheme();
   const debouncedMarkers = useDebounce(markers);
   const containerRef = useRef<ComponentRef<"div"> | string>("");
-  const map = useRef<Map | null>(null);
+  const map = useRef<MapboxMap | null>(null);
   const currentTheme = theme || palette.mode;
 
   const memoMarkers = useMemo(() => {
@@ -100,7 +100,7 @@ const useMarkerMap = ({
       return;
     }
 
-    map.current = new Map({
+    map.current = new MapboxMap({
       ...coreMapOptions,
       container,
     });
@@ -120,7 +120,7 @@ const useMarkerMap = ({
    * Update zoom separately if needed
    */
   useEffect(() => {
-    if (!map.current || !isMapInitialized || zoom === undefined) {
+    if (!(map.current && isMapInitialized) || zoom === undefined) {
       return;
     }
 

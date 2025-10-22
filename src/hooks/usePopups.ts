@@ -1,4 +1,4 @@
-import { Map, Popup } from "mapbox-gl";
+import { Map as MapboxMap, Popup } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
 import { MarkerProps } from "@/types/MarkerProps";
 import addPopup from "@/utils/addPopup";
@@ -6,7 +6,7 @@ import getFeature from "@/utils/getFeature";
 import { CustomMarkerMapProps } from "@/utils/loadMarkers.tsx";
 
 type UsePopupsProps = {
-  map: RefObject<Map | null>;
+  map: RefObject<MapboxMap | null>;
   markers?: MarkerProps[];
   openPopup: string | number | undefined;
   isMapInitialized: boolean;
@@ -16,7 +16,7 @@ const usePopups = ({ openPopup, map, markers, isMapInitialized }: UsePopupsProps
   const popupRef = useRef<Popup | null>(null);
 
   useEffect(() => {
-    if (!map.current || !markers || !isMapInitialized) {
+    if (!(map.current && markers && isMapInitialized)) {
       return undefined;
     }
 
@@ -41,7 +41,9 @@ const usePopups = ({ openPopup, map, markers, isMapInitialized }: UsePopupsProps
           tooltip: marker.Tooltip,
         });
 
-        if (popup) popupRef.current = popup;
+        if (popup) {
+          popupRef.current = popup;
+        }
       }
     }
 
@@ -53,7 +55,7 @@ const usePopups = ({ openPopup, map, markers, isMapInitialized }: UsePopupsProps
 
       const feature = getFeature({ map, point });
 
-      if (feature && feature.properties && feature.properties.id) {
+      if (feature?.properties?.id) {
         if (popupRef.current) {
           popupRef.current.remove();
           popupRef.current = null;
@@ -91,7 +93,10 @@ const usePopups = ({ openPopup, map, markers, isMapInitialized }: UsePopupsProps
               map,
               tooltip: marker.Tooltip,
             });
-            if (popup) popupRef.current = popup;
+
+            if (popup) {
+              popupRef.current = popup;
+            }
           });
         }
       }

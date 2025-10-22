@@ -1,9 +1,9 @@
-import { LngLatBounds, Map } from "mapbox-gl";
+import { LngLatBounds, Map as MapboxMap } from "mapbox-gl";
 import { RefObject, useEffect, useRef } from "react";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 type useFitBoundsProps = {
-  map: RefObject<Map | null>;
+  map: RefObject<MapboxMap | null>;
   disableAnimation: boolean | undefined;
   fitBounds?: boolean;
   fitBoundDuration?: number;
@@ -56,7 +56,7 @@ const useFitBounds = ({
    */
   useEffect(() => {
     // If the map is not initialized, or if animation is disabled, or if fitBounds is false, or if there are no markers or only one marker, skip the fitBounds logic
-    if (!map.current || !isMapInitialized || disableAnimation || fitBounds === false || !markers?.length || markers?.length <= 1) {
+    if (!(map.current && isMapInitialized) || disableAnimation || fitBounds === false || !markers?.length || markers?.length <= 1) {
       return;
     }
 
