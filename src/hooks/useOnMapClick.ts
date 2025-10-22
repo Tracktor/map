@@ -1,15 +1,15 @@
-import { Map } from "mapbox-gl";
+import { Map as MapboxMap } from "mapbox-gl";
 import { RefObject, useEffect } from "react";
 
 type UseCorrectedMapClickProps = {
-  map: RefObject<Map | null>;
+  map: RefObject<MapboxMap | null>;
   onMapClick?: (lng: number, lat: number) => void;
   isMapInitialized?: boolean;
 };
 
 const useCorrectedMapClick = ({ map, onMapClick, isMapInitialized }: UseCorrectedMapClickProps) => {
   useEffect(() => {
-    if (!map.current || !onMapClick || !isMapInitialized) {
+    if (!(map.current && onMapClick && isMapInitialized)) {
       return;
     }
 
@@ -17,7 +17,13 @@ const useCorrectedMapClick = ({ map, onMapClick, isMapInitialized }: UseCorrecte
 
     const handleClick = (e: MouseEvent) => {
       const point: [number, number] = [e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top];
-      const lngLat = map.current!.unproject(point);
+
+      if (!map.current) {
+        return;
+      }
+
+      const lngLat = map.current.unproject(point);
+
       onMapClick(lngLat.lng, lngLat.lat);
     };
 

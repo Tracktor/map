@@ -1,5 +1,5 @@
 import { Palette } from "@tracktor/design-system";
-import { LngLatLike, Map } from "mapbox-gl";
+import { LngLatLike, Map as MapboxMap } from "mapbox-gl";
 import { RefObject, useEffect } from "react";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/constants/coordinates.ts";
 import { MarkerProps } from "@/types/MarkerProps.ts";
@@ -7,7 +7,7 @@ import coordinateConverter from "@/utils/coordinateConverter.ts";
 import { loadMarkers } from "@/utils/loadMarkers.tsx";
 
 type UseInitializeMapProps = {
-  map: RefObject<Map | null>;
+  map: RefObject<MapboxMap | null>;
   markers?: MarkerProps[];
   palette: Palette;
   isMapInitialized: boolean;
@@ -18,7 +18,7 @@ type UseInitializeMapProps = {
 const useMarkers = ({ map, markers, palette, isMapInitialized, fitBounds, center }: UseInitializeMapProps) => {
   // Add or refresh markers
   useEffect(() => {
-    if (!map.current || !markers || !isMapInitialized) {
+    if (!(map.current && markers && isMapInitialized)) {
       return;
     }
 

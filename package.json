@@ -3,7 +3,7 @@
   "description": "A react library to easily display map with multiple tools",
   "private": false,
   "license": "UNLICENSED",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "main": "dist/main.umd.cjs",
   "module": "dist/main.js",
@@ -18,7 +18,8 @@
   "scripts": {
     "example": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint .",
+    "lint": "biome check --diagnostic-level=error . && tsc --noEmit --incremental",
+    "lint:fix": "biome check . --write",
     "prepublishOnly": "yarn build",
     "preview": "vite preview"
   },
@@ -33,12 +34,12 @@
     "mapbox-gl": "^3.12.0"
   },
   "devDependencies": {
+    "@tracktor/biome-config-react": "^1.1.1",
     "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^22.14.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.6.0",
-    "eslint-config-react-tracktor": "^1.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "~5.8.3",

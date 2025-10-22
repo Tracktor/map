@@ -1,11 +1,11 @@
-import { Popup, Map } from "mapbox-gl";
-import { RefObject, ReactNode } from "react";
+import { Map as MapboxMap, Popup } from "mapbox-gl";
+import { ReactNode, RefObject } from "react";
 import { createRoot } from "react-dom/client";
 
 interface AddPopupProps {
   coordinates?: [number, number];
   tooltip?: ReactNode;
-  map: RefObject<Map | null>;
+  map: RefObject<MapboxMap | null>;
 }
 
 /**
@@ -72,7 +72,7 @@ const createCloseButton = (popup: Popup): HTMLButtonElement => {
  * });
  */
 const addPopup = ({ map, tooltip, coordinates }: AddPopupProps): Popup | null => {
-  if (!coordinates || !tooltip || !map.current || !Array.isArray(coordinates) || coordinates.length !== 2) {
+  if (!(coordinates && tooltip && map.current && Array.isArray(coordinates)) || coordinates.length !== 2) {
     return null;
   }
 

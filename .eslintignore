@@ -1,6 +1,0 @@
-.circleci
-.husky
-node_modules
-dist
-dev-dist
-public

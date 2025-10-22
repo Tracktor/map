@@ -1,6 +1,6 @@
 import { Palette } from "@tracktor/design-system";
 import type { FeatureCollection } from "geojson";
-import { Map, Marker, GeoJSONSource } from "mapbox-gl";
+import { GeoJSONSource, Map as MapboxMap, Marker } from "mapbox-gl";
 import { ComponentType, RefObject } from "react";
 import { createRoot } from "react-dom/client";
 import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/components/MarkerMap/useMarkerMap";
@@ -18,9 +18,9 @@ export interface CustomMarkerMapProps {
     zIndex: number;
     pointerEvents?: string;
     name?: string;
-    iconProps?: Record<string, any>;
+    iconProps?: Record<string, unknown>;
     onClick?: (markerData?: CustomMarkerMapProps) => void;
-    IconComponent?: ComponentType<any>;
+    IconComponent?: ComponentType<unknown>;
   };
   type: string;
 }
@@ -31,7 +31,7 @@ interface GenerateMarkersProps {
 }
 
 interface LoadMarkersProps {
-  map: RefObject<Map | null>;
+  map: RefObject<MapboxMap | null>;
   palette: Palette;
   markers: MarkerProps[];
 }
@@ -97,7 +97,7 @@ export const generateMarkers = ({ palette, type }: GenerateMarkersProps): object
  * @param {CustomMarkerMapProps[]} standardMarkers - Array of marker definitions
  * @param {Palette} palette - Design system color palette
  */
-const loadStandardMarkers = (map: Map, sourceId: string, standardMarkers: CustomMarkerMapProps[], palette: Palette) => {
+const loadStandardMarkers = (map: MapboxMap, sourceId: string, standardMarkers: CustomMarkerMapProps[], palette: Palette) => {
   const geoJsonData: FeatureCollection = {
     features: standardMarkers.map((marker) => ({
       geometry: {
@@ -171,9 +171,11 @@ const loadStandardMarkers = (map: Map, sourceId: string, standardMarkers: Custom
  * @param {Map} map - Mapbox GL map instance
  * @param {CustomMarkerMapProps[]} reactMarkers - Array of React-based marker definitions
  */
-const loadReactMarkers = (map: Map, reactMarkers: CustomMarkerMapProps[]) => {
+const loadReactMarkers = (map: MapboxMap, reactMarkers: CustomMarkerMapProps[]) => {
   const existingMarkers = document.querySelectorAll(".react-custom-marker");
-  existingMarkers.forEach((el) => el.remove());
+  existingMarkers.forEach((el) => {
+    el.remove();
+  });
 
   // Trier les markers par zIndex pour assurer l'ordre correct
   const sortedReactMarkers = [...reactMarkers].sort((a, b) => {
@@ -282,12 +284,12 @@ export const loadMarkers = ({ map, palette, markers }: LoadMarkersProps) => {
   const standardMarkers = layer.features.filter((marker) => marker.properties?.IconComponent === undefined);
 
   if (standardMarkers.length) {
-    loadStandardMarkers(map.current, "markerProps", standardMarkers, palette);
+    loadStandardMarkers(map.current, "markerProps", standardMarkers as unknown as CustomMarkerMapProps[], palette);
   }
 
   const reactMarkers = layer.features.filter((marker) => marker.properties?.IconComponent);
 
   if (reactMarkers.length) {
-    loadReactMarkers(map.current, reactMarkers);
+    loadReactMarkers(map.current, reactMarkers as unknown as CustomMarkerMapProps[]);
   }
 };
