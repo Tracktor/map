@@ -3,8 +3,9 @@ import { memo, ReactElement, useMemo, useState } from "react";
 import MapboxMap, { Marker, Popup } from "react-map-gl";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { isArray } from "@tracktor/react-utils";
+import { isArray, isNumber } from "@tracktor/react-utils";
 import FitBounds from "@/Features/Bounds/FitsBounds.ts";
+import DefaultMarker from "@/Features/Markers/DefaultMarkers.tsx";
 
 const MarkerMap = ({
   containerStyle,
@@ -27,17 +28,22 @@ const MarkerMap = ({
   const theme = useTheme();
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
 
-  const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
+  const selectedMarker = useMemo(() => {
+    if (!selected) {
+      return null;
+    }
+    return markers.find((m) => m.id === selected) ?? null;
+  }, [selected, markers]);
 
-  const handleMarkerClick = (id: string | number) => {
-    if (!openPopupOnHover) {
+  const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
+    if (!openPopupOnHover && hasTooltip) {
       setSelected(id);
     }
   };
 
-  const handleMarkerHover = (id: string | number | null) => {
+  const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
     if (openPopupOnHover) {
-      setSelected(id);
+      setSelected(hasTooltip ? id : null);
     }
   };
 
@@ -72,26 +78,31 @@ const MarkerMap = ({
         {markers.map((m) => (
           <Marker
             key={m.id}
-            longitude={m.lng}
-            latitude={m.lat}
+            longitude={isNumber(m.lng) ? m.lng : undefined}
+            latitude={isNumber(m.lat) ? m.lat : undefined}
             anchor="bottom"
-            onClick={() => handleMarkerClick(m.id)}
-            onMouseEnter={() => handleMarkerHover(m.id)}
+            onClick={() => handleMarkerClick(m.id, Boolean(m.Tooltip))}
+            onMouseEnter={() => handleMarkerHover(m.id, Boolean(m.Tooltip))}
             onMouseLeave={() => handleMarkerHover(null)}
           >
-            {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <div>📍</div>}
+            {m.IconComponent ? (
+              <m.IconComponent {...m.iconProps} />
+            ) : (
+              <DefaultMarker color={m.type === "worksite" ? "#1976d2" : "#4caf50"} />
+            )}
           </Marker>
         ))}
 
-        {selectedMarker && (
+        {selectedMarker?.Tooltip && (
           <Popup
-            longitude={selectedMarker.lng}
-            latitude={selectedMarker.lat}
+            longitude={isNumber(selectedMarker.lng) ? selectedMarker.lng : 0}
+            latitude={isNumber(selectedMarker.lat) ? selectedMarker.lat : 0}
             anchor="top"
             onClose={() => setSelected(null)}
             maxWidth={popupMaxWidth}
+            closeOnClick={false}
           >
-            {selectedMarker.Tooltip ?? <div>Marker {selectedMarker.id}</div>}
+            {selectedMarker.Tooltip}
           </Popup>
         )}
 
