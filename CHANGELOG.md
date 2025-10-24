@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/Tracktor/map/compare/v1.1.1...v1.1.2) (2025-10-24)
+
+
+### 🐛 Fixes
+
+* update @tracktor/biome-config-react to version 1.3.0 in bun.lock and package.json ([5f2e2b9](https://github.com/Tracktor/map/commit/5f2e2b9dcc36c5a73f64c5b3d9c75f0c6ce93311))
+
 ### [1.1.1](https://github.com/Tracktor/map/compare/v1.1.0...v1.1.1) (2025-10-24)
 
 
