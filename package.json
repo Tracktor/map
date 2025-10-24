@@ -22,7 +22,8 @@
     "lint:fix": "bunx biome check . --write",
     "prepublishOnly": "bun run build",
     "preview": "bunx vite preview",
-    "release": "bun run build && bun publish --access public"
+    "release": "bun run build && bun publish --access public",
+    "version": "bunx standard-version"
   },
   "files": [
     "dist"
@@ -46,6 +47,7 @@
     "@vitejs/plugin-react": "^4.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "standard-version": "^9.5.0",
     "typescript": "~5.8.3",
     "vite": "^7.0.0",
     "vite-plugin-css-injected-by-js": "^3.5.2",

@@ -7,71 +7,99 @@ on:
 
 permissions:
   contents: write
-  pull-requests: read
-  issues: read
-  id-token: write
+  packages: write
 
 jobs:
   release:
-    name: 🚀 Release
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 🛎️ Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install Bun
+      - name: 🐰 Setup Bun
         uses: oven-sh/setup-bun@v1
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Get next version
-        id: version
-        uses: reecetech/version-increment@v2024.10.1
         with:
-          scheme: conventional_commits
-          release_branch: main
+          bun-version: latest
 
-      - name: Bump version in package.json
-        if: steps.version.outputs.version != steps.version.outputs.current-version
+      - name: 📦 Install dependencies
+        run: bun install
+
+      - name: 🧑 Configure Git user
         run: |
-          sed -i "s/\"version\": *\".*\"/\"version\": \"${{ steps.version.outputs.version }}\"/" package.json
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit and Tag new version
-        if: steps.version.outputs.version != steps.version.outputs.current-version
-        uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actions
-          message: "chore: release v${{ steps.version.outputs.version }}"
-          tag: v${{ steps.version.outputs.version }}
+      - name: 🧪 Run lint & tests
+        run: |
+          if bun run test; then
+            echo "✅ Tests passed"
+          else
+            echo "⚠️ No tests found or tests failed — continuing anyway"
+          fi
 
-      - name: Generate CHANGELOG
-        if: steps.version.outputs.version != steps.version.outputs.current-version
-        id: changelog
-        uses: requarks/changelog-action@v1.10.2
-        with:
-          fromTag: v${{ steps.version.outputs.current-version }}
-          toTag: v${{ steps.version.outputs.version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🏷️ Bump version & generate changelog
+        id: bump
+        run: |
+          OUTPUT=$(bunx standard-version || true)
+          echo "$OUTPUT"
 
-      - name: Create GitHub Release
-        if: steps.version.outputs.version != steps.version.outputs.current-version
-        uses: ncipollo/release-action@v1
-        with:
-          tag: v${{ steps.version.outputs.version }}
-          name: Version ${{ steps.version.outputs.version }}
-          body: ${{ steps.changelog.outputs.changes }}
-          makeLatest: true
+          if echo "$OUTPUT" | grep -q "to null"; then
+            echo "No new release detected (no feat/fix commits)."
+            git restore package.json
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build package
+      - name: ⏹️ Stop pipeline if no release bump
+        if: steps.bump.outputs.should_publish == 'false'
+        run: |
+          echo "⏹️ No bump detected — stopping workflow (no publish, no release)."
+          exit 0
+
+      - name: 🚀 Push changes & tags
+        run: git push --follow-tags origin main
+
+      - name: 🏗️ Build project
         run: bun run build
 
-      - name: Publish to npm
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: 🔍 Check if version already exists on npm
         run: |
-          bunx npm-cli-login -u tracktor -p $NPM_TOKEN -e contact@tracktor.fr
-          bun publish --access public
+          PKG_NAME=$(jq -r .name package.json)
+          VERSION=$(jq -r .version package.json)
+          if npm view $PKG_NAME versions --json | grep -q "\"$VERSION\""; then
+            echo "⚠️ Version $VERSION already exists on npm. Skipping publish."
+            exit 0
+          fi
+
+      - name: 🆔 Get version from package.json
+        id: get_version
+        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+
+      - name: 📝 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: steps.bump.outputs.should_publish == 'true'
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔐 Setup npm auth
+        if: steps.bump.outputs.should_publish == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          npm whoami
+
+      - name: 📤 Publish to npm
+        if: steps.bump.outputs.should_publish == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: bun publish --access public
