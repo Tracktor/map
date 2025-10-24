@@ -33,12 +33,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: 🧪 Run lint & tests
-        run: |
-          if bun run test; then
-            echo "✅ Tests passed"
-          else
-            echo "⚠️ No tests found or tests failed — continuing anyway"
-          fi
+        run: bun run test
 
       - name: 🏷️ Bump version & generate changelog
         id: bump
@@ -102,4 +97,4 @@ jobs:
         if: steps.bump.outputs.should_publish == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: bun publish --access public
+        run: npm publish --access public
