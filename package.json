@@ -1,6 +1,6 @@
 {
   "name": "@tracktor/map",
-  "description": "A react library to easily display map with multiple tools",
+  "description": "A React library to easily display map with multiple tools",
   "private": false,
   "license": "UNLICENSED",
   "version": "1.0.6",
@@ -16,16 +16,20 @@
     }
   },
   "scripts": {
-    "example": "vite",
-    "build": "tsc && vite build",
-    "lint": "biome check --diagnostic-level=error . && tsc --noEmit --incremental",
-    "lint:fix": "biome check . --write",
-    "prepublishOnly": "yarn build",
-    "preview": "vite preview"
+    "example": "bunx vite",
+    "build": "bunx tsc && bunx vite build",
+    "lint": "bunx biome check --diagnostic-level=error . && bunx tsc --noEmit --incremental",
+    "lint:fix": "bunx biome check . --write",
+    "prepublishOnly": "bun run build",
+    "preview": "bunx vite preview",
+    "release": "bun run build && bun publish --access public"
   },
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@mui/icons-material": "^5.17.1",
     "@mui/x-license": "^8.6.0",
@@ -54,5 +58,9 @@
     "mapbox-gl": ">=3.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
-  }
+  },
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "packageManager": "bun@1.1.34"
 }

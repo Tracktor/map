@@ -13,49 +13,49 @@ const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {
-    lib: {
-      entry: resolve(__dirname, "src/main.ts"),
-      fileName: (format) => {
-        if (format === "es") return "main.js";
-        if (format === "umd") return "main.umd.cjs";
-        return "main.js";
-      },
-      formats: ["es", "umd"],
-      name,
-    },
-    rollupOptions: {
-      external: [...Object.keys(dependencies), ...Object.keys(peerDependencies)],
-      output: {
-        globals: {
-          "@mui/x-license": "muiXLicense",
-          "@tracktor/design-system": "designSystem",
-          "mapbox-gl": "mapboxgl",
-          react: "React",
-          "react-dom": "ReactDOM",
+    build: {
+        lib: {
+            entry: resolve(__dirname, "src/main.ts"),
+            fileName: (format) => {
+                if (format === "es") return "main.js";
+                if (format === "umd") return "main.umd.cjs";
+                return "main.js";
+            },
+            formats: ["es", "umd"],
+            name,
         },
-      },
+        rollupOptions: {
+            external: [
+                ...Object.keys(dependencies ?? {}),
+                ...Object.keys(peerDependencies ?? {}),
+                "react",
+                "react-dom",
+            ],
+            output: {
+                globals: {
+                    "@mui/x-license": "muiXLicense",
+                    "@tracktor/design-system": "designSystem",
+                    "mapbox-gl": "mapboxgl",
+                    react: "React",
+                    "react-dom": "ReactDOM",
+                },
+            },
+        },
     },
-  },
-  plugins: [
-    dts({
-      exclude: ["vite.config.ts", "example"],
-      tsconfigPath: "./tsconfig.app.json",
-    }),
-    // Mapbox require CSS to be imported to render correctly (imported from provider)
-    cssInjectedByJsPlugin(),
-    react(),
-  ],
-  resolve: {
-    alias: [
-      {
-        find: "@",
-        replacement: resolve(__dirname, "src"),
-      },
-      {
-        find: "example",
-        replacement: resolve(__dirname, "example"),
-      },
+    plugins: [
+        dts({
+            exclude: ["vite.config.ts", "example"],
+            tsconfigPath: "./tsconfig.app.json",
+        }),
+        // Mapbox requires CSS to be imported to render correctly (imported from provider)
+        cssInjectedByJsPlugin(),
+        react(),
     ],
-  },
+    resolve: {
+        dedupe: ["react", "react-dom"],
+        alias: [
+            { find: "@", replacement: resolve(__dirname, "src") },
+            { find: "example", replacement: resolve(__dirname, "example") },
+        ],
+    },
 });
