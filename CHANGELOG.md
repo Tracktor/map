@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/Tracktor/map/compare/v1.1.0...v1.1.1) (2025-10-24)
+
+
+### 🐛 Fixes
+
+* remove lint and test step from release workflow ([5067728](https://github.com/Tracktor/map/commit/5067728a763fc5381fbb94afa5f5fd023a985e41))
+* update release workflow to use npm for publishing and streamline test execution ([3c75d2f](https://github.com/Tracktor/map/commit/3c75d2f1a79909ebc432149b1defe8091cc3102b))
+
 ## 1.1.0 (2025-10-24)
 
 
