@@ -34,7 +34,7 @@ const useMarkerMap = ({
   theme,
   mapStyle,
   fitBoundsAnimationKey,
-  baseMapView = "default",
+  baseMapView = "street",
   zoom = 6,
   fitBoundsPadding = 50,
   fitBoundDuration = 1000,

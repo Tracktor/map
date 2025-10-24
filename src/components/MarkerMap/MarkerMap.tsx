@@ -1,11 +1,13 @@
 import { Box, GlobalStyles, Skeleton, useTheme } from "@tracktor/design-system";
-import { memo, ReactElement, useMemo, useState } from "react";
+import { memo, ReactElement, useMemo, useRef, useState } from "react";
 import MapboxMap, { Marker, Popup } from "react-map-gl";
-import { MarkerMapProps } from "@/types/MarkerMapProps";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
+import mapboxGlobalStyles from "@/constants/globalStyle.ts";
 import FitBounds from "@/Features/Bounds/FitsBounds.ts";
 import DefaultMarker from "@/Features/Markers/DefaultMarkers.tsx";
+import { MarkerMapProps } from "@/types/MarkerMapProps";
+import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
 const MarkerMap = ({
   containerStyle,
@@ -23,55 +25,68 @@ const MarkerMap = ({
   fitBoundsPadding,
   fitBoundDuration,
   onMapClick,
-  mapStyle = "mapbox://styles/mapbox/streets-v11",
+  baseMapView,
+  cooperativeGestures = true,
+  doubleClickZoom = true,
+  projection,
+  theme: themeOverride,
 }: MarkerMapProps): ReactElement => {
   const theme = useTheme();
+  const mapRef = useRef<any>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
 
-  const selectedMarker = useMemo(() => {
-    if (!selected) {
-      return null;
-    }
-    return markers.find((m) => m.id === selected) ?? null;
-  }, [selected, markers]);
+  console.log("cooperativeGestures:", cooperativeGestures);
+
+  const mapStyle = useMemo(
+    () => getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
+    [baseMapView, themeOverride, theme.palette.mode],
+  );
+
+  const {
+    style: coreStyle,
+    cooperativeGestures: coopGestures,
+    doubleClickZoom: dblZoom,
+  } = getCoreMapOptions({
+    baseMapView,
+    cooperativeGestures,
+    doubleClickZoom,
+    mapStyle,
+    projection,
+    theme: themeOverride ?? theme.palette.mode,
+  });
+
+  const handleMapLoad = () => {
+    const map = mapRef.current?.getMap?.();
+    if (map) map.setStyle(mapStyle);
+  };
 
   const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
-    if (!openPopupOnHover && hasTooltip) {
-      setSelected(id);
-    }
+    if (!openPopupOnHover && hasTooltip) setSelected(id);
   };
 
   const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
-    if (openPopupOnHover) {
-      setSelected(hasTooltip ? id : null);
-    }
+    if (openPopupOnHover) setSelected(hasTooltip ? id : null);
   };
+
+  const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
 
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
-      <GlobalStyles
-        styles={{
-          ".mapboxgl-popup-content": {
-            backgroundColor: "transparent!important",
-            borderRadius: "0px !important",
-            boxShadow: "none!important",
-            padding: "0px 0px!important",
-            width: "fit-content!important",
-          },
-          ".mapboxgl-popup-tip": {
-            borderTopColor: theme.palette.mode === "dark" ? "#1e1e1e !important" : '#ffffff !important"',
-          },
-        }}
-      />
+      <GlobalStyles styles={mapboxGlobalStyles} />
 
       <MapboxMap
+        ref={mapRef}
+        onLoad={handleMapLoad}
+        cooperativeGestures={coopGestures}
+        doubleClickZoom={dblZoom}
+        mapStyle={coreStyle}
+        projection={projection}
         initialViewState={{
           latitude: isArray(center) ? center[1] : center.lat,
           longitude: isArray(center) ? center[0] : center.lng,
           zoom,
         }}
         style={{ height: "100%", width: "100%" }}
-        mapStyle={mapStyle}
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         onClick={(e) => onMapClick?.(e.lngLat.lng, e.lngLat.lat)}
       >

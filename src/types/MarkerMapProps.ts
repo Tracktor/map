@@ -113,7 +113,7 @@ export interface MarkerMapProps {
    * Optional base map view
    * @default "default"
    */
-  baseMapView?: "default" | "satellite" | "streets" | "3d";
+  baseMapView?: "satellite" | "street";
 
   /**
    * Optional key to activate zoom on scroll without restriction (default is true).

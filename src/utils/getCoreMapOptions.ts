@@ -3,28 +3,21 @@ import { MapOptions } from "mapbox-gl";
 interface MapOptionsProps {
   mapStyle?: string;
   projection?: MapOptions["projection"];
-  baseMapView?: "default" | "satellite" | "streets" | "3d";
+  baseMapView?: "street" | "satellite";
   cooperativeGestures?: boolean;
   doubleClickZoom?: boolean;
   theme?: "light" | "dark";
 }
 
-const getBaseMapStyle = (baseMapView?: "default" | "satellite" | "streets" | "3d", theme?: "dark" | "light"): string => {
+export const getBaseMapStyle = (baseMapView?: "street" | "satellite", theme?: "dark" | "light"): string => {
   const isDarkTheme = theme === "dark";
 
   switch (baseMapView) {
     case "satellite":
-      return "mapbox://styles/mapbox/satellite-v9"; // No light/dark variants
+      return "mapbox://styles/mapbox/satellite-streets-v12";
 
-    case "3d":
-      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v12?optimize=true";
-
-    case "streets":
-      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v11";
-
-    case "default":
     default:
-      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v11";
+      return isDarkTheme ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/streets-v12";
   }
 };
 
