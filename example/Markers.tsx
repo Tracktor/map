@@ -29,7 +29,8 @@ const randomOffset = () => (Math.random() - 0.5) * 0.01;
 
 export const generateMarkers = (count: number): MarkerProps[] =>
   Array.from({ length: count }, (_, i) => {
-    const id = `${i + 1}`;
+    const markerId = i + 1;
+    const id = `${markerId}`;
     const baseLat = 48.844039;
     const baseLng = 2.489326;
     const lat = baseLat + randomOffset();
@@ -46,12 +47,13 @@ export const generateMarkers = (count: number): MarkerProps[] =>
       },
       ...(isWorksite
         ? {
-            Tooltip: <TooltipExample name={`tooltip-${i}`} />,
+            Tooltip: <TooltipExample name={`tooltip-${id}`} />,
             type: "worksite",
           }
         : {
             IconComponent: ReactMarkerExample,
             iconProps: { name: `icon-${i}` },
+            Tooltip: <TooltipExample name={`tooltip-${id}`} />,
             type: "agency",
           }),
     };

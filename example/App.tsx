@@ -1,4 +1,4 @@
-import { Box, Button, MenuItem, Select, Slider, Stack, Switch, ThemeProvider, Typography } from "@tracktor/design-system";
+import { Box, Button, MenuItem, Select, Slider, Stack, Switch, TextField, ThemeProvider, Typography } from "@tracktor/design-system";
 import { generateMarkers } from "example/Markers";
 import type { MapOptions } from "mapbox-gl";
 import { useMemo, useState } from "react";
@@ -16,6 +16,8 @@ const App = () => {
   const [projection, setProjection] = useState<MapOptions["projection"]>("mercator");
   const [visibleMarkerCount, setVisibleMarkerCount] = useState(DEFAULT_MARKERS);
 
+  const [openPopupId, setOpenPopupId] = useState<string>("");
+
   const handleMapClick = (lng: number, lat: number): void => {
     console.log("Map clicked at:", { lat, lng });
   };
@@ -28,7 +30,7 @@ const App = () => {
         <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
           <Box sx={{ flex: 1 }}>
             <MarkerMap
-              openPopup="1"
+              openPopup={openPopupId}
               markers={markers}
               height="100%"
               width="100%"
@@ -74,6 +76,16 @@ const App = () => {
               Nombre de markers ({visibleMarkerCount})
             </Typography>
             <Slider min={1} max={MAX_MARKERS} value={visibleMarkerCount} onChange={(_, v) => setVisibleMarkerCount(v as number)} />
+
+            <Typography variant="body2" color="text.secondary">
+              Open popup
+            </Typography>
+            <TextField
+              placeholder="ID du marker ex: 10"
+              size="small"
+              value={openPopupId}
+              onChange={(e) => setOpenPopupId(e.target.value)}
+            />
 
             <Typography variant="body2" color="text.secondary">
               Interactions

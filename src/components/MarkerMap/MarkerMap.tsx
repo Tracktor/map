@@ -1,5 +1,5 @@
 import { Box, GlobalStyles, Skeleton, useTheme } from "@tracktor/design-system";
-import { memo, ReactElement, useMemo, useRef, useState } from "react";
+import { memo, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import MapboxMap, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
@@ -24,9 +24,9 @@ const MarkerMap = ({
   fitBounds = true,
   fitBoundsPadding,
   fitBoundDuration,
-  fitBoundsAnimationKey, // ✅
-  disableAnimation, // ✅
-  mapStyle: baseMapStyle, // ✅
+  fitBoundsAnimationKey,
+  disableAnimation,
+  mapStyle: baseMapStyle,
   onMapClick,
   baseMapView,
   cooperativeGestures = true,
@@ -38,11 +38,10 @@ const MarkerMap = ({
   const mapRef = useRef<any>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
 
-  /**
-   * 📌 Détermine le style final :
-   * - priorité à la prop `mapStyle` si fournie
-   * - sinon style généré en fonction de `baseMapView` et du thème
-   */
+  useEffect(() => {
+    setSelected(openPopup ?? null);
+  }, [openPopup]);
+
   const mapStyle = useMemo(
     () => baseMapStyle || getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
     [baseMapView, baseMapStyle, themeOverride, theme.palette.mode],
