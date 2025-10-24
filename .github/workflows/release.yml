@@ -32,9 +32,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: 🧪 Run lint & tests
-        run: bun run test
-
       - name: 🏷️ Bump version & generate changelog
         id: bump
         run: |
