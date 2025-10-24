@@ -24,6 +24,9 @@ const MarkerMap = ({
   fitBounds = true,
   fitBoundsPadding,
   fitBoundDuration,
+  fitBoundsAnimationKey, // ✅
+  disableAnimation, // ✅
+  mapStyle: baseMapStyle, // ✅
   onMapClick,
   baseMapView,
   cooperativeGestures = true,
@@ -35,9 +38,14 @@ const MarkerMap = ({
   const mapRef = useRef<any>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
 
+  /**
+   * 📌 Détermine le style final :
+   * - priorité à la prop `mapStyle` si fournie
+   * - sinon style généré en fonction de `baseMapView` et du thème
+   */
   const mapStyle = useMemo(
-    () => getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
-    [baseMapView, themeOverride, theme.palette.mode],
+    () => baseMapStyle || getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
+    [baseMapView, baseMapStyle, themeOverride, theme.palette.mode],
   );
 
   const {
@@ -55,21 +63,15 @@ const MarkerMap = ({
 
   const handleMapLoad = () => {
     const map = mapRef.current?.getMap?.();
-    if (map) {
-      map.setStyle(mapStyle);
-    }
+    if (map) map.setStyle(mapStyle);
   };
 
   const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
-    if (!openPopupOnHover && hasTooltip) {
-      setSelected(id);
-    }
+    if (!openPopupOnHover && hasTooltip) setSelected(id);
   };
 
   const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
-    if (openPopupOnHover) {
-      setSelected(hasTooltip ? id : null);
-    }
+    if (openPopupOnHover) setSelected(hasTooltip ? id : null);
   };
 
   const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
@@ -77,57 +79,6 @@ const MarkerMap = ({
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
       <GlobalStyles styles={mapboxGlobalStyles} />
-
-      <MapboxMap
-        key={`${coopGestures}-${dblZoom}-${projection}`}
-        ref={mapRef}
-        onLoad={handleMapLoad}
-        cooperativeGestures={coopGestures}
-        doubleClickZoom={dblZoom}
-        mapStyle={coreStyle}
-        projection={projection}
-        initialViewState={{
-          latitude: isArray(center) ? center[1] : center.lat,
-          longitude: isArray(center) ? center[0] : center.lng,
-          zoom,
-        }}
-        style={{ height: "100%", width: "100%" }}
-        mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-        onClick={(e) => onMapClick?.(e.lngLat.lng, e.lngLat.lat)}
-      >
-        {markers.map((m) => (
-          <Marker
-            key={m.id}
-            longitude={isNumber(m.lng) ? m.lng : undefined}
-            latitude={isNumber(m.lat) ? m.lat : undefined}
-            anchor="bottom"
-            onClick={() => handleMarkerClick(m.id, Boolean(m.Tooltip))}
-            onMouseEnter={() => handleMarkerHover(m.id, Boolean(m.Tooltip))}
-            onMouseLeave={() => handleMarkerHover(null)}
-          >
-            {m.IconComponent ? (
-              <m.IconComponent {...m.iconProps} />
-            ) : (
-              <DefaultMarker color={m.type === "worksite" ? "#1976d2" : "#4caf50"} />
-            )}
-          </Marker>
-        ))}
-
-        {selectedMarker?.Tooltip && (
-          <Popup
-            longitude={isNumber(selectedMarker.lng) ? selectedMarker.lng : 0}
-            latitude={isNumber(selectedMarker.lat) ? selectedMarker.lat : 0}
-            anchor="top"
-            onClose={() => setSelected(null)}
-            maxWidth={popupMaxWidth}
-            closeOnClick={false}
-          >
-            {selectedMarker.Tooltip}
-          </Popup>
-        )}
-
-        {fitBounds && markers.length > 1 && <FitBounds markers={markers} padding={fitBoundsPadding} duration={fitBoundDuration} />}
-      </MapboxMap>
 
       {loading && (
         <Skeleton
@@ -140,6 +91,66 @@ const MarkerMap = ({
             zIndex: 2,
           }}
         />
+      )}
+
+      {!loading && (
+        <MapboxMap
+          key={`${coopGestures}-${dblZoom}-${projection}-${mapStyle}`} // 🔁 re-render si style change
+          ref={mapRef}
+          onLoad={handleMapLoad}
+          cooperativeGestures={coopGestures}
+          doubleClickZoom={dblZoom}
+          mapStyle={coreStyle}
+          projection={projection}
+          initialViewState={{
+            latitude: isArray(center) ? center[1] : center.lat,
+            longitude: isArray(center) ? center[0] : center.lng,
+            zoom,
+          }}
+          style={{ height: "100%", width: "100%" }}
+          mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+          onClick={(e) => onMapClick?.(e.lngLat.lng, e.lngLat.lat)}
+        >
+          {markers.map((m) => (
+            <Marker
+              key={m.id}
+              longitude={isNumber(m.lng) ? m.lng : undefined}
+              latitude={isNumber(m.lat) ? m.lat : undefined}
+              anchor="bottom"
+              onClick={() => handleMarkerClick(m.id, Boolean(m.Tooltip))}
+              onMouseEnter={() => handleMarkerHover(m.id, Boolean(m.Tooltip))}
+              onMouseLeave={() => handleMarkerHover(null)}
+            >
+              {m.IconComponent ? (
+                <m.IconComponent {...m.iconProps} />
+              ) : (
+                <DefaultMarker color={m.type === "worksite" ? "#1976d2" : "#4caf50"} />
+              )}
+            </Marker>
+          ))}
+
+          {selectedMarker?.Tooltip && (
+            <Popup
+              longitude={isNumber(selectedMarker.lng) ? selectedMarker.lng : 0}
+              latitude={isNumber(selectedMarker.lat) ? selectedMarker.lat : 0}
+              anchor="top"
+              onClose={() => setSelected(null)}
+              maxWidth={popupMaxWidth}
+              closeOnClick={false}
+            >
+              {selectedMarker.Tooltip}
+            </Popup>
+          )}
+
+          {fitBounds && markers.length > 1 && (
+            <FitBounds
+              markers={markers}
+              padding={fitBoundsPadding}
+              duration={disableAnimation ? 0 : fitBoundDuration}
+              animationKey={fitBoundsAnimationKey}
+            />
+          )}
+        </MapboxMap>
       )}
     </Box>
   );

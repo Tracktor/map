@@ -7,11 +7,13 @@ interface FitBoundsProps {
   markers: MarkerProps[];
   padding?: number;
   duration?: number;
+  animationKey?: unknown; // ✅ nouveau
 }
 
-const FitBounds = ({ markers, padding = 50, duration = 1000 }: FitBoundsProps) => {
+const FitBounds = ({ markers, padding = 50, duration = 1000, animationKey }: FitBoundsProps) => {
   const { current: map } = useMap();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: animationKey is intentionally included to trigger the effect manually
   useEffect(() => {
     if (!map || markers.length === 0) {
       return;
@@ -30,7 +32,7 @@ const FitBounds = ({ markers, padding = 50, duration = 1000 }: FitBoundsProps) =
       duration,
       padding,
     });
-  }, [map, markers, padding, duration]);
+  }, [map, markers, padding, duration, animationKey]);
 
   return null;
 };
