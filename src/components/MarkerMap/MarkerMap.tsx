@@ -1,6 +1,6 @@
 import { Box, GlobalStyles, Skeleton, useTheme } from "@tracktor/design-system";
 import { memo, ReactElement, useEffect, useMemo, useRef, useState } from "react";
-import MapboxMap, { Marker, Popup } from "react-map-gl";
+import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
 import mapboxGlobalStyles from "@/constants/globalStyle.ts";
@@ -35,7 +35,7 @@ const MarkerMap = ({
   theme: themeOverride,
 }: MarkerMapProps): ReactElement => {
   const theme = useTheme();
-  const mapRef = useRef<any>(null);
+  const mapRef = useRef<MapRef | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
 
   useEffect(() => {
@@ -62,15 +62,21 @@ const MarkerMap = ({
 
   const handleMapLoad = () => {
     const map = mapRef.current?.getMap?.();
-    if (map) map.setStyle(mapStyle);
+    if (map) {
+      map.setStyle(mapStyle);
+    }
   };
 
   const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
-    if (!openPopupOnHover && hasTooltip) setSelected(id);
+    if (!openPopupOnHover && hasTooltip) {
+      setSelected(id);
+    }
   };
 
   const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
-    if (openPopupOnHover) setSelected(hasTooltip ? id : null);
+    if (openPopupOnHover) {
+      setSelected(hasTooltip ? id : null);
+    }
   };
 
   const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
@@ -94,7 +100,7 @@ const MarkerMap = ({
 
       {!loading && (
         <MapboxMap
-          key={`${coopGestures}-${dblZoom}-${projection}-${mapStyle}`} // 🔁 re-render si style change
+          key={`${coopGestures}-${dblZoom}-${projection}-${mapStyle}`}
           ref={mapRef}
           onLoad={handleMapLoad}
           cooperativeGestures={coopGestures}

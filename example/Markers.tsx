@@ -20,7 +20,7 @@ export const ReactMarkerExample = ({ name }: { name: string }) => (
       <Typography variant="h6" pr={0.5}>
         {name}
       </Typography>
-      <Chip label="React marker" size="xSmall" variant="outlined-rounded" color="info" />
+      <Chip label={name} size="xSmall" variant="outlined-rounded" color="warning" />
     </Stack>
   </Paper>
 );

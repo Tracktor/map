@@ -1,5 +1,5 @@
-import mapboxgl from "mapbox-gl";
-import { useEffect } from "react";
+import mapboxgl, { Map as MapboxMap } from "mapbox-gl";
+import { useEffect, useMemo, useRef } from "react";
 import { useMap } from "react-map-gl";
 import { MarkerProps } from "@/types/MarkerProps";
 
@@ -7,32 +7,62 @@ interface FitBoundsProps {
   markers: MarkerProps[];
   padding?: number;
   duration?: number;
-  animationKey?: unknown; // ✅ nouveau
+  disableAnimation?: boolean;
+  fitBounds?: boolean;
+  animationKey?: unknown;
 }
 
-const FitBounds = ({ markers, padding = 50, duration = 1000, animationKey }: FitBoundsProps) => {
-  const { current: map } = useMap();
+const serializeKey = (key: unknown): string => {
+  if (typeof key === "string" || typeof key === "number") return String(key);
+  return JSON.stringify(key);
+};
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: animationKey is intentionally included to trigger the effect manually
+const FitBounds = ({
+  markers,
+  padding = 50,
+  duration = 1000,
+  disableAnimation = false,
+  fitBounds = true,
+  animationKey,
+}: FitBoundsProps) => {
+  const mapbox = useMap() as { current: MapboxMap | null };
+  const map = mapbox.current;
+  const previousKey = useRef<string>("");
+
+  const validMarkers = useMemo(() => markers.filter((m) => Number.isFinite(m.lng) && Number.isFinite(m.lat)), [markers]);
+
+  const bounds = useMemo(() => {
+    if (validMarkers.length === 0) return null;
+    const b = new mapboxgl.LngLatBounds();
+    for (const m of validMarkers) {
+      b.extend([m.lng, m.lat]);
+    }
+    return b;
+  }, [validMarkers]);
+
   useEffect(() => {
-    if (!map || markers.length === 0) {
-      return;
+    if (!(map && fitBounds && bounds)) return;
+
+    if (animationKey !== undefined) {
+      const currentKey = serializeKey(animationKey);
+      if (previousKey.current === currentKey) return;
+      previousKey.current = currentKey;
     }
 
-    const bounds = new mapboxgl.LngLatBounds();
-    for (const marker of markers) {
-      bounds.extend([marker.lng, marker.lat]);
-    }
-
-    if (bounds.isEmpty()) {
+    if (validMarkers.length === 1) {
+      map.flyTo({
+        center: [validMarkers[0].lng, validMarkers[0].lat],
+        duration: disableAnimation ? 0 : duration,
+        zoom: 14,
+      });
       return;
     }
 
     map.fitBounds(bounds, {
-      duration,
+      duration: disableAnimation ? 0 : duration,
       padding,
     });
-  }, [map, markers, padding, duration, animationKey]);
+  }, [map, bounds, padding, duration, disableAnimation, animationKey, fitBounds, validMarkers]);
 
   return null;
 };
