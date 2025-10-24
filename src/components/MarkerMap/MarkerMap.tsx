@@ -1,63 +1,45 @@
-import { Box, GlobalStyles, Skeleton } from "@tracktor/design-system";
-import mapboxgl from "mapbox-gl";
-import { memo, ReactElement } from "react";
-import useMarkerMap from "@/components/MarkerMap/useMarkerMap";
-import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
+import { Box, GlobalStyles, Skeleton, useTheme } from "@tracktor/design-system";
+import { memo, ReactElement, useMemo, useState } from "react";
+import MapboxMap, { Marker, Popup } from "react-map-gl";
+import { MarkerMapProps } from "@/types/MarkerMapProps";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { isArray } from "@tracktor/react-utils";
+import FitBounds from "@/Features/Bounds/FitsBounds.ts";
 
-/**
- * MarkerMap is a reusable React component that displays an interactive Mapbox map
- * with customizable markers and behavior.
- *
- * It supports features like:
- * - Auto-fitting bounds to markers
- * - Custom marker icons and tooltips
- * - Light/dark theming
- * - Fly animations and zooming
- * - Popup display (on click or hover)
- * - Custom styling for the map container
- * - Manual or automatic control of map centering and zoom
- *
- * @param {object} props - Props used to configure the map rendering.
- * @param {boolean} [props.fitBounds] - If true, automatically adjusts the viewport to fit all markers.
- * @param {number} [props.fitBoundsPadding] - Padding in pixels when fitting bounds to markers.
- * @param {LngLatLike | number[]} [props.center] - Initial center of the map [lng, lat].
- * @param {string} [props.mapStyle] - Mapbox style URL or identifier (e.g. "mapbox://styles/mapbox/streets-v11").
- * @param {number} [props.zoom] - Initial zoom level of the map.
- * @param {string} [props.popupMaxWidth] - Maximum width of popups (e.g., "200px").
- * @param {number | string} [props.width="100%"] - Width of the map container.
- * @param {number | string} [props.height=300] - Height of the map container.
- * @param {boolean} [props.loading] - Optional flag indicating if the map is in loading state.
- * @param {string} [props.markerImageURL] - URL of a custom image used for default marker icons.
- * @param {SxProps} [props.containerStyle] - Style object (MUI `sx`) to customize the map container.
- * @param {number} [props.fitBoundDuration] - Duration of fitBounds animation in milliseconds.
- * @param {boolean} [props.square] - If true, forces the map container to be a square.
- * @param {number | string} [props.openPopup] - ID of the marker whose popup should be open by default.
- * @param {boolean} [props.openPopupOnHover] - If true, opens the popup on marker hover instead of click.
- * @param {MarkerProps[]} [props.markers] - Array of marker objects to render on the map.
- * @param {(lng: number, lat: number) => void} [props.onMapClick] - Callback triggered when the map is clicked.
- * @param {"light" | "dark"} [props.theme] - Optional theme override for map rendering.
- *
- * @returns {ReactElement} The rendered map component with optional markers and behavior.
- *
- * @example
- * ```tsx
- * <MarkerMap
- *   center={[2.3488, 48.8534]}
- *   zoom={13}
- *   fitBounds
- *   openPopupOnHover
- *   popupMaxWidth="250px"
- *   mapStyle="mapbox://styles/mapbox/light-v10"
- *   theme="light"
- *   markers={[
- *    { id: 1, lat: 48.8534, lng: 2.3488, name: "Marker 1" },
- *    { id: 2, lat: 48.8566, lng: 2.3522, name: "Marker 2" },
- *   ]}
- * />
- * ```
- */
-const MarkerMap = ({ containerStyle, square, loading, height = 300, width = "100%", ...props }: MarkerMapProps): ReactElement => {
-  const { containerRef, currentTheme } = useMarkerMap(props);
+const MarkerMap = ({
+  containerStyle,
+  square,
+  loading,
+  height = 300,
+  width = "100%",
+  center = [2.3522, 48.8566],
+  zoom = 5,
+  popupMaxWidth,
+  openPopup,
+  openPopupOnHover,
+  markers = [],
+  fitBounds = true,
+  fitBoundsPadding,
+  fitBoundDuration,
+  onMapClick,
+  mapStyle = "mapbox://styles/mapbox/streets-v11",
+}: MarkerMapProps): ReactElement => {
+  const theme = useTheme();
+  const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
+
+  const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
+
+  const handleMarkerClick = (id: string | number) => {
+    if (!openPopupOnHover) {
+      setSelected(id);
+    }
+  };
+
+  const handleMarkerHover = (id: string | number | null) => {
+    if (openPopupOnHover) {
+      setSelected(id);
+    }
+  };
 
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
@@ -71,42 +53,51 @@ const MarkerMap = ({ containerStyle, square, loading, height = 300, width = "100
             width: "fit-content!important",
           },
           ".mapboxgl-popup-tip": {
-            borderTopColor: currentTheme === "dark" ? "#1e1e1e !important" : '#ffffff !important"',
+            borderTopColor: theme.palette.mode === "dark" ? "#1e1e1e !important" : '#ffffff !important"',
           },
         }}
       />
-      {mapboxgl.supported() ? (
-        <Box
-          ref={containerRef}
-          sx={{
-            alignItems: "center",
-            borderRadius: square ? 0 : 1,
-            height,
-            justifyContent: "center",
-            left: 0,
-            overflow: "hidden",
-            position: "absolute",
-            top: 0,
-            visibility: loading ? "hidden !important" : "visible",
-            width,
-            zIndex: 1,
-          }}
-        />
-      ) : (
-        <Box
-          sx={{
-            left: "50%",
-            position: "absolute",
-            textAlign: "center",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          WebGL is not enabled in your browser. This technology is required to display the interactive map.
-        </Box>
-      )}
 
-      {/* Loading skeleton */}
+      <MapboxMap
+        initialViewState={{
+          latitude: isArray(center) ? center[1] : center.lat,
+          longitude: isArray(center) ? center[0] : center.lng,
+          zoom,
+        }}
+        style={{ height: "100%", width: "100%" }}
+        mapStyle={mapStyle}
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+        onClick={(e) => onMapClick?.(e.lngLat.lng, e.lngLat.lat)}
+      >
+        {markers.map((m) => (
+          <Marker
+            key={m.id}
+            longitude={m.lng}
+            latitude={m.lat}
+            anchor="bottom"
+            onClick={() => handleMarkerClick(m.id)}
+            onMouseEnter={() => handleMarkerHover(m.id)}
+            onMouseLeave={() => handleMarkerHover(null)}
+          >
+            {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <div>📍</div>}
+          </Marker>
+        ))}
+
+        {selectedMarker && (
+          <Popup
+            longitude={selectedMarker.lng}
+            latitude={selectedMarker.lat}
+            anchor="top"
+            onClose={() => setSelected(null)}
+            maxWidth={popupMaxWidth}
+          >
+            {selectedMarker.Tooltip ?? <div>Marker {selectedMarker.id}</div>}
+          </Popup>
+        )}
+
+        {fitBounds && markers.length > 1 && <FitBounds markers={markers} padding={fitBoundsPadding} duration={fitBoundDuration} />}
+      </MapboxMap>
+
       {loading && (
         <Skeleton
           width={width}
