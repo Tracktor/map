@@ -1,9 +1,12 @@
-import { Box, Button, FormControlLabel, MenuItem, Select, Stack, Switch, ThemeProvider, Typography } from "@tracktor/design-system";
-import { lotOfMarkers } from "example/Markers.tsx";
+import { Box, Button, MenuItem, Select, Slider, Stack, Switch, ThemeProvider, Typography } from "@tracktor/design-system";
+import { generateMarkers } from "example/Markers";
 import type { MapOptions } from "mapbox-gl";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MarkerMap from "@/components/MarkerMap/MarkerMap";
-import MapProvider from "@/context/MapProvider.tsx";
+import MapProvider from "@/context/MapProvider";
+
+const MAX_MARKERS = 1000;
+const DEFAULT_MARKERS = 150;
 
 const App = () => {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("dark");
@@ -11,34 +14,22 @@ const App = () => {
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
   const [projection, setProjection] = useState<MapOptions["projection"]>("mercator");
-
-  const [mapKey, setMapKey] = useState(0); // pour forcer le reset de la vue
+  const [visibleMarkerCount, setVisibleMarkerCount] = useState(DEFAULT_MARKERS);
 
   const handleMapClick = (lng: number, lat: number): void => {
     console.log("Map clicked at:", { lat, lng });
   };
 
-  const handleResetView = () => {
-    // On change la key pour re-monter le composant MarkerMap
-    setMapKey((prev) => prev + 1);
-  };
+  const markers = useMemo(() => generateMarkers(visibleMarkerCount), [visibleMarkerCount]);
 
   return (
     <ThemeProvider theme={themeMode}>
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
-        <Stack
-          direction="row"
-          sx={{
-            height: "100vh",
-            overflow: "hidden",
-            width: "100vw",
-          }}
-        >
+        <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
           <Box sx={{ flex: 1 }}>
             <MarkerMap
-              key={mapKey}
               openPopup="1"
-              markers={lotOfMarkers}
+              markers={markers}
               height="100%"
               width="100%"
               onMapClick={handleMapClick}
@@ -79,15 +70,25 @@ const App = () => {
               <MenuItem value="satellite">Satellite</MenuItem>
             </Select>
 
-            <FormControlLabel
-              control={<Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />}
-              label="Cooperative Gestures"
-            />
+            <Typography variant="body2" color="text.secondary">
+              Nombre de markers ({visibleMarkerCount})
+            </Typography>
+            <Slider min={1} max={MAX_MARKERS} value={visibleMarkerCount} onChange={(_, v) => setVisibleMarkerCount(v as number)} />
 
-            <FormControlLabel
-              control={<Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />}
-              label="Double Click Zoom"
-            />
+            <Typography variant="body2" color="text.secondary">
+              Interactions
+            </Typography>
+            <Stack spacing={1}>
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Typography variant="body2">Cooperative Gestures</Typography>
+                <Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />
+              </Stack>
+
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Typography variant="body2">Double Click Zoom</Typography>
+                <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
+              </Stack>
+            </Stack>
 
             <Typography variant="body2" color="text.secondary">
               Projection
@@ -100,10 +101,6 @@ const App = () => {
               <MenuItem value="equirectangular">Equirectangular</MenuItem>
               <MenuItem value="naturalEarth">Natural Earth</MenuItem>
             </Select>
-
-            <Button variant="outlined" color="primary" onClick={handleResetView}>
-              🔄 Réinitialiser la vue
-            </Button>
           </Box>
         </Stack>
       </MapProvider>

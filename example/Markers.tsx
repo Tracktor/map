@@ -27,31 +27,32 @@ export const ReactMarkerExample = ({ name }: { name: string }) => (
 
 const randomOffset = () => (Math.random() - 0.5) * 0.01;
 
-export const lotOfMarkers: MarkerProps[] = Array.from({ length: 150 }, (_, i) => {
-  const id = `${i + 1}`;
-  const baseLat = 48.844039;
-  const baseLng = 2.489326;
-  const lat = baseLat + randomOffset();
-  const lng = baseLng + randomOffset();
-  const isWorksite = i % 2 === 0;
+export const generateMarkers = (count: number): MarkerProps[] =>
+  Array.from({ length: count }, (_, i) => {
+    const id = `${i + 1}`;
+    const baseLat = 48.844039;
+    const baseLng = 2.489326;
+    const lat = baseLat + randomOffset();
+    const lng = baseLng + randomOffset();
+    const isWorksite = i % 2 === 0;
 
-  return {
-    id,
-    lat,
-    lng,
-    name: `marker ${String.fromCharCode(65 + (i % 26))}${i}`,
-    onClick: (element) => {
-      console.log(`Marker ${id} clicked`, element);
-    },
-    ...(isWorksite
-      ? {
-          Tooltip: <TooltipExample name={`tooltip-${i}`} />,
-          type: "worksite",
-        }
-      : {
-          IconComponent: ReactMarkerExample,
-          iconProps: { name: `icon-${i}` },
-          type: "agency",
-        }),
-  };
-});
+    return {
+      id,
+      lat,
+      lng,
+      name: `marker ${String.fromCharCode(65 + (i % 26))}${i}`,
+      onClick: (element) => {
+        console.log(`Marker ${id} clicked`, element);
+      },
+      ...(isWorksite
+        ? {
+            Tooltip: <TooltipExample name={`tooltip-${i}`} />,
+            type: "worksite",
+          }
+        : {
+            IconComponent: ReactMarkerExample,
+            iconProps: { name: `icon-${i}` },
+            type: "agency",
+          }),
+    };
+  });

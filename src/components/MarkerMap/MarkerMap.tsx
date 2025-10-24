@@ -35,8 +35,6 @@ const MarkerMap = ({
   const mapRef = useRef<any>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
 
-  console.log("cooperativeGestures:", cooperativeGestures);
-
   const mapStyle = useMemo(
     () => getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
     [baseMapView, themeOverride, theme.palette.mode],
@@ -57,15 +55,21 @@ const MarkerMap = ({
 
   const handleMapLoad = () => {
     const map = mapRef.current?.getMap?.();
-    if (map) map.setStyle(mapStyle);
+    if (map) {
+      map.setStyle(mapStyle);
+    }
   };
 
   const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
-    if (!openPopupOnHover && hasTooltip) setSelected(id);
+    if (!openPopupOnHover && hasTooltip) {
+      setSelected(id);
+    }
   };
 
   const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
-    if (openPopupOnHover) setSelected(hasTooltip ? id : null);
+    if (openPopupOnHover) {
+      setSelected(hasTooltip ? id : null);
+    }
   };
 
   const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
@@ -75,6 +79,7 @@ const MarkerMap = ({
       <GlobalStyles styles={mapboxGlobalStyles} />
 
       <MapboxMap
+        key={`${coopGestures}-${dblZoom}-${projection}`}
         ref={mapRef}
         onLoad={handleMapLoad}
         cooperativeGestures={coopGestures}
