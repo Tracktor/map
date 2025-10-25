@@ -58,6 +58,7 @@ const MarkerMap = ({
     theme,
     zoom,
   });
+
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
       <GlobalStyles styles={mapboxGlobalStyles} />

@@ -6,21 +6,22 @@ import type { MarkerMapProps } from "@/types/MarkerMapProps";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
 const useMarkerMap = ({
-  center = [2.3522, 48.8566],
-  zoom = 5,
+  center,
+  zoom,
   openPopup,
   openPopupOnHover,
-  markers = [],
+  markers,
   baseMapView,
   mapStyle: baseMapStyle,
   projection,
-  cooperativeGestures = true,
-  doubleClickZoom = true,
+  cooperativeGestures,
+  doubleClickZoom,
   theme: themeOverride,
 }: MarkerMapProps) => {
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
+
   const initialCenter = useMemo(() => {
     if (isArray(center)) {
       return {
@@ -68,7 +69,7 @@ const useMarkerMap = ({
     }
   };
 
-  const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
+  const selectedMarker = useMemo(() => (selected ? (markers?.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
 
   useEffect(() => {
     setSelected(openPopup ?? null);
