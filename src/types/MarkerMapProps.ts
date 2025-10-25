@@ -1,5 +1,6 @@
 import { SxProps } from "@tracktor/design-system";
-import { LngLatLike, MapOptions } from "mapbox-gl";
+import { LngLatLike } from "mapbox-gl";
+import type { ProjectionSpecification as ReactMapProjection } from "react-map-gl";
 import { MarkerProps } from "@/types/MarkerProps.ts";
 
 export interface MarkerMapProps {
@@ -107,7 +108,7 @@ export interface MarkerMapProps {
   /**
    * Coordinate projection to use for the map (default is 'mercator').
    */
-  projection?: MapOptions["projection"];
+  projection?: ReactMapProjection;
 
   /**
    * Optional base map view

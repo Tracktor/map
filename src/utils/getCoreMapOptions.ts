@@ -58,11 +58,11 @@ const getCoreMapOptions = ({
   baseMapView,
   doubleClickZoom,
   cooperativeGestures,
-}: MapOptionsProps): Omit<MapOptions, "container"> => ({
+}: MapOptionsProps): Omit<MapOptions, "container"> & { style: string } => ({
   cooperativeGestures,
   doubleClickZoom,
   failIfMajorPerformanceCaveat: false,
-  style: mapStyle || getBaseMapStyle(baseMapView, theme),
+  style: mapStyle ?? getBaseMapStyle(baseMapView, theme),
 });
 
 export default getCoreMapOptions;
