@@ -1,7 +1,8 @@
 import { SxProps } from "@tracktor/design-system";
+import type { Feature } from "geojson";
 import { LngLatLike } from "mapbox-gl";
 import type { ProjectionSpecification as ReactMapProjection } from "react-map-gl";
-import { MarkerProps } from "@/types/MarkerProps.ts";
+import { MarkerProps } from "@/types/MarkerProps";
 
 export interface MarkerMapProps {
   /**
@@ -127,7 +128,7 @@ export interface MarkerMapProps {
   doubleClickZoom?: boolean;
 
   /**
-   * Enable marker clustering. If true, markers that are close together will be grouped into a single cluster marker.
+   * GeoJSON route to be displayed on the map.
    */
-  cluster?: boolean;
+  route?: Feature;
 }

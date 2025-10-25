@@ -3,6 +3,7 @@ import { memo, ReactElement } from "react";
 import MapboxMap, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isNumber } from "@tracktor/react-utils";
+import { Layer, Source } from "react-map-gl";
 import mapboxGlobalStyles from "@/constants/globalStyle";
 import FitBounds from "@/Features/Bounds/FitsBounds";
 import useMarkerMap from "@/Features/MarkerMap/useMarkerMap.ts";
@@ -33,6 +34,7 @@ const MarkerMap = ({
   doubleClickZoom = true,
   projection,
   theme,
+  route,
 }: MarkerMapProps): ReactElement => {
   const {
     selectedMarker,
@@ -136,6 +138,23 @@ const MarkerMap = ({
               duration={disableAnimation ? 0 : fitBoundDuration}
               animationKey={fitBoundsAnimationKey}
             />
+          )}
+          {route && (
+            <Source id="route" type="geojson" data={route}>
+              <Layer
+                id="route-line"
+                type="line"
+                paint={{
+                  "line-color": "#007AFF",
+                  "line-opacity": 0.8,
+                  "line-width": 4,
+                }}
+                layout={{
+                  "line-cap": "round",
+                  "line-join": "round",
+                }}
+              />
+            </Source>
           )}
         </MapboxMap>
       )}
