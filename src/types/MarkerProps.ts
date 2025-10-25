@@ -1,4 +1,5 @@
 import { ComponentType, ReactNode } from "react";
+import { VariantMarker } from "@/Features/Markers/DefaultMarkers.tsx";
 
 interface CustomMarkerMapProps {
   geometry: {
@@ -88,7 +89,9 @@ export interface MarkerProps<T = Record<string, unknown>> {
    * Optional custom React component to use as the marker icon.
    * Overrides iconImage if provided.
    */
-
   // biome-ignore lint/suspicious/noExplicitAny: <Icons can receive any props depending on context>
   IconComponent?: ComponentType<any>;
+
+  color?: string;
+  variant?: VariantMarker;
 }

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import MapProvider from "@/context/MapProvider";
 import MarkerMap from "@/Features/MarkerMap/MarkerMap.tsx";
+import { VariantMarker, variantMarkerColor } from "@/Features/Markers/DefaultMarkers.tsx";
 
 const MAX_MARKERS = 1000;
 const DEFAULT_MARKERS = 150;
@@ -19,12 +20,13 @@ const App = () => {
   const [visibleMarkerCount, setVisibleMarkerCount] = useState(DEFAULT_MARKERS);
   const [openPopupId, setOpenPopupId] = useState<string>("");
   const [openPopupOnHover, setOpenPopupOnHover] = useState(false);
+  const [markerVariant, setMarkerVariant] = useState<VariantMarker>("default");
 
   const handleMapClick = (lng: number, lat: number): void => {
     console.log("Map clicked at:", { lat, lng });
   };
 
-  const markers = useMemo(() => generateMarkers(visibleMarkerCount), [visibleMarkerCount]);
+  const markers = useMemo(() => generateMarkers(visibleMarkerCount, markerVariant), [visibleMarkerCount, markerVariant]);
 
   return (
     <ThemeProvider theme={themeMode}>
@@ -108,6 +110,20 @@ const App = () => {
                 <Typography variant="body2">Open Popup on hover</Typography>
                 <Switch checked={openPopupOnHover} onChange={(e) => setOpenPopupOnHover(e.target.checked)} />
               </Stack>
+
+              <Typography variant="body2" color="text.secondary">
+                Couleur des markers
+              </Typography>
+              <Select value={markerVariant} onChange={(e) => setMarkerVariant(e.target.value as VariantMarker)} size="small">
+                {Object.entries(variantMarkerColor).map(([key, color]) => (
+                  <MenuItem key={key} value={key}>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                      <Box sx={{ backgroundColor: color, borderRadius: "50%", height: 16, width: 16 }} />
+                      <Typography variant="body2">{key}</Typography>
+                    </Stack>
+                  </MenuItem>
+                ))}
+              </Select>
             </Stack>
 
             <Typography variant="body2" color="text.secondary">

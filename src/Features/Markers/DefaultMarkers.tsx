@@ -1,16 +1,35 @@
 import { Box, useTheme } from "@tracktor/design-system";
 
-const DefaultMarker = ({ color = "#7CBDCE" }) => {
-  const { palette } = useTheme();
+const BLACK = "#000000";
+const WHITE = "#FFFFFF";
 
-  const centerColor = palette.mode === "dark" ? "#000000" : "#ffffff";
+export const variantMarkerColor = {
+  default: "#009ba6",
+  primary: "#3F83F8",
+  secondary: "#9C27B0",
+  success: "#4CAF50",
+  warning: "#FF9800",
+} as const;
+
+export type VariantMarker = keyof typeof variantMarkerColor;
+
+interface MarkerProps {
+  variant?: keyof typeof variantMarkerColor;
+  color?: string;
+}
+
+const DefaultMarker = ({ color, variant }: MarkerProps) => {
+  const { palette } = useTheme();
+  const centerColor = palette.mode === "dark" ? BLACK : WHITE;
+
+  const markerColor = (variant && variantMarkerColor[variant]) || color || variantMarkerColor.default;
 
   return (
     <Box
       component="div"
       style={{
         backgroundColor: centerColor,
-        border: `7px solid ${color}`,
+        border: `7px solid ${markerColor}`,
         borderRadius: "50%",
         boxShadow: "0 0 4px rgba(0,0,0,0.3)",
         height: 28,

@@ -111,11 +111,7 @@ const MarkerMap = ({
                 onMouseLeave={() => handleMarkerHover(null)}
                 style={{ cursor: m.Tooltip ? "pointer" : "default" }}
               >
-                {m.IconComponent ? (
-                  <m.IconComponent {...m.iconProps} />
-                ) : (
-                  <DefaultMarker color={m.type === "worksite" ? "#1976d2" : "#4caf50"} />
-                )}
+                {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <DefaultMarker color={m.color} variant={m.variant} />}
               </Box>
             </Marker>
           ))}
