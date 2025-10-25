@@ -1,62 +1,60 @@
 import { MapOptions } from "mapbox-gl";
+import BASEMAP, { BaseMapView } from "@/constants/baseMap.ts";
 
 interface MapOptionsProps {
   mapStyle?: string;
   projection?: MapOptions["projection"];
-  baseMapView?: "default" | "satellite" | "streets" | "3d";
+  baseMapView?: BaseMapView;
   cooperativeGestures?: boolean;
   doubleClickZoom?: boolean;
   theme?: "light" | "dark";
 }
 
-const getBaseMapStyle = (baseMapView?: "default" | "satellite" | "streets" | "3d", theme?: "dark" | "light"): string => {
+export const getBaseMapStyle = (baseMapView?: BaseMapView, theme?: "dark" | "light"): string => {
   const isDarkTheme = theme === "dark";
 
   switch (baseMapView) {
     case "satellite":
-      return "mapbox://styles/mapbox/satellite-v9"; // No light/dark variants
+      return BASEMAP.satellite;
 
-    case "3d":
-      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v12?optimize=true";
-
-    case "streets":
-      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v11";
-
-    case "default":
     default:
-      return isDarkTheme ? "mapbox://styles/mapbox/dark-v10" : "mapbox://styles/mapbox/streets-v11";
+      return isDarkTheme ? BASEMAP.street.dark : BASEMAP.street.light;
   }
 };
 
 /**
- * Generates configuration options for initializing a Mapbox map
+ * Generates standardized configuration options for initializing a Mapbox map.
  *
- * This utility function creates a standardized configuration object for Mapbox GL JS
- * by processing various input parameters. It handles:
- * - Center point calculation (with fallback to marker positions or default)
- * - Style application
- * - Initial zoom level
+ * This utility function returns a base configuration object compatible with **Mapbox GL JS**.
+ * It applies a default style based on the selected **base map view** and **theme** if no explicit style is provided.
  *
- * @param {Object} params - Configuration parameters
- * @param {string} params.mapStyle - Mapbox style URL or specification
- * @param {MarkerProps[]} [params.markers] - Array of marker definitions
- * @param {LngLatLike|number[]} [params.center] - Optional center coordinates (either as LngLat object or [lng, lat] array)
- * @param {MapOptions["projection"]} [params.projection] - Optional coordinate projection
- * @param {string} [params.baseMapView] - Optional base map view type (default, satellite, streets, dark, 3d)
- * @param {boolean} [params.cooperativeGestures=true] - Enable cooperative gestures (default: true)
- * @param {boolean} [params.doubleClickZoom=true] - Enable double-click zoom (default: true)
+ * ### Features
+ * - Supports both **light** and **dark** themes.
+ * - Supports multiple base map types (e.g., streets, satellite).
+ * - Enables optional Mapbox interaction settings (e.g., cooperative gestures, double-click zoom).
+ * - Disables `failIfMajorPerformanceCaveat` by default for broader compatibility.
  *
- * @returns {object} Mapbox-compatible configuration object with:
- *   - center: Calculated center coordinates
- *   - cooperativeGestures: Enabled by default
- *   - failIfMajorPerformanceCaveat: Disabled by default
- *   - style: The provided map style
- *   - zoom: Initial zoom level
+ * @param {Object} params - Configuration parameters.
+ * @param {string} [params.mapStyle] - Custom Mapbox style URL or specification.
+ * If not provided, a default style is derived from `baseMapView` and `theme`.
+ * @param {"light" | "dark"} [params.theme] - Theme mode that determines which default style to use.
+ * @param {BaseMapView} [params.baseMapView] - Base map view type (`"satellite"`, `"street"`, etc.).
+ * @param {boolean} [params.doubleClickZoom] - Enable or disable double-click zoom.
+ * @param {boolean} [params.cooperativeGestures] - Enable or disable cooperative gestures.
+ *
+ * @returns {Omit<MapOptions, "container"> & { style: string }} - A configuration object ready to be passed to the Mapbox constructor.
  *
  * @example
  * const options = getCoreMapOptions({
- *   mapStyle: 'mapbox://styles/mapbox/streets-v11',
- *   markers: [{ lat: 48.8584, lng: 2.2945 }],
+ *   theme: "dark",
+ *   baseMapView: "satellite",
+ *   cooperativeGestures: true,
+ *   doubleClickZoom: false,
+ * });
+ *
+ * new mapboxgl.Map({
+ *   container: "map",
+ *   ...options,
  * });
  */
 const getCoreMapOptions = ({
@@ -65,11 +63,11 @@ const getCoreMapOptions = ({
   baseMapView,
   doubleClickZoom,
   cooperativeGestures,
-}: MapOptionsProps): Omit<MapOptions, "container"> => ({
+}: MapOptionsProps): Omit<MapOptions, "container"> & { style: string } => ({
   cooperativeGestures,
   doubleClickZoom,
   failIfMajorPerformanceCaveat: false,
-  style: mapStyle || getBaseMapStyle(baseMapView, theme),
+  style: mapStyle ?? getBaseMapStyle(baseMapView, theme),
 });
 
 export default getCoreMapOptions;
