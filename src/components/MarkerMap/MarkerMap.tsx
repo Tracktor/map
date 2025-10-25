@@ -3,6 +3,7 @@ import { memo, ReactElement, useEffect, useMemo, useRef, useState } from "react"
 import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
+// import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/constants/coordinates.ts";
 import mapboxGlobalStyles from "@/constants/globalStyle.ts";
 import FitBounds from "@/Features/Bounds/FitsBounds.ts";
 import DefaultMarker from "@/Features/Markers/DefaultMarkers.tsx";
@@ -37,6 +38,15 @@ const MarkerMap = ({
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
+  const initialCenter = useMemo(() => {
+    if (isArray(center)) {
+      return {
+        latitude: center[1],
+        longitude: center[0],
+        zoom,
+      };
+    }
+  }, [center, zoom]);
 
   useEffect(() => {
     setSelected(openPopup ?? null);
@@ -107,14 +117,12 @@ const MarkerMap = ({
           doubleClickZoom={dblZoom}
           mapStyle={coreStyle}
           projection={projection}
-          initialViewState={{
-            latitude: isArray(center) ? center[1] : center.lat,
-            longitude: isArray(center) ? center[0] : center.lng,
-            zoom,
-          }}
+          initialViewState={initialCenter}
           style={{ height: "100%", width: "100%" }}
           mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-          onClick={(e) => onMapClick?.(e.lngLat.lng, e.lngLat.lat)}
+          onClick={(e) => {
+            onMapClick?.(e.lngLat.lng, e.lngLat.lat);
+          }}
         >
           {markers.map((m) => (
             <Marker
@@ -122,15 +130,25 @@ const MarkerMap = ({
               longitude={isNumber(m.lng) ? m.lng : undefined}
               latitude={isNumber(m.lat) ? m.lat : undefined}
               anchor="bottom"
-              onClick={() => handleMarkerClick(m.id, Boolean(m.Tooltip))}
-              onMouseEnter={() => handleMarkerHover(m.id, Boolean(m.Tooltip))}
-              onMouseLeave={() => handleMarkerHover(null)}
+              onClick={(e) => {
+                e.originalEvent.stopPropagation();
+                m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
+              }}
             >
-              {m.IconComponent ? (
-                <m.IconComponent {...m.iconProps} />
-              ) : (
-                <DefaultMarker color={m.type === "worksite" ? "#1976d2" : "#4caf50"} />
-              )}
+              <Box
+                component="div"
+                onMouseEnter={() => {
+                  m.id && handleMarkerHover(m.id, Boolean(m.Tooltip));
+                }}
+                onMouseLeave={() => handleMarkerHover(null)}
+                style={{ cursor: m.Tooltip ? "pointer" : "default" }}
+              >
+                {m.IconComponent ? (
+                  <m.IconComponent {...m.iconProps} />
+                ) : (
+                  <DefaultMarker color={m.type === "worksite" ? "#1976d2" : "#4caf50"} />
+                )}
+              </Box>
             </Marker>
           ))}
 
@@ -141,7 +159,7 @@ const MarkerMap = ({
               anchor="top"
               onClose={() => setSelected(null)}
               maxWidth={popupMaxWidth}
-              closeOnClick={false}
+              closeOnClick={true}
             >
               {selectedMarker.Tooltip}
             </Popup>

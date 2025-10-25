@@ -15,8 +15,8 @@ const App = () => {
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
   const [projection, setProjection] = useState<MapOptions["projection"]>("mercator");
   const [visibleMarkerCount, setVisibleMarkerCount] = useState(DEFAULT_MARKERS);
-
   const [openPopupId, setOpenPopupId] = useState<string>("");
+  const [openPopupOnHover, setOpenPopupOnHover] = useState(false);
 
   const handleMapClick = (lng: number, lat: number): void => {
     console.log("Map clicked at:", { lat, lng });
@@ -39,6 +39,7 @@ const App = () => {
               cooperativeGestures={cooperativeGestures}
               doubleClickZoom={doubleClickZoom}
               projection={projection}
+              openPopupOnHover={openPopupOnHover}
             />
           </Box>
 
@@ -99,6 +100,11 @@ const App = () => {
               <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Typography variant="body2">Double Click Zoom</Typography>
                 <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
+              </Stack>
+
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Typography variant="body2">Open Popup on hover</Typography>
+                <Switch checked={openPopupOnHover} onChange={(e) => setOpenPopupOnHover(e.target.checked)} />
               </Stack>
             </Stack>
 
