@@ -23,7 +23,8 @@
     "prepublishOnly": "bun run build",
     "preview": "bunx vite preview",
     "release": "bun run build && bun publish --access public",
-    "version": "bunx standard-version"
+    "version": "bunx standard-version",
+    "prepare": "husky"
   },
   "files": [
     "dist"
@@ -47,6 +48,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.6.0",
+    "husky": "^9.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "standard-version": "^9.5.0",

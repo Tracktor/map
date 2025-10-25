@@ -1,7 +1,7 @@
 import { Box, Button, MenuItem, Select, Slider, Stack, Switch, TextField, ThemeProvider, Typography } from "@tracktor/design-system";
 import { generateMarkers } from "example/Markers";
-import type { MapOptions } from "mapbox-gl";
 import { useMemo, useState } from "react";
+import type { ProjectionSpecification } from "react-map-gl";
 import MapProvider from "@/context/MapProvider";
 import MarkerMap from "@/Features/MarkerMap/MarkerMap.tsx";
 
@@ -13,7 +13,9 @@ const App = () => {
   const [baseMapView, setBaseMapView] = useState<"street" | "satellite">("street");
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
-  const [projection, setProjection] = useState<MapOptions["projection"]>("mercator");
+  const [projection, setProjection] = useState<ProjectionSpecification>({
+    name: "mercator",
+  });
   const [visibleMarkerCount, setVisibleMarkerCount] = useState(DEFAULT_MARKERS);
   const [openPopupId, setOpenPopupId] = useState<string>("");
   const [openPopupOnHover, setOpenPopupOnHover] = useState(false);
@@ -111,7 +113,11 @@ const App = () => {
             <Typography variant="body2" color="text.secondary">
               Projection
             </Typography>
-            <Select value={projection} onChange={(e) => setProjection(e.target.value as MapOptions["projection"])} size="small">
+            <Select
+              value={projection.name}
+              onChange={(e) => setProjection({ name: e.target.value as ProjectionSpecification["name"] })}
+              size="small"
+            >
               <MenuItem value="mercator">Mercator</MenuItem>
               <MenuItem value="globe">Globe</MenuItem>
               <MenuItem value="albers">Albers</MenuItem>
