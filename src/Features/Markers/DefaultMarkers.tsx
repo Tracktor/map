@@ -1,4 +1,5 @@
 import { Box, useTheme } from "@tracktor/design-system";
+import { isString } from "@tracktor/react-utils";
 
 const BLACK = "#000000";
 const WHITE = "#FFFFFF";
@@ -14,15 +15,20 @@ export const variantMarkerColor = {
 export type VariantMarker = keyof typeof variantMarkerColor;
 
 interface MarkerProps {
-  variant?: keyof typeof variantMarkerColor;
+  variant?: string | keyof typeof variantMarkerColor;
   color?: string;
 }
+
+const isPredefinedVariant = (v: string): v is VariantMarker => v in variantMarkerColor;
 
 const DefaultMarker = ({ color, variant }: MarkerProps) => {
   const { palette } = useTheme();
   const centerColor = palette.mode === "dark" ? BLACK : WHITE;
 
-  const markerColor = (variant && variantMarkerColor[variant]) || color || variantMarkerColor.default;
+  const markerColor =
+    (variant && isPredefinedVariant(variant) && variantMarkerColor[variant]) ||
+    color ||
+    (isString(variant) ? variant : variantMarkerColor.default);
 
   return (
     <Box

@@ -6,87 +6,96 @@ import { MarkerProps } from "@/types/MarkerProps";
 
 export interface MarkerMapProps {
   /**
-   * Determines if the map should automatically adjust its zoom to include all markers.
+   * Automatically adjusts the map's zoom and center
+   * to ensure all markers are visible within the viewport.
    */
   fitBounds?: boolean;
 
   /**
-   * Padding in pixels to add around bounds when using fitBounds.
+   * Additional padding (in pixels) around the bounds
+   * when using `fitBounds`.
    */
   fitBoundsPadding?: number;
 
   /**
-   * Coordinates for the center of the map (longitude, latitude).
+   * Coordinates for the initial center of the map.
+   * Format: [longitude, latitude].
    */
   center?: LngLatLike | number[];
 
   /**
-   * Map style to use (URL or style identifier).
+   * Mapbox style URL or predefined style ID
+   * (e.g., "mapbox://styles/mapbox/streets-v11").
    */
   mapStyle?: string;
 
   /**
    * Initial zoom level of the map.
+   * A higher number means a closer zoom.
    */
   zoom?: number;
 
   /**
-   * Maximum width of popups in pixels or another CSS unit.
+   * Maximum width of popups in pixels or any valid CSS unit.
    */
   popupMaxWidth?: string;
 
   /**
    * Width of the map container.
+   * Can be a number (px) or any CSS unit (e.g. "100%").
    */
   width?: number | string;
 
   /**
    * Height of the map container.
+   * Can be a number (px) or any CSS unit (e.g. "100vh").
    */
   height?: number | string;
 
   /**
-   * Indicates if the map is currently loading.
+   * Indicates whether the map is currently in a loading state.
+   * Displays a skeleton overlay when true.
    */
   loading?: boolean;
 
   /**
-   * URL of the image to use for markers.
+   * URL of a custom image used as the default marker icon.
    */
   markerImageURL?: string;
 
   /**
-   * Style to apply to the map container (uses MUI's SxProps system).
+   * Custom styles applied to the map container.
+   * Uses MUI's `SxProps` system.
    */
   containerStyle?: SxProps;
 
   /**
-   * Disables the animation
+   * Disables the map's fitBounds animation.
    */
   disableAnimation?: boolean;
 
   /**
-   * Duration of the fit bounds animation in milliseconds.
+   * Duration (in ms) of the fitBounds animation.
    */
   fitBoundDuration?: number;
 
   /**
-   * Optional key to trigger fitBounds animation.
+   * Optional key that can be updated to re-trigger the fitBounds animation.
    */
   fitBoundsAnimationKey?: unknown;
 
   /**
-   * Forces the map container to be square.
+   * Forces the map container to have a square shape.
    */
   square?: boolean;
 
   /**
-   * ID of the marker whose popup should be open by default.
+   * ID of the marker whose popup should be open when the map loads.
    */
   openPopup?: number | string;
 
   /**
-   * Automatically opens popups when hovering over markers.
+   * Opens marker popups automatically when hovering over them.
    */
   openPopupOnHover?: boolean;
 
@@ -96,39 +105,64 @@ export interface MarkerMapProps {
   markers?: MarkerProps[];
 
   /**
-   * Function called when clicking on the map, with coordinates of the clicked point.
+   * Callback triggered when the map is clicked.
+   * Returns the longitude and latitude of the clicked point.
    */
   onMapClick?: (lng: number, lat: number) => void;
 
   /**
-   * The theme of Map.
+   * The color theme of the map UI.
    * @default "light"
    */
   theme?: "dark" | "light";
 
   /**
-   * Coordinate projection to use for the map (default is 'mercator').
+   * Map projection type to use.
+   * @default "mercator"
    */
   projection?: ReactMapProjection;
 
   /**
-   * Optional base map view
-   * @default "default"
+   * Base map view mode.
+   * @default "street"
    */
   baseMapView?: "satellite" | "street";
 
   /**
-   * Optional key to activate zoom on scroll without restriction (default is true).
+   * Enables or disables cooperative gestures
+   * (e.g. requiring two-finger pan on touch devices).
+   * @default true
    */
   cooperativeGestures?: boolean;
 
   /**
-   * Optional key to activate double-click zoom (default is true).
+   * Enables or disables double-click zoom.
+   * @default true
    */
   doubleClickZoom?: boolean;
 
   /**
-   * GeoJSON route to be displayed on the map.
+   * A GeoJSON feature representing a line to display on the map.
    */
-  route?: Feature;
+  line?: Feature;
+
+  /**
+   * Starting point of the route.
+   * Format: [longitude, latitude].
+   * If both `from` and `to` are provided, a route will be calculated.
+   */
+  from?: [number, number];
+
+  /**
+   * Ending point of the route.
+   * Format: [longitude, latitude].
+   * If both `from` and `to` are provided, a route will be calculated.
+   */
+  to?: [number, number];
+
+  /**
+   * Transportation profile used for route calculation.
+   * @default "driving"
+   */
+  profile?: "driving" | "walking" | "cycling";
 }

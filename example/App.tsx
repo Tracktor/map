@@ -1,148 +1,27 @@
-import { Box, Button, MenuItem, Select, Slider, Stack, Switch, TextField, ThemeProvider, Typography } from "@tracktor/design-system";
-import { generateMarkers } from "example/Markers";
-import { useMemo, useState } from "react";
-import type { ProjectionSpecification } from "react-map-gl";
+import { ThemeProvider } from "@tracktor/design-system";
+import Navbar from "example/Navbar.tsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MapProvider from "@/context/MapProvider";
-import MarkerMap from "@/Features/MarkerMap/MarkerMap.tsx";
-import { VariantMarker, variantMarkerColor } from "@/Features/Markers/DefaultMarkers.tsx";
+import MarkersExample from "./MarkersExample";
+import MultiCityExample from "./MultiCityExample";
+import RouteExample from "./RoutesExample";
 
-const MAX_MARKERS = 1000;
-const DEFAULT_MARKERS = 150;
-
+/**
+ * This is the main app entry point.
+ * It wraps all routes with providers and global components.
+ */
 const App = () => {
-  const [themeMode, setThemeMode] = useState<"light" | "dark">("dark");
-  const [baseMapView, setBaseMapView] = useState<"street" | "satellite">("street");
-  const [cooperativeGestures, setCooperativeGestures] = useState(true);
-  const [doubleClickZoom, setDoubleClickZoom] = useState(true);
-  const [projection, setProjection] = useState<ProjectionSpecification>({
-    name: "mercator",
-  });
-  const [visibleMarkerCount, setVisibleMarkerCount] = useState(DEFAULT_MARKERS);
-  const [openPopupId, setOpenPopupId] = useState<string>("");
-  const [openPopupOnHover, setOpenPopupOnHover] = useState(false);
-  const [markerVariant, setMarkerVariant] = useState<VariantMarker>("default");
-
-  const handleMapClick = (lng: number, lat: number): void => {
-    console.log("Map clicked at:", { lat, lng });
-  };
-
-  const markers = useMemo(() => generateMarkers(visibleMarkerCount, markerVariant), [visibleMarkerCount, markerVariant]);
-
   return (
-    <ThemeProvider theme={themeMode}>
+    <ThemeProvider theme="dark">
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
-        <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
-          <Box sx={{ flex: 1 }}>
-            <MarkerMap
-              openPopup={openPopupId}
-              markers={markers}
-              height="100%"
-              width="100%"
-              onMapClick={handleMapClick}
-              baseMapView={baseMapView}
-              cooperativeGestures={cooperativeGestures}
-              doubleClickZoom={doubleClickZoom}
-              projection={projection}
-              openPopupOnHover={openPopupOnHover}
-            />
-          </Box>
-
-          <Box
-            sx={{
-              backgroundColor: "background.paper",
-              borderColor: "divider",
-              borderLeft: "1px solid",
-              color: "text.primary",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              p: 2,
-              width: 300,
-            }}
-          >
-            <Typography variant="h6">🧭 Options</Typography>
-
-            <Typography variant="body2" color="text.secondary">
-              Thème
-            </Typography>
-            <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-              {themeMode === "dark" ? "Light mode" : "Dark mode"}
-            </Button>
-
-            <Typography variant="body2" color="text.secondary">
-              Base Map View
-            </Typography>
-            <Select value={baseMapView} onChange={(e) => setBaseMapView(e.target.value)} size="small">
-              <MenuItem value="street">Street</MenuItem>
-              <MenuItem value="satellite">Satellite</MenuItem>
-            </Select>
-
-            <Typography variant="body2" color="text.secondary">
-              Nombre de markers ({visibleMarkerCount})
-            </Typography>
-            <Slider min={1} max={MAX_MARKERS} value={visibleMarkerCount} onChange={(_, v) => setVisibleMarkerCount(v as number)} />
-
-            <Typography variant="body2" color="text.secondary">
-              Open popup
-            </Typography>
-            <TextField
-              placeholder="ID du marker ex: 10"
-              size="small"
-              value={openPopupId}
-              onChange={(e) => setOpenPopupId(e.target.value)}
-            />
-
-            <Typography variant="body2" color="text.secondary">
-              Interactions
-            </Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Cooperative Gestures</Typography>
-                <Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />
-              </Stack>
-
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Double Click Zoom</Typography>
-                <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
-              </Stack>
-
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Open Popup on hover</Typography>
-                <Switch checked={openPopupOnHover} onChange={(e) => setOpenPopupOnHover(e.target.checked)} />
-              </Stack>
-
-              <Typography variant="body2" color="text.secondary">
-                Couleur des markers
-              </Typography>
-              <Select value={markerVariant} onChange={(e) => setMarkerVariant(e.target.value as VariantMarker)} size="small">
-                {Object.entries(variantMarkerColor).map(([key, color]) => (
-                  <MenuItem key={key} value={key}>
-                    <Stack direction="row" alignItems="center" gap={1}>
-                      <Box sx={{ backgroundColor: color, borderRadius: "50%", height: 16, width: 16 }} />
-                      <Typography variant="body2">{key}</Typography>
-                    </Stack>
-                  </MenuItem>
-                ))}
-              </Select>
-            </Stack>
-
-            <Typography variant="body2" color="text.secondary">
-              Projection
-            </Typography>
-            <Select
-              value={projection.name}
-              onChange={(e) => setProjection({ name: e.target.value as ProjectionSpecification["name"] })}
-              size="small"
-            >
-              <MenuItem value="mercator">Mercator</MenuItem>
-              <MenuItem value="globe">Globe</MenuItem>
-              <MenuItem value="albers">Albers</MenuItem>
-              <MenuItem value="equalEarth">Equal Earth</MenuItem>
-              <MenuItem value="equirectangular">Equirectangular</MenuItem>
-              <MenuItem value="naturalEarth">Natural Earth</MenuItem>
-            </Select>
-          </Box>
-        </Stack>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<MarkersExample />} />
+            <Route path="/multilines" element={<MultiCityExample />} />
+            <Route path="/route" element={<RouteExample />} />
+          </Routes>
+        </BrowserRouter>
       </MapProvider>
     </ThemeProvider>
   );

@@ -34,7 +34,10 @@ const MarkerMap = ({
   doubleClickZoom = true,
   projection,
   theme,
-  route,
+  line,
+  from,
+  to,
+  profile = "driving",
 }: MarkerMapProps): ReactElement => {
   const {
     selectedMarker,
@@ -47,17 +50,21 @@ const MarkerMap = ({
     initialCenter,
     coreStyle,
     coopGestures,
+    route,
   } = useMarkerMap({
     baseMapView,
     center,
     cooperativeGestures,
     doubleClickZoom,
+    from,
     mapStyle,
     markers,
     openPopup,
     openPopupOnHover,
+    profile,
     projection,
     theme,
+    to,
     zoom,
   });
 
@@ -139,8 +146,27 @@ const MarkerMap = ({
               animationKey={fitBoundsAnimationKey}
             />
           )}
+
           {route && (
             <Source id="route" type="geojson" data={route}>
+              <Layer
+                id="route-line"
+                type="line"
+                paint={{
+                  "line-color": "#FF5733",
+                  "line-opacity": 0.8,
+                  "line-width": 4,
+                }}
+                layout={{
+                  "line-cap": "round",
+                  "line-join": "round",
+                }}
+              />
+            </Source>
+          )}
+
+          {line && (
+            <Source id="route" type="geojson" data={line}>
               <Layer
                 id="route-line"
                 type="line"

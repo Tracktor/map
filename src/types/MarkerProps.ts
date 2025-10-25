@@ -93,5 +93,5 @@ export interface MarkerProps<T = Record<string, unknown>> {
   IconComponent?: ComponentType<any>;
 
   color?: string;
-  variant?: VariantMarker;
+  variant?: string | VariantMarker;
 }
