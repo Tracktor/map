@@ -1,13 +1,13 @@
-import { Box, GlobalStyles, Skeleton, useTheme } from "@tracktor/design-system";
-import { memo, ReactElement, useEffect, useMemo, useRef, useState } from "react";
-import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
+import { Box, GlobalStyles, Skeleton } from "@tracktor/design-system";
+import { memo, ReactElement } from "react";
+import MapboxMap, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { isArray, isNumber } from "@tracktor/react-utils";
-import mapboxGlobalStyles from "@/constants/globalStyle.ts";
-import FitBounds from "@/Features/Bounds/FitsBounds.tsx";
-import DefaultMarker from "@/Features/Markers/DefaultMarkers.tsx";
-import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
-import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions.ts";
+import { isNumber } from "@tracktor/react-utils";
+import mapboxGlobalStyles from "@/constants/globalStyle";
+import FitBounds from "@/Features/Bounds/FitsBounds";
+import useMarkerMap from "@/Features/MarkerMap/useMarkerMap.ts";
+import DefaultMarker from "@/Features/Markers/DefaultMarkers";
+import { MarkerMapProps } from "@/types/MarkerMapProps";
 
 const MarkerMap = ({
   containerStyle,
@@ -26,70 +26,38 @@ const MarkerMap = ({
   fitBoundDuration,
   fitBoundsAnimationKey,
   disableAnimation,
-  mapStyle: baseMapStyle,
+  mapStyle,
   onMapClick,
   baseMapView,
   cooperativeGestures = true,
   doubleClickZoom = true,
   projection,
-  theme: themeOverride,
+  theme,
 }: MarkerMapProps): ReactElement => {
-  const theme = useTheme();
-  const mapRef = useRef<MapRef | null>(null);
-  const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
-  const initialCenter = useMemo(() => {
-    if (isArray(center)) {
-      return {
-        latitude: center[1],
-        longitude: center[0],
-        zoom,
-      };
-    }
-  }, [center, zoom]);
-
-  useEffect(() => {
-    setSelected(openPopup ?? null);
-  }, [openPopup]);
-
-  const mapStyle = useMemo(
-    () => baseMapStyle || getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
-    [baseMapView, baseMapStyle, themeOverride, theme.palette.mode],
-  );
-
   const {
-    style: coreStyle,
-    cooperativeGestures: coopGestures,
-    doubleClickZoom: dblZoom,
-  } = getCoreMapOptions({
+    selectedMarker,
+    setSelected,
+    handleMarkerClick,
+    handleMarkerHover,
+    handleMapLoad,
+    mapRef,
+    dblZoom,
+    initialCenter,
+    coreStyle,
+    coopGestures,
+  } = useMarkerMap({
     baseMapView,
+    center,
     cooperativeGestures,
     doubleClickZoom,
     mapStyle,
+    markers,
+    openPopup,
+    openPopupOnHover,
     projection,
-    theme: themeOverride ?? theme.palette.mode,
+    theme,
+    zoom,
   });
-
-  const handleMapLoad = () => {
-    const map = mapRef.current?.getMap?.();
-    if (map) {
-      map.setStyle(mapStyle);
-    }
-  };
-
-  const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
-    if (!openPopupOnHover && hasTooltip) {
-      setSelected(id);
-    }
-  };
-
-  const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
-    if (openPopupOnHover) {
-      setSelected(hasTooltip ? id : null);
-    }
-  };
-
-  const selectedMarker = useMemo(() => (selected ? (markers.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
-
   return (
     <Box sx={{ height, position: "relative", width, ...containerStyle }}>
       <GlobalStyles styles={mapboxGlobalStyles} />

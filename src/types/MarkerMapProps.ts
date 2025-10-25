@@ -125,4 +125,9 @@ export interface MarkerMapProps {
    * Optional key to activate double-click zoom (default is true).
    */
   doubleClickZoom?: boolean;
+
+  /**
+   * Enable marker clustering. If true, markers that are close together will be grouped into a single cluster marker.
+   */
+  cluster?: boolean;
 }
