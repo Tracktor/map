@@ -2,8 +2,8 @@ import { Box, Button, MenuItem, Select, Slider, Stack, Switch, TextField, ThemeP
 import { generateMarkers } from "example/Markers";
 import type { MapOptions } from "mapbox-gl";
 import { useMemo, useState } from "react";
-import MarkerMap from "@/components/MarkerMap/MarkerMap";
 import MapProvider from "@/context/MapProvider";
+import MarkerMap from "@/Features/MarkerMap/MarkerMap.tsx";
 
 const MAX_MARKERS = 1000;
 const DEFAULT_MARKERS = 150;

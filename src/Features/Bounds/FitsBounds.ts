@@ -1,4 +1,4 @@
-import mapboxgl, { Map as MapboxMap } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useRef } from "react";
 import { useMap } from "react-map-gl";
 import { MarkerProps } from "@/types/MarkerProps";
@@ -13,7 +13,10 @@ interface FitBoundsProps {
 }
 
 const serializeKey = (key: unknown): string => {
-  if (typeof key === "string" || typeof key === "number") return String(key);
+  if (typeof key === "string" || typeof key === "number") {
+    return String(key);
+  }
+
   return JSON.stringify(key);
 };
 
@@ -25,14 +28,17 @@ const FitBounds = ({
   fitBounds = true,
   animationKey,
 }: FitBoundsProps) => {
-  const mapbox = useMap() as { current: MapboxMap | null };
+  const mapbox = useMap();
   const map = mapbox.current;
   const previousKey = useRef<string>("");
 
   const validMarkers = useMemo(() => markers.filter((m) => Number.isFinite(m.lng) && Number.isFinite(m.lat)), [markers]);
 
   const bounds = useMemo(() => {
-    if (validMarkers.length === 0) return null;
+    if (validMarkers.length === 0) {
+      return null;
+    }
+
     const b = new mapboxgl.LngLatBounds();
     for (const m of validMarkers) {
       b.extend([m.lng, m.lat]);
@@ -41,7 +47,9 @@ const FitBounds = ({
   }, [validMarkers]);
 
   useEffect(() => {
-    if (!(map && fitBounds && bounds)) return;
+    if (!(map && fitBounds && bounds)) {
+      return undefined;
+    }
 
     if (animationKey !== undefined) {
       const currentKey = serializeKey(animationKey);

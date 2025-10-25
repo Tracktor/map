@@ -7,8 +7,8 @@ import { isArray, isNumber } from "@tracktor/react-utils";
 import mapboxGlobalStyles from "@/constants/globalStyle.ts";
 import FitBounds from "@/Features/Bounds/FitsBounds.ts";
 import DefaultMarker from "@/Features/Markers/DefaultMarkers.tsx";
-import { MarkerMapProps } from "@/types/MarkerMapProps";
-import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
+import { MarkerMapProps } from "@/types/MarkerMapProps.ts";
+import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions.ts";
 
 const MarkerMap = ({
   containerStyle,
