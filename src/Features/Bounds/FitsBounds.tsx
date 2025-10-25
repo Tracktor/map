@@ -1,3 +1,4 @@
+import { isNumber, isString } from "@tracktor/react-utils";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useRef } from "react";
 import { useMap } from "react-map-gl";
@@ -13,12 +14,14 @@ interface FitBoundsProps {
 }
 
 const serializeKey = (key: unknown): string => {
-  if (typeof key === "string" || typeof key === "number") {
+  if (isString(key) || isNumber(key)) {
     return String(key);
   }
 
   return JSON.stringify(key);
 };
+
+const isValidMarker = (m: MarkerProps): m is MarkerProps & { lng: number; lat: number } => Number.isFinite(m.lng) && Number.isFinite(m.lat);
 
 const FitBounds = ({
   markers,
@@ -32,18 +35,17 @@ const FitBounds = ({
   const map = mapbox.current;
   const previousKey = useRef<string>("");
 
-  const validMarkers = useMemo(() => markers.filter((m) => Number.isFinite(m.lng) && Number.isFinite(m.lat)), [markers]);
+  const validMarkers = useMemo(() => markers.filter(isValidMarker), [markers]);
 
   const bounds = useMemo(() => {
     if (validMarkers.length === 0) {
       return null;
     }
 
-    const b = new mapboxgl.LngLatBounds();
-    for (const m of validMarkers) {
-      b.extend([m.lng, m.lat]);
-    }
-    return b;
+    return validMarkers.reduce((acc, m) => {
+      acc.extend([Number(m.lng), Number(m.lat)]);
+      return acc;
+    }, new mapboxgl.LngLatBounds());
   }, [validMarkers]);
 
   useEffect(() => {
@@ -53,7 +55,9 @@ const FitBounds = ({
 
     if (animationKey !== undefined) {
       const currentKey = serializeKey(animationKey);
-      if (previousKey.current === currentKey) return;
+      if (previousKey.current === currentKey) {
+        return;
+      }
       previousKey.current = currentKey;
     }
 
@@ -66,7 +70,7 @@ const FitBounds = ({
       return;
     }
 
-    map.fitBounds(bounds, {
+    map.fitBounds([bounds.getSouthWest(), bounds.getNorthEast()], {
       duration: disableAnimation ? 0 : duration,
       padding,
     });

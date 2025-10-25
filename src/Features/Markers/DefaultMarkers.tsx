@@ -1,6 +1,6 @@
 import { Box, useTheme } from "@tracktor/design-system";
 
-const DefaultMarker = ({ color = "#1976d2" }) => {
+const DefaultMarker = ({ color = "#7CBDCE" }) => {
   const { palette } = useTheme();
 
   const centerColor = palette.mode === "dark" ? "#000000" : "#ffffff";

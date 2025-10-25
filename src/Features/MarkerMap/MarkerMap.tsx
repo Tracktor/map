@@ -3,7 +3,6 @@ import { memo, ReactElement, useEffect, useMemo, useRef, useState } from "react"
 import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
-// import { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/constants/coordinates.ts";
 import mapboxGlobalStyles from "@/constants/globalStyle.ts";
 import FitBounds from "@/Features/Bounds/FitsBounds.tsx";
 import DefaultMarker from "@/Features/Markers/DefaultMarkers.tsx";
