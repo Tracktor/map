@@ -8,6 +8,7 @@ import mapboxGlobalStyles from "@/constants/globalStyle";
 import FitBounds from "@/Features/Bounds/FitsBounds";
 import useMarkerMap from "@/Features/MarkerMap/useMarkerMap.ts";
 import DefaultMarker from "@/Features/Markers/DefaultMarkers";
+import RenderFeatures from "@/Features/RenderFeature/RenderFeature.tsx";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
 
 const MarkerMap = ({
@@ -34,7 +35,7 @@ const MarkerMap = ({
   doubleClickZoom = true,
   projection,
   theme,
-  line,
+  features,
   from,
   to,
   profile = "driving",
@@ -164,22 +165,7 @@ const MarkerMap = ({
             </Source>
           )}
 
-          {line && (
-            <Source type="geojson" data={line}>
-              <Layer
-                type="line"
-                paint={{
-                  "line-color": "#007AFF",
-                  "line-opacity": 0.8,
-                  "line-width": 4,
-                }}
-                layout={{
-                  "line-cap": "round",
-                  "line-join": "round",
-                }}
-              />
-            </Source>
-          )}
+          {features && <RenderFeatures features={features} />}
         </MapboxMap>
       )}
     </Box>

@@ -73,8 +73,8 @@ const cardData = [
   {
     description: "Draw multiple lines between cities with auto zoom & fit bounds.",
     image: MultiLinePreview,
-    path: "/multilines",
-    title: "🧭 Multi-lines Example",
+    path: "/features",
+    title: "🗺 Features Example",
   },
 ];
 

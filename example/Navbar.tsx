@@ -5,7 +5,7 @@ const navItems = [
   { icon: "🏡", label: "Home", path: "/" },
   { icon: "📍", label: "Markers", path: "/markers" },
   { icon: "🧭", label: "Route", path: "/route" },
-  { icon: "🗺️", label: "Multilines", path: "/multilines" },
+  { icon: "🗺️", label: "Features", path: "/features" },
 ];
 
 const Navbar = () => {

@@ -2,8 +2,8 @@ import { ThemeProvider } from "@tracktor/design-system";
 import LandingPage from "example/LandingPage.tsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MapProvider from "@/context/MapProvider";
+import FeaturesExample from "./FeaturesExample.tsx";
 import MarkersExample from "./MarkersExample";
-import MultiCityExample from "./MultiCityExample";
 import RouteExample from "./RoutesExample";
 
 /**
@@ -18,7 +18,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/markers" element={<MarkersExample />} />
-            <Route path="/multilines" element={<MultiCityExample />} />
+            <Route path="/features" element={<FeaturesExample />} />
             <Route path="/route" element={<RouteExample />} />
           </Routes>
         </BrowserRouter>

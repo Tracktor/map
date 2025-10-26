@@ -1,5 +1,5 @@
 import { SxProps } from "@tracktor/design-system";
-import type { Feature } from "geojson";
+import type { Feature, FeatureCollection } from "geojson";
 import { LngLatLike } from "mapbox-gl";
 import type { ProjectionSpecification as ReactMapProjection } from "react-map-gl";
 import { MarkerProps } from "@/types/MarkerProps";
@@ -142,9 +142,9 @@ export interface MarkerMapProps {
   doubleClickZoom?: boolean;
 
   /**
-   * A GeoJSON feature representing a line to display on the map.
+   * One or multiple GeoJSON line features to display on the map.
    */
-  line?: Feature;
+  features?: Feature | Feature[] | FeatureCollection;
 
   /**
    * Starting point of the route.
