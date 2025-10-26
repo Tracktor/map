@@ -148,9 +148,8 @@ const MarkerMap = ({
           )}
 
           {route && (
-            <Source id="route" type="geojson" data={route}>
+            <Source type="geojson" data={route}>
               <Layer
-                id="route-line"
                 type="line"
                 paint={{
                   "line-color": "#FF5733",
@@ -166,9 +165,8 @@ const MarkerMap = ({
           )}
 
           {line && (
-            <Source id="route" type="geojson" data={line}>
+            <Source type="geojson" data={line}>
               <Layer
-                id="route-line"
                 type="line"
                 paint={{
                   "line-color": "#007AFF",

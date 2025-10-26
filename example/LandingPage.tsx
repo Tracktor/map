@@ -65,16 +65,16 @@ const cardData = [
     title: "📍 Markers Example",
   },
   {
-    description: "Draw multiple lines between cities with auto zoom & fit bounds.",
-    image: MultiLinePreview,
-    path: "/multilines",
-    title: "🧭 Multi-lines Example",
-  },
-  {
     description: "Calculate and display routes between two points.",
     image: RoutePreview,
     path: "/route",
     title: "🚗 Route Example",
+  },
+  {
+    description: "Draw multiple lines between cities with auto zoom & fit bounds.",
+    image: MultiLinePreview,
+    path: "/multilines",
+    title: "🧭 Multi-lines Example",
   },
 ];
 

@@ -1,37 +1,52 @@
-import { Button, Divider, Paper, Stack } from "@tracktor/design-system";
+import { Button, Paper, Stack, Tooltip } from "@tracktor/design-system";
 import { Link as RouterLink } from "react-router-dom";
+
+const navItems = [
+  { icon: "🏡", label: "Home", path: "/" },
+  { icon: "📍", label: "Markers", path: "/markers" },
+  { icon: "🧭", label: "Route", path: "/route" },
+  { icon: "🗺️", label: "Multilines", path: "/multilines" },
+];
 
 const Navbar = () => {
   return (
     <Paper
-      elevation={3}
+      elevation={4}
       sx={{
-        alignItems: "center",
         backdropFilter: "blur(8px)",
-        borderRadius: 1,
+        backgroundColor: "black",
+        borderRadius: 4,
         display: "flex",
-        gap: 1,
-        left: 8,
+        flexDirection: "column",
+        left: 16,
+        p: 0.5,
         position: "fixed",
-        top: 16,
+        top: "15%",
+        transform: "translateY(-50%)",
         zIndex: 1000,
       }}
     >
-      <Stack direction="row" spacing={1} alignItems="center">
-        <Button component={RouterLink} to="/markers" size="small">
-          🏠 Markers
-        </Button>
-
-        <Divider orientation="vertical" flexItem />
-        <Button component={RouterLink} to="/route" variant="text" size="small">
-          🧭 Route
-        </Button>
-
-        <Divider orientation="vertical" flexItem />
-
-        <Button component={RouterLink} to="/multilines" variant="text" size="small">
-          🗺️ Multilines
-        </Button>
+      <Stack direction="column" spacing={0.5} alignItems="center">
+        {navItems.map((item) => (
+          <Tooltip key={item.path} title={item.label} placement="right">
+            <Button
+              component={RouterLink}
+              to={item.path}
+              variant="text"
+              size="small"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.05)",
+                },
+                fontSize: "1.3rem",
+                minWidth: 36,
+                px: 1,
+              }}
+            >
+              {item.icon}
+            </Button>
+          </Tooltip>
+        ))}
       </Stack>
     </Paper>
   );
