@@ -18,7 +18,7 @@ const Navbar = () => {
       }}
     >
       <Stack direction="row" spacing={1} alignItems="center">
-        <Button component={RouterLink} to="/" size="small">
+        <Button component={RouterLink} to="/markers" size="small">
           🏠 Markers
         </Button>
 

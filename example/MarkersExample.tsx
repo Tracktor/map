@@ -16,6 +16,7 @@ import {
   ThemeProvider,
   Typography,
 } from "@tracktor/design-system";
+import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import MapProvider from "@/context/MapProvider";
@@ -109,6 +110,7 @@ const MarkersExample = () => {
   return (
     <ThemeProvider theme={themeMode}>
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
+        <Navbar />
         <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
           {/* 🗺️ Map */}
           <Box sx={{ flex: 1 }}>

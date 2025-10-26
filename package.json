@@ -22,7 +22,7 @@
     "lint:fix": "bunx biome check . --write",
     "prepublishOnly": "bun run build",
     "preview": "bunx vite preview",
-    "release": "bun run build && bun publish --access public",
+    "release": "bun run build && bun publish --access example/public",
     "version": "bunx standard-version",
     "prepare": "husky"
   },
@@ -49,6 +49,7 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.6.0",
     "husky": "^9.1.7",
+    "prism-react-renderer": "^2.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.9.4",

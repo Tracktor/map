@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@tracktor/design-system";
-import Navbar from "example/Navbar.tsx";
+import LandingPage from "example/LandingPage.tsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MapProvider from "@/context/MapProvider";
 import MarkersExample from "./MarkersExample";
@@ -15,9 +15,9 @@ const App = () => {
     <ThemeProvider theme="dark">
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
         <BrowserRouter>
-          <Navbar />
           <Routes>
-            <Route path="/" element={<MarkersExample />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/markers" element={<MarkersExample />} />
             <Route path="/multilines" element={<MultiCityExample />} />
             <Route path="/route" element={<RouteExample />} />
           </Routes>

@@ -1,4 +1,5 @@
 import { Box, Button, MenuItem, Select, Stack, Switch, ThemeProvider, Typography } from "@tracktor/design-system";
+import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import MapProvider from "@/context/MapProvider";
@@ -52,6 +53,7 @@ const RouteExample = () => {
   return (
     <ThemeProvider theme={themeMode}>
       <MapProvider licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
+        <Navbar />
         <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
           <Box sx={{ flex: 1 }}>
             <MarkerMap

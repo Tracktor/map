@@ -1,4 +1,5 @@
 import { Box, ThemeProvider } from "@tracktor/design-system";
+import Navbar from "example/Navbar.tsx";
 import type { Feature, GeoJsonProperties, LineString } from "geojson";
 import { useMemo } from "react";
 import MapProvider from "@/context/MapProvider";
@@ -40,6 +41,7 @@ const MultiCityExample = () => {
   return (
     <ThemeProvider theme="dark">
       <MapProvider licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
+        <Navbar />
         <Box sx={{ height: "100vh", width: "100vw" }}>
           <MarkerMap markers={markers} line={line} fitBounds height="100%" width="100%" />
         </Box>
