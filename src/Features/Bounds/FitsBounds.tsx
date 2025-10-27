@@ -14,6 +14,7 @@ interface FitBoundsProps {
   disableAnimation?: boolean;
   fitBounds?: boolean;
   animationKey?: unknown;
+  offset?: [number, number];
 }
 
 const serializeKey = (key: unknown): string => {
@@ -59,6 +60,7 @@ const FitBounds = ({
   disableAnimation = false,
   fitBounds = true,
   animationKey,
+  offset = [0, 0],
 }: FitBoundsProps) => {
   const { current: map } = useMap();
   const previousKey = useRef<string>("");
@@ -98,6 +100,7 @@ const FitBounds = ({
       map.flyTo({
         center: [m.lng, m.lat],
         duration: disableAnimation ? 0 : duration,
+        offset,
         zoom: 14,
       });
       return;
@@ -105,9 +108,10 @@ const FitBounds = ({
 
     map.fitBounds([bounds.getSouthWest().toArray(), bounds.getNorthEast().toArray()], {
       duration: disableAnimation ? 0 : duration,
+      offset,
       padding,
     });
-  }, [map, bounds, padding, duration, disableAnimation, animationKey, fitBounds, validMarkers, featureCoords]);
+  }, [map, bounds, padding, duration, disableAnimation, animationKey, fitBounds, validMarkers, featureCoords, offset]);
 
   return null;
 };

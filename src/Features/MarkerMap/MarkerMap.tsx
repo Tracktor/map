@@ -168,6 +168,7 @@ const MarkerMap = ({
               padding={fitBoundsPadding}
               duration={disableAnimation ? 0 : fitBoundDuration}
               animationKey={fitBoundsAnimationKey}
+              offset={selectedMarker ? [0, 80] : [0, 0]}
             />
           )}
         </MapboxMap>
