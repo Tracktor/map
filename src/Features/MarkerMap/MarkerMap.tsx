@@ -71,11 +71,12 @@ const MarkerMap = ({
   });
 
   return (
-    <Box sx={{ height, position: "relative", width, ...containerStyle }}>
+    <Box data-testid="mapbox-container" sx={{ height, position: "relative", width, ...containerStyle }}>
       <GlobalStyles styles={mapboxGlobalStyles} />
 
       {loading && (
         <Skeleton
+          data-testid="skeleton-loader"
           width={width}
           height={height}
           variant={square ? "rectangular" : "rounded"}
