@@ -54,6 +54,7 @@ const MarkerMap = ({
     coreStyle,
     coopGestures,
     route,
+    isMapReady,
   } = useMarkerMap({
     baseMapView,
     center,
@@ -105,31 +106,32 @@ const MarkerMap = ({
             onMapClick?.(e.lngLat.lng, e.lngLat.lat);
           }}
         >
-          {markers.filter(isValidMarker).map((m) => (
-            <Marker
-              key={m.id}
-              longitude={m.lng}
-              latitude={m.lat}
-              anchor="bottom"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
-              }}
-            >
-              <Box
-                component="div"
-                onMouseEnter={() => {
-                  m.id && handleMarkerHover(m.id, Boolean(m.Tooltip));
+          {isMapReady &&
+            markers.filter(isValidMarker).map((m) => (
+              <Marker
+                key={m.id}
+                longitude={m.lng}
+                latitude={m.lat}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
                 }}
-                onMouseLeave={() => handleMarkerHover(null)}
-                style={{ cursor: m.Tooltip ? "pointer" : "default" }}
               >
-                {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <DefaultMarker color={m.color} variant={m.variant} />}
-              </Box>
-            </Marker>
-          ))}
+                <Box
+                  component="div"
+                  onMouseEnter={() => {
+                    m.id && handleMarkerHover(m.id, Boolean(m.Tooltip));
+                  }}
+                  onMouseLeave={() => handleMarkerHover(null)}
+                  style={{ cursor: m.Tooltip ? "pointer" : "default" }}
+                >
+                  {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <DefaultMarker color={m.color} variant={m.variant} />}
+                </Box>
+              </Marker>
+            ))}
 
-          {selectedMarker?.Tooltip && (
+          {isMapReady && selectedMarker?.Tooltip && (
             <Popup
               longitude={isNumber(selectedMarker.lng) ? selectedMarker.lng : 0}
               latitude={isNumber(selectedMarker.lat) ? selectedMarker.lat : 0}
@@ -145,7 +147,7 @@ const MarkerMap = ({
             </Popup>
           )}
 
-          {route && (
+          {isMapReady && route && (
             <Source type="geojson" data={route}>
               <Layer
                 type="line"

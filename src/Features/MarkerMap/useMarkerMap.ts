@@ -27,6 +27,7 @@ const useMarkerMap = ({
   const mapRef = useRef<MapRef | null>(null);
   const [route, setRoute] = useState<Feature<LineString, GeoJsonProperties> | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
+  const [isMapReady, setIsMapReady] = useState(false);
 
   const initialCenter = useMemo(() => {
     if (isArray(center)) {
@@ -59,7 +60,9 @@ const useMarkerMap = ({
   const handleMapLoad = () => {
     const map = mapRef.current?.getMap?.();
     if (map) {
-      map.setStyle(mapStyle);
+      map.once("idle", () => {
+        setIsMapReady(true);
+      });
     }
   };
 
@@ -101,6 +104,7 @@ const useMarkerMap = ({
     handleMarkerClick,
     handleMarkerHover,
     initialCenter,
+    isMapReady,
     mapRef,
     route,
     selected,
