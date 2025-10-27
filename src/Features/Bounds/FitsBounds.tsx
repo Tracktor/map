@@ -8,7 +8,7 @@ import { MarkerProps } from "@/types/MarkerProps";
 
 interface FitBoundsProps {
   markers?: MarkerProps[];
-  features?: FeatureCollection<Geometry, GeoJsonProperties> | Feature<Geometry> | Feature<Geometry>[]; // ✅
+  features?: FeatureCollection<Geometry, GeoJsonProperties> | Feature<Geometry> | Feature<Geometry>[];
   padding?: number;
   duration?: number;
   disableAnimation?: boolean;
@@ -80,6 +80,9 @@ const FitBounds = ({
 
   useEffect(() => {
     if (openPopup) {
+      if (animationKey !== undefined) {
+        previousKey.current = serializeKey(animationKey);
+      }
       return;
     }
 
