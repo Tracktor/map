@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/Tracktor/map/compare/v1.1.2...v1.2.0) (2025-10-27)
+
+
+### ✨ Features
+
+* add customizable itinerary line styles to MarkerMap and RoutesExample ([a9c4eb7](https://github.com/Tracktor/map/commit/a9c4eb7184092db0e8b332be6ffae9cdbbd9de84))
+* add DefaultMarker component and update MarkerMap to use it for improved marker rendering ([1007ed3](https://github.com/Tracktor/map/commit/1007ed3fa452016bf25145b8cd487c57e12c9ef9))
+* add husky for pre-commit linting and update package dependencies ([17e27cc](https://github.com/Tracktor/map/commit/17e27cce743af67e525dd5f336ea7ff67390f283))
+* add openPopup functionality with TextField for marker interaction in MarkerMap ([921bc77](https://github.com/Tracktor/map/commit/921bc77e4b172bf1b20a31d7b6539793b2e1beac))
+* add openPopup functionality with TextField for marker interaction in MarkerMap ([4d58ffb](https://github.com/Tracktor/map/commit/4d58ffbd5536307e61701fc8d18788b9e0f2a7fc))
+* add openPopupOnHover option and enhance marker interaction in MarkerMap ([d02cb95](https://github.com/Tracktor/map/commit/d02cb957fb57b2f4f975df70b173d02d8e086d23))
+* add tests for MarkerMap component and update package.json for testing dependencies ([9325f8e](https://github.com/Tracktor/map/commit/9325f8e68ebcc8b124263a4f9ae413aa54c0e699))
+* enhance FeaturesExample with dynamic feature addition and update FitBounds to support features ([cbe74f2](https://github.com/Tracktor/map/commit/cbe74f246c22bd75f5170bd2e7d169dc6126e6b6))
+* enhance FitBounds and MarkerMap with animation options and customizable map styles ([d14fcab](https://github.com/Tracktor/map/commit/d14fcabcaf86c6559134519c2419588d72061148))
+* enhance marker customization by adding variant support and updating marker generation logic ([a777dad](https://github.com/Tracktor/map/commit/a777dad80122d736e39d357cdc9986c240856710))
+* enhance MarkerMap with customizable options and global styles ([6313b0b](https://github.com/Tracktor/map/commit/6313b0b4ad0be34d529cb3d1dc2593125268685f))
+* enhance MarkerMap with customizable options and global styles ([cad2c2b](https://github.com/Tracktor/map/commit/cad2c2bc97c18651def5652d0d62026dfbd545e7))
+* implement routing with react-router and add examples for markers and routes ([fa24169](https://github.com/Tracktor/map/commit/fa24169af10b64391e68190dae5904a4f848583f))
+* implement theme mode toggle in FeaturesExample and MarkersExample components ([0caa135](https://github.com/Tracktor/map/commit/0caa135b29e953a97f73a4d99c2ff3b9d92c9735))
+* integrate FitBounds component for automatic map bounds adjustment and update dependencies ([83d95fb](https://github.com/Tracktor/map/commit/83d95fb2e6443a4e29d24eadf92369dbb50392f6))
+* integrate react-router for navigation and add RouteExample component with route fetching ([35b68b6](https://github.com/Tracktor/map/commit/35b68b65f13df085f974d071719a0c1adad73ccc))
+* introduce BASEMAP constants and update map options to support multiple base map views ([812d9b7](https://github.com/Tracktor/map/commit/812d9b7f31fcef4cd723d3cf34b71cf194b02219))
+* refactor MarkerMap component, introduce useMarkerMap hook, and add clustering option in MarkerMapProps ([e5ce5bd](https://github.com/Tracktor/map/commit/e5ce5bd16e0a05afb64bf5a85d652d7dac0e77e6))
+* refactor MarkerMap import path and enhance context management in MapProvider ([1410863](https://github.com/Tracktor/map/commit/1410863c177baf472010c857accfc65ad5ac376d))
+* rename FitsBounds to FitsBounds.tsx and enhance CustomMarkerMapProps interface in MarkerProps ([34c51bf](https://github.com/Tracktor/map/commit/34c51bf82a4ef344f196da405b7adfd794a01a55))
+* rename MultiCityExample to FeaturesExample and update routing to include features ([92f74f2](https://github.com/Tracktor/map/commit/92f74f273f777f8a2190503d62aa983fd2fd8cfc))
+* replace Navbar with LandingPage and update routing for improved navigation ([cd8f748](https://github.com/Tracktor/map/commit/cd8f7488b4fa9ea5fa31187c3a0a4f31637b3a77))
+* update DefaultMarker color, improve marker validation, and optimize bounds calculation in FitBounds ([649bcae](https://github.com/Tracktor/map/commit/649bcae984a8e85e7b93cb65946dd6c6d7feef81))
+* update lib  ([36ec44c](https://github.com/Tracktor/map/commit/36ec44c47948afe006a668fcfcb5092cc37b17c4))
+* update map options to use optional chaining for style and change projection type in MarkerMapProps ([a966c7d](https://github.com/Tracktor/map/commit/a966c7d922cd8a7989d7c28dd8411300f9753592))
+* update Navbar layout and add tooltip support for navigation items ([03910a8](https://github.com/Tracktor/map/commit/03910a896d45b34cbfaf8bc98853ca76b722d5be))
+* update Navbar styles for improved layout and spacing ([7d5c7a9](https://github.com/Tracktor/map/commit/7d5c7a9d23254593c056f9f4556a017711703de4))
+
 ### [1.1.2](https://github.com/Tracktor/map/compare/v1.1.1...v1.1.2) (2025-10-24)
 
 
