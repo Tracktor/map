@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.5](https://github.com/Tracktor/map/compare/v1.2.4...v1.2.5) (2025-10-27)
+
+
+### 🐛 Fixes
+
+* update FitBounds component to handle animationKey in useEffect for improved popup functionality ([d5ad9b3](https://github.com/Tracktor/map/commit/d5ad9b32abd479f28adcb6bbb88ed30ba48be067))
+
 ### [1.2.4](https://github.com/Tracktor/map/compare/v1.2.3...v1.2.4) (2025-10-27)
 
 
