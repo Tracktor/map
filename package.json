@@ -26,7 +26,10 @@
     "version": "bunx standard-version",
     "prepare": "husky",
     "test": "bun test --preload ./test/setup.ts",
-    "test:watch": "bun test --watch --preload ./test/setup.ts"
+    "test:watch": "bun test --watch --preload ./test/setup.ts",
+    "dev:example": "vite --config vite.config.example.ts",
+    "build:example": "vite build --config vite.config.example.ts",
+    "deploy:example": "bun run build:example && cp dist-example/index.html dist-example/404.html && gh-pages -d dist-example"
   },
   "files": [
     "dist"
@@ -54,6 +57,7 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.6.0",
     "bun-types": "^1.3.1",
+    "gh-pages": "^6.3.0",
     "husky": "^9.1.7",
     "jsdom": "^27.0.1",
     "prism-react-renderer": "^2.4.1",

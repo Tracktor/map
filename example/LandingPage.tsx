@@ -136,7 +136,7 @@ const LandingPage = () => {
           It provides an intuitive <code>MarkerMap</code> component designed to simplify interactive map integrations in modern
           applications.
         </Typography>
-        <Typography variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
+        <Typography component="div" variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
           The component comes with powerful built-in features including:
           <ul style={{ marginTop: 8 }}>
             <li>
@@ -162,6 +162,7 @@ const LandingPage = () => {
             </li>
           </ul>
         </Typography>
+
         <Typography variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
           Whether you're displaying a single marker or an entire network of routes, <code>MarkerMap</code> is built for flexibility, high
           performance, and a clean developer experience.
