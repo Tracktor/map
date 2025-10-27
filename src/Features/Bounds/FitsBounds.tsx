@@ -3,6 +3,7 @@ import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "ge
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useRef } from "react";
 import { useMap } from "react-map-gl";
+import isValidMarker from "@/types/isValidMarker.ts";
 import { MarkerProps } from "@/types/MarkerProps";
 
 interface FitBoundsProps {
@@ -21,8 +22,6 @@ const serializeKey = (key: unknown): string => {
   }
   return JSON.stringify(key);
 };
-
-const isValidMarker = (m: MarkerProps): m is MarkerProps & { lng: number; lat: number } => Number.isFinite(m.lng) && Number.isFinite(m.lat);
 
 const extractCoordsFromFeatures = (input?: FeatureCollection<Geometry> | Feature<Geometry> | Feature<Geometry>[]): [number, number][] => {
   if (!input) {

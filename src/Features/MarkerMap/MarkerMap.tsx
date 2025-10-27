@@ -9,6 +9,7 @@ import FitBounds from "@/Features/Bounds/FitsBounds";
 import useMarkerMap from "@/Features/MarkerMap/useMarkerMap.ts";
 import DefaultMarker from "@/Features/Markers/DefaultMarkers";
 import RenderFeatures from "@/Features/RenderFeature/RenderFeature.tsx";
+import isValidMarker from "@/types/isValidMarker.ts";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
 
 const MarkerMap = ({
@@ -104,11 +105,11 @@ const MarkerMap = ({
             onMapClick?.(e.lngLat.lng, e.lngLat.lat);
           }}
         >
-          {markers.map((m) => (
+          {markers.filter(isValidMarker).map((m) => (
             <Marker
               key={m.id}
-              longitude={isNumber(m.lng) ? m.lng : undefined}
-              latitude={isNumber(m.lat) ? m.lat : undefined}
+              longitude={m.lng}
+              latitude={m.lat}
               anchor="bottom"
               onClick={(e) => {
                 e.originalEvent.stopPropagation();

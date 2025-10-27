@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "example": "bunx vite",
+    "example": "vite --config vite.config.example.ts",
     "build": "bunx tsc && bunx vite build",
     "lint": "bunx biome check --diagnostic-level=error . && bunx tsc --noEmit --incremental",
     "lint:fix": "bunx biome check . --write",
