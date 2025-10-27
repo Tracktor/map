@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.4](https://github.com/Tracktor/map/compare/v1.2.3...v1.2.4) (2025-10-27)
+
+
+### 🐛 Fixes
+
+* replace offset prop with openPopup in FitBounds component for improved functionality ([c2a0241](https://github.com/Tracktor/map/commit/c2a02414364015f2087425bc24a82cb0752137a6))
+
 ### [1.2.3](https://github.com/Tracktor/map/compare/v1.2.2...v1.2.3) (2025-10-27)
 
 
