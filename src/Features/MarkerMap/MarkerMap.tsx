@@ -139,15 +139,6 @@ const MarkerMap = ({
             </Popup>
           )}
 
-          {fitBounds && markers.length > 1 && (
-            <FitBounds
-              markers={markers}
-              padding={fitBoundsPadding}
-              duration={disableAnimation ? 0 : fitBoundDuration}
-              animationKey={fitBoundsAnimationKey}
-            />
-          )}
-
           {route && (
             <Source type="geojson" data={route}>
               <Layer
@@ -166,6 +157,16 @@ const MarkerMap = ({
           )}
 
           {features && <RenderFeatures features={features} />}
+
+          {fitBounds && (
+            <FitBounds
+              markers={markers}
+              features={features}
+              padding={fitBoundsPadding}
+              duration={disableAnimation ? 0 : fitBoundDuration}
+              animationKey={fitBoundsAnimationKey}
+            />
+          )}
         </MapboxMap>
       )}
     </Box>

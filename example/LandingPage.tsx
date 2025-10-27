@@ -11,8 +11,8 @@ import {
   TableRow,
   Typography,
 } from "@tracktor/design-system";
+import FeaturesPreview from "example/public/assets/features-preview.png";
 import MarkerPreview from "example/public/assets/markers-preview.png";
-import MultiLinePreview from "example/public/assets/multilines-preview.png";
 import RoutePreview from "example/public/assets/route-preview.png";
 import type { PrismTheme } from "prism-react-renderer";
 import { Highlight } from "prism-react-renderer";
@@ -71,8 +71,8 @@ const cardData = [
     title: "🚗 Route Example",
   },
   {
-    description: "Draw multiple lines between cities with auto zoom & fit bounds.",
-    image: MultiLinePreview,
+    description: "Render FeatureCollection Polygons, MultiPolygons, Lines, MultiLines and Points on the map.",
+    image: FeaturesPreview,
     path: "/features",
     title: "🗺 Features Example",
   },

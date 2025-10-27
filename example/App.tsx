@@ -1,10 +1,10 @@
 import { ThemeProvider } from "@tracktor/design-system";
+import FeaturesExample from "example/FeaturesExample.tsx";
 import LandingPage from "example/LandingPage.tsx";
+import MarkersExample from "example/MarkersExample";
+import RouteExample from "example/RoutesExample";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MapProvider from "@/context/MapProvider";
-import FeaturesExample from "./FeaturesExample.tsx";
-import MarkersExample from "./MarkersExample";
-import RouteExample from "./RoutesExample";
 
 /**
  * This is the main app entry point.
