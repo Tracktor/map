@@ -137,8 +137,11 @@ const MarkerMap = ({
               onClose={() => setSelected(null)}
               maxWidth={popupMaxWidth}
               closeOnClick={true}
+              closeOnMove={false}
             >
-              {selectedMarker.Tooltip}
+              <Box component="div" sx={{ minHeight: 60, minWidth: 240 }}>
+                {selectedMarker.Tooltip}
+              </Box>
             </Popup>
           )}
 

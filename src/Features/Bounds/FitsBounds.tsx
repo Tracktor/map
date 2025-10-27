@@ -82,6 +82,8 @@ const FitBounds = ({
     if (openPopup) {
       if (animationKey !== undefined) {
         previousKey.current = serializeKey(animationKey);
+      } else {
+        previousKey.current = "__initial_skip__";
       }
       return;
     }
@@ -96,6 +98,8 @@ const FitBounds = ({
         return;
       }
       previousKey.current = currentKey;
+    } else if (previousKey.current === "__initial_skip__") {
+      return;
     }
 
     if (bounds.isEmpty()) {
