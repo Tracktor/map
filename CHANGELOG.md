@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/Tracktor/map/compare/v1.2.2...v1.2.3) (2025-10-27)
+
+
+### 🐛 Fixes
+
+* add offset prop to FitBounds component for improved map positioning ([6b4d7e6](https://github.com/Tracktor/map/commit/6b4d7e6248eb60cad007bb5846caf2593ba5171b))
+
 ### [1.2.2](https://github.com/Tracktor/map/compare/v1.2.1...v1.2.2) (2025-10-27)
 
 
