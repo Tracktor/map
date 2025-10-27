@@ -1,8 +1,7 @@
-import { Box, Button, MenuItem, Select, Stack, Switch, ThemeProvider, Typography } from "@tracktor/design-system";
+import { Box, Button, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
 import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
-import MapProvider from "@/context/MapProvider";
 import MarkerMap from "@/Features/MarkerMap/MarkerMap";
 
 const predefinedRoutes = [
@@ -32,8 +31,12 @@ const predefinedRoutes = [
   },
 ];
 
-const RouteExample = () => {
-  const [themeMode, setThemeMode] = useState<"light" | "dark">("dark");
+interface RouteExampleProps {
+  themeMode: "light" | "dark";
+  setThemeMode: (mode: "light" | "dark") => void;
+}
+
+const RouteExample = ({ themeMode, setThemeMode }: RouteExampleProps) => {
   const [projection, setProjection] = useState<ProjectionSpecification>({
     name: "mercator",
   });
@@ -51,110 +54,108 @@ const RouteExample = () => {
   );
 
   return (
-    <ThemeProvider theme={themeMode}>
-      <MapProvider licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
-        <Navbar />
-        <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
-          <Box sx={{ flex: 1 }}>
-            <MarkerMap
-              markers={markers}
-              from={selectedRoute.from as [number, number]}
-              to={selectedRoute.to as [number, number]}
-              profile={profile}
-              cooperativeGestures={cooperativeGestures}
-              doubleClickZoom={doubleClickZoom}
-              projection={projection}
-              fitBounds
-              height="100%"
-              width="100%"
-            />
-          </Box>
+    <>
+      <Navbar />
+      <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
+        <Box sx={{ flex: 1 }}>
+          <MarkerMap
+            markers={markers}
+            from={selectedRoute.from as [number, number]}
+            to={selectedRoute.to as [number, number]}
+            profile={profile}
+            cooperativeGestures={cooperativeGestures}
+            doubleClickZoom={doubleClickZoom}
+            projection={projection}
+            fitBounds
+            height="100%"
+            width="100%"
+          />
+        </Box>
 
-          <Box
-            sx={{
-              backgroundColor: "background.paper",
-              borderColor: "divider",
-              borderLeft: "1px solid",
-              color: "text.primary",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              p: 2,
-              width: 300,
+        <Box
+          sx={{
+            backgroundColor: "background.paper",
+            borderColor: "divider",
+            borderLeft: "1px solid",
+            color: "text.primary",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            p: 2,
+            width: 300,
+          }}
+        >
+          <Typography variant="h6">🚗 Route options</Typography>
+
+          {/* Thème */}
+          <Typography variant="body2" color="text.secondary">
+            Theme
+          </Typography>
+          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
+            {themeMode === "dark" ? "Light mode" : "Dark mode"}
+          </Button>
+
+          <Typography variant="body2" color="text.secondary">
+            Predefined routes
+          </Typography>
+          <Select
+            value={selectedRoute.id}
+            onChange={(e) => {
+              const route = predefinedRoutes.find((r) => r.id === e.target.value);
+              if (route) {
+                setSelectedRoute(route);
+              }
             }}
+            size="small"
           >
-            <Typography variant="h6">🚗 Route options</Typography>
+            {predefinedRoutes.map((route) => (
+              <MenuItem key={route.id} value={route.id}>
+                {route.name}
+              </MenuItem>
+            ))}
+          </Select>
 
-            {/* Thème */}
-            <Typography variant="body2" color="text.secondary">
-              Theme
-            </Typography>
-            <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-              {themeMode === "dark" ? "Light mode" : "Dark mode"}
-            </Button>
+          <Typography variant="body2" color="text.secondary">
+            Profile
+          </Typography>
+          <Select value={profile} onChange={(e) => setProfile(e.target.value as "driving" | "walking" | "cycling")} size="small">
+            <MenuItem value="driving">🚗 Driving</MenuItem>
+            <MenuItem value="walking">🚶 Walking</MenuItem>
+            <MenuItem value="cycling">🚴 Cycling</MenuItem>
+          </Select>
 
-            <Typography variant="body2" color="text.secondary">
-              Predefined routes
-            </Typography>
-            <Select
-              value={selectedRoute.id}
-              onChange={(e) => {
-                const route = predefinedRoutes.find((r) => r.id === e.target.value);
-                if (route) {
-                  setSelectedRoute(route);
-                }
-              }}
-              size="small"
-            >
-              {predefinedRoutes.map((route) => (
-                <MenuItem key={route.id} value={route.id}>
-                  {route.name}
-                </MenuItem>
-              ))}
-            </Select>
-
-            <Typography variant="body2" color="text.secondary">
-              Profile
-            </Typography>
-            <Select value={profile} onChange={(e) => setProfile(e.target.value as "driving" | "walking" | "cycling")} size="small">
-              <MenuItem value="driving">🚗 Driving</MenuItem>
-              <MenuItem value="walking">🚶 Walking</MenuItem>
-              <MenuItem value="cycling">🚴 Cycling</MenuItem>
-            </Select>
-
-            <Typography variant="body2" color="text.secondary">
-              Interactions
-            </Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Cooperative Gestures</Typography>
-                <Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />
-              </Stack>
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Double Click Zoom</Typography>
-                <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
-              </Stack>
+          <Typography variant="body2" color="text.secondary">
+            Interactions
+          </Typography>
+          <Stack spacing={1}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="body2">Cooperative Gestures</Typography>
+              <Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />
             </Stack>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="body2">Double Click Zoom</Typography>
+              <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
+            </Stack>
+          </Stack>
 
-            <Typography variant="body2" color="text.secondary">
-              Projection
-            </Typography>
-            <Select
-              value={projection.name}
-              onChange={(e) => setProjection({ name: e.target.value as ProjectionSpecification["name"] })}
-              size="small"
-            >
-              <MenuItem value="mercator">Mercator</MenuItem>
-              <MenuItem value="globe">Globe</MenuItem>
-              <MenuItem value="albers">Albers</MenuItem>
-              <MenuItem value="equalEarth">Equal Earth</MenuItem>
-              <MenuItem value="equirectangular">Equirectangular</MenuItem>
-              <MenuItem value="naturalEarth">Natural Earth</MenuItem>
-            </Select>
-          </Box>
-        </Stack>
-      </MapProvider>
-    </ThemeProvider>
+          <Typography variant="body2" color="text.secondary">
+            Projection
+          </Typography>
+          <Select
+            value={projection.name}
+            onChange={(e) => setProjection({ name: e.target.value as ProjectionSpecification["name"] })}
+            size="small"
+          >
+            <MenuItem value="mercator">Mercator</MenuItem>
+            <MenuItem value="globe">Globe</MenuItem>
+            <MenuItem value="albers">Albers</MenuItem>
+            <MenuItem value="equalEarth">Equal Earth</MenuItem>
+            <MenuItem value="equirectangular">Equirectangular</MenuItem>
+            <MenuItem value="naturalEarth">Natural Earth</MenuItem>
+          </Select>
+        </Box>
+      </Stack>
+    </>
   );
 };
 

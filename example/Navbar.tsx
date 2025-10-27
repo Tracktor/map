@@ -14,7 +14,6 @@ const Navbar = () => {
       elevation={4}
       sx={{
         backdropFilter: "blur(8px)",
-        backgroundColor: "black",
         borderRadius: 4,
         display: "flex",
         flexDirection: "column",

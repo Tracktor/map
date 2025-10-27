@@ -13,13 +13,11 @@ import {
   Stack,
   Switch,
   TextField,
-  ThemeProvider,
   Typography,
 } from "@tracktor/design-system";
 import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
-import MapProvider from "@/context/MapProvider";
 import MarkerMap from "@/Features/MarkerMap/MarkerMap.tsx";
 import { VariantMarker, variantMarkerColor } from "@/Features/Markers/DefaultMarkers.tsx";
 import { MarkerProps } from "@/types/MarkerProps";
@@ -88,8 +86,12 @@ const generateMarkers = (
     };
   });
 
-const MarkersExample = () => {
-  const [themeMode, setThemeMode] = useState<"light" | "dark">("dark");
+interface MarkerExampleProps {
+  themeMode: "light" | "dark";
+  setThemeMode: (mode: "light" | "dark") => void;
+}
+
+const MarkersExample = ({ themeMode, setThemeMode }: MarkerExampleProps) => {
   const [baseMapView, setBaseMapView] = useState<"street" | "satellite">("street");
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
@@ -108,134 +110,132 @@ const MarkersExample = () => {
   const markers = useMemo(() => generateMarkers(visibleMarkerCount, markerVariant), [visibleMarkerCount, markerVariant]);
 
   return (
-    <ThemeProvider theme={themeMode}>
-      <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
-        <Navbar />
-        <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
-          {/* 🗺️ Map */}
-          <Box sx={{ flex: 1 }}>
-            <MarkerMap
-              openPopup={openPopupId}
-              markers={markers}
-              height="100%"
-              width="100%"
-              onMapClick={handleMapClick}
-              baseMapView={baseMapView}
-              cooperativeGestures={cooperativeGestures}
-              doubleClickZoom={doubleClickZoom}
-              projection={projection}
-              openPopupOnHover={openPopupOnHover}
-            />
-          </Box>
+    <>
+      <Navbar />
+      <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
+        {/* 🗺️ Map */}
+        <Box sx={{ flex: 1 }}>
+          <MarkerMap
+            openPopup={openPopupId}
+            markers={markers}
+            height="100%"
+            width="100%"
+            onMapClick={handleMapClick}
+            baseMapView={baseMapView}
+            cooperativeGestures={cooperativeGestures}
+            doubleClickZoom={doubleClickZoom}
+            projection={projection}
+            openPopupOnHover={openPopupOnHover}
+          />
+        </Box>
 
-          {/* ⚙️ Sidebar panel */}
-          <Box
-            sx={{
-              backgroundColor: "background.paper",
-              borderColor: "divider",
-              borderLeft: "1px solid",
-              color: "text.primary",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              p: 2,
-              width: 300,
-            }}
-          >
-            <Typography variant="h6">🧭 Options</Typography>
+        {/* ⚙️ Sidebar panel */}
+        <Box
+          sx={{
+            backgroundColor: "background.paper",
+            borderColor: "divider",
+            borderLeft: "1px solid",
+            color: "text.primary",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            p: 2,
+            width: 300,
+          }}
+        >
+          <Typography variant="h6">🧭 Options</Typography>
 
-            {/* Theme toggle */}
-            <Typography variant="body2" color="text.secondary">
-              Theme
-            </Typography>
-            <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-              {themeMode === "dark" ? "Light mode" : "Dark mode"}
-            </Button>
+          {/* Theme toggle */}
+          <Typography variant="body2" color="text.secondary">
+            Theme
+          </Typography>
+          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
+            {themeMode === "dark" ? "Light mode" : "Dark mode"}
+          </Button>
 
-            {/* Base map style */}
-            <Typography variant="body2" color="text.secondary">
-              Base Map View
-            </Typography>
-            <Select value={baseMapView} onChange={(e) => setBaseMapView(e.target.value)} size="small">
-              <MenuItem value="street">Street</MenuItem>
-              <MenuItem value="satellite">Satellite</MenuItem>
-            </Select>
+          {/* Base map style */}
+          <Typography variant="body2" color="text.secondary">
+            Base Map View
+          </Typography>
+          <Select value={baseMapView} onChange={(e) => setBaseMapView(e.target.value)} size="small">
+            <MenuItem value="street">Street</MenuItem>
+            <MenuItem value="satellite">Satellite</MenuItem>
+          </Select>
 
-            {/* Marker count */}
-            <Typography variant="body2" color="text.secondary">
-              Number of markers ({visibleMarkerCount})
-            </Typography>
-            <Slider min={1} max={MAX_MARKERS} value={visibleMarkerCount} onChange={(_, v) => setVisibleMarkerCount(v as number)} />
+          {/* Marker count */}
+          <Typography variant="body2" color="text.secondary">
+            Number of markers ({visibleMarkerCount})
+          </Typography>
+          <Slider min={1} max={MAX_MARKERS} value={visibleMarkerCount} onChange={(_, v) => setVisibleMarkerCount(v as number)} />
 
-            {/* Popup ID */}
-            <Typography variant="body2" color="text.secondary">
-              Open popup
-            </Typography>
-            <TextField placeholder="Marker ID e.g. 10" size="small" value={openPopupId} onChange={(e) => setOpenPopupId(e.target.value)} />
+          {/* Popup ID */}
+          <Typography variant="body2" color="text.secondary">
+            Open popup
+          </Typography>
+          <TextField placeholder="Marker ID e.g. 10" size="small" value={openPopupId} onChange={(e) => setOpenPopupId(e.target.value)} />
 
-            {/* Interactions */}
-            <Typography variant="body2" color="text.secondary">
-              Interactions
-            </Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Cooperative gestures</Typography>
-                <Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />
-              </Stack>
-
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Double click zoom</Typography>
-                <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
-              </Stack>
-
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Open popup on hover</Typography>
-                <Switch checked={openPopupOnHover} onChange={(e) => setOpenPopupOnHover(e.target.checked)} />
-              </Stack>
-
-              {/* Marker color */}
-              <Typography variant="body2" color="text.secondary">
-                Marker color
-              </Typography>
-              <Select value={markerVariant} onChange={(e) => setMarkerVariant(e.target.value as VariantMarker)} size="small">
-                {Object.entries(variantMarkerColor).map(([key, color]) => (
-                  <MenuItem key={key} value={key}>
-                    <Stack direction="row" alignItems="center" gap={1}>
-                      <Box
-                        sx={{
-                          backgroundColor: color,
-                          borderRadius: "50%",
-                          height: 16,
-                          width: 16,
-                        }}
-                      />
-                      <Typography variant="body2">{key}</Typography>
-                    </Stack>
-                  </MenuItem>
-                ))}
-              </Select>
+          {/* Interactions */}
+          <Typography variant="body2" color="text.secondary">
+            Interactions
+          </Typography>
+          <Stack spacing={1}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="body2">Cooperative gestures</Typography>
+              <Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />
             </Stack>
 
-            {/* Projection */}
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="body2">Double click zoom</Typography>
+              <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
+            </Stack>
+
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="body2">Open popup on hover</Typography>
+              <Switch checked={openPopupOnHover} onChange={(e) => setOpenPopupOnHover(e.target.checked)} />
+            </Stack>
+
+            {/* Marker color */}
             <Typography variant="body2" color="text.secondary">
-              Projection
+              Marker color
             </Typography>
-            <Select
-              value={projection.name}
-              onChange={(e) => setProjection({ name: e.target.value as ProjectionSpecification["name"] })}
-              size="small"
-            >
-              <MenuItem value="mercator">Mercator</MenuItem>
-              <MenuItem value="globe">Globe</MenuItem>
-              <MenuItem value="albers">Albers</MenuItem>
-              <MenuItem value="equalEarth">Equal Earth</MenuItem>
-              <MenuItem value="equirectangular">Equirectangular</MenuItem>
-              <MenuItem value="naturalEarth">Natural Earth</MenuItem>
+            <Select value={markerVariant} onChange={(e) => setMarkerVariant(e.target.value as VariantMarker)} size="small">
+              {Object.entries(variantMarkerColor).map(([key, color]) => (
+                <MenuItem key={key} value={key}>
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    <Box
+                      sx={{
+                        backgroundColor: color,
+                        borderRadius: "50%",
+                        height: 16,
+                        width: 16,
+                      }}
+                    />
+                    <Typography variant="body2">{key}</Typography>
+                  </Stack>
+                </MenuItem>
+              ))}
             </Select>
-          </Box>
-        </Stack>
-      </MapProvider>
-    </ThemeProvider>
+          </Stack>
+
+          {/* Projection */}
+          <Typography variant="body2" color="text.secondary">
+            Projection
+          </Typography>
+          <Select
+            value={projection.name}
+            onChange={(e) => setProjection({ name: e.target.value as ProjectionSpecification["name"] })}
+            size="small"
+          >
+            <MenuItem value="mercator">Mercator</MenuItem>
+            <MenuItem value="globe">Globe</MenuItem>
+            <MenuItem value="albers">Albers</MenuItem>
+            <MenuItem value="equalEarth">Equal Earth</MenuItem>
+            <MenuItem value="equirectangular">Equirectangular</MenuItem>
+            <MenuItem value="naturalEarth">Natural Earth</MenuItem>
+          </Select>
+        </Box>
+      </Stack>
+    </>
   );
 };
 

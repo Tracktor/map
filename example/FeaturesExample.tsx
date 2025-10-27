@@ -1,8 +1,7 @@
-import { Box, Button, MenuItem, Select, Stack, ThemeProvider, Typography } from "@tracktor/design-system";
+import { Box, Button, MenuItem, Select, Stack, Typography } from "@tracktor/design-system";
 import Navbar from "example/Navbar";
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 import { useCallback, useMemo, useState } from "react";
-import MapProvider from "@/context/MapProvider";
 import MarkerMap from "@/Features/MarkerMap/MarkerMap";
 
 const randomCoordInFrance = () => [2 + (Math.random() - 0.5) * 6, 46 + (Math.random() - 0.5) * 6];
@@ -52,8 +51,12 @@ const createRandomPolygon = (): Feature<Polygon> => {
   };
 };
 
-const FeaturesExample = () => {
-  const [themeMode, setThemeMode] = useState<"light" | "dark">("dark");
+interface FeaturesExampleProps {
+  themeMode: "light" | "dark";
+  setThemeMode: (mode: "light" | "dark") => void;
+}
+
+const FeaturesExample = ({ themeMode, setThemeMode }: FeaturesExampleProps) => {
   const [featureList, setFeatureList] = useState<Feature[]>([]);
   const [baseMapView, setBaseMapView] = useState<"street" | "satellite">("street");
 
@@ -99,69 +102,67 @@ const FeaturesExample = () => {
   const clearFeatures = useCallback(() => setFeatureList([]), []);
 
   return (
-    <ThemeProvider theme={themeMode}>
-      <MapProvider licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
-        <Navbar />
-        <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
-          <Box sx={{ flex: 1 }}>
-            <MarkerMap markers={markers} features={features} fitBounds baseMapView={baseMapView} height="100%" width="100%" />
-          </Box>
+    <>
+      <Navbar />
+      <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
+        <Box sx={{ flex: 1 }}>
+          <MarkerMap markers={markers} features={features} fitBounds baseMapView={baseMapView} height="100%" width="100%" />
+        </Box>
 
-          <Box
-            sx={{
-              backgroundColor: "background.paper",
-              borderColor: "divider",
-              borderLeft: "1px solid",
-              color: "text.primary",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              p: 2,
-              width: 300,
-            }}
-          >
-            <Typography variant="h6">🧭 Options</Typography>
+        <Box
+          sx={{
+            backgroundColor: "background.paper",
+            borderColor: "divider",
+            borderLeft: "1px solid",
+            color: "text.primary",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            p: 2,
+            width: 300,
+          }}
+        >
+          <Typography variant="h6">🧭 Options</Typography>
 
-            <Typography variant="body2" color="text.secondary">
-              Theme
-            </Typography>
-            <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-              {themeMode === "dark" ? "Light mode" : "Dark mode"}
+          <Typography variant="body2" color="text.secondary">
+            Theme
+          </Typography>
+          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
+            {themeMode === "dark" ? "Light mode" : "Dark mode"}
+          </Button>
+
+          <Typography variant="body2" color="text.secondary">
+            Base Map View
+          </Typography>
+          <Select value={baseMapView} onChange={(e) => setBaseMapView(e.target.value)} size="small">
+            <MenuItem value="street">Street</MenuItem>
+            <MenuItem value="satellite">Satellite</MenuItem>
+          </Select>
+
+          <Typography variant="h6" mt={2}>
+            ➕ Add Features
+          </Typography>
+
+          <Stack spacing={1}>
+            <Button variant="contained" onClick={() => addFeature("point")}>
+              📍 Add Point
             </Button>
+            <Button variant="contained" onClick={() => addFeature("line")}>
+              ➖ Add Line
+            </Button>
+            <Button variant="contained" onClick={() => addFeature("polygon")}>
+              🟩 Add Polygon
+            </Button>
+          </Stack>
 
-            <Typography variant="body2" color="text.secondary">
-              Base Map View
-            </Typography>
-            <Select value={baseMapView} onChange={(e) => setBaseMapView(e.target.value)} size="small">
-              <MenuItem value="street">Street</MenuItem>
-              <MenuItem value="satellite">Satellite</MenuItem>
-            </Select>
-
-            <Typography variant="h6" mt={2}>
-              ➕ Add Features
-            </Typography>
-
-            <Stack spacing={1}>
-              <Button variant="contained" onClick={() => addFeature("point")}>
-                📍 Add Point
-              </Button>
-              <Button variant="contained" onClick={() => addFeature("line")}>
-                ➖ Add Line
-              </Button>
-              <Button variant="contained" onClick={() => addFeature("polygon")}>
-                🟩 Add Polygon
-              </Button>
-            </Stack>
-
-            {featureList.length > 0 && (
-              <Button variant="outlined" color="error" onClick={clearFeatures}>
-                🗑 Clear all
-              </Button>
-            )}
-          </Box>
-        </Stack>
-      </MapProvider>
-    </ThemeProvider>
+          {featureList.length > 0 && (
+            <Button variant="outlined" color="error" onClick={clearFeatures}>
+              🗑 Clear all
+            </Button>
+          )}
+        </Box>
+      </Stack>
+    </>
   );
 };
 
