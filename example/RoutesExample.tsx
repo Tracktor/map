@@ -69,6 +69,11 @@ const RouteExample = ({ themeMode, setThemeMode }: RouteExampleProps) => {
             fitBounds
             height="100%"
             width="100%"
+            itineraryLineStyle={{
+              color: "#b91037",
+              opacity: 0.9,
+              width: 2,
+            }}
           />
         </Box>
 

@@ -165,4 +165,15 @@ export interface MarkerMapProps {
    * @default "driving"
    */
   profile?: "driving" | "walking" | "cycling";
+
+  /**
+   * Custom styles for the itinerary line displayed on the map.
+   * If not provided, default styles will be used.
+   * @default { color: "#3b82f6", width: 4, opacity: 0.8 }
+   */
+  itineraryLineStyle?: Partial<{
+    color: string;
+    width: number;
+    opacity: number;
+  }>;
 }

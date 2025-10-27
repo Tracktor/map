@@ -39,6 +39,7 @@ const MarkerMap = ({
   from,
   to,
   profile = "driving",
+  itineraryLineStyle,
 }: MarkerMapProps): ReactElement => {
   const {
     selectedMarker,
@@ -144,9 +145,9 @@ const MarkerMap = ({
               <Layer
                 type="line"
                 paint={{
-                  "line-color": "#FF5733",
-                  "line-opacity": 0.8,
-                  "line-width": 4,
+                  "line-color": itineraryLineStyle?.color ?? "#9c3333",
+                  "line-opacity": itineraryLineStyle?.opacity ?? 0.8,
+                  "line-width": itineraryLineStyle?.width ?? 4,
                 }}
                 layout={{
                   "line-cap": "round",
