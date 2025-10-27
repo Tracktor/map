@@ -1,5 +1,24 @@
 import { ComponentType, ReactNode } from "react";
-import { CustomMarkerMapProps } from "@/utils/loadMarkers.tsx";
+import { VariantMarker } from "@/Features/Markers/DefaultMarkers.tsx";
+
+interface CustomMarkerMapProps {
+  geometry: {
+    coordinates: number[];
+    type: string;
+  };
+  properties: {
+    description?: string;
+    id?: string | number;
+    size: number;
+    zIndex: number;
+    pointerEvents?: string;
+    name?: string;
+    iconProps?: Record<string, unknown>;
+    onClick?: (markerData?: CustomMarkerMapProps) => void;
+    IconComponent?: ComponentType<unknown>;
+  };
+  type: string;
+}
 
 export interface MarkerProps<T = Record<string, unknown>> {
   /**
@@ -70,7 +89,9 @@ export interface MarkerProps<T = Record<string, unknown>> {
    * Optional custom React component to use as the marker icon.
    * Overrides iconImage if provided.
    */
-
   // biome-ignore lint/suspicious/noExplicitAny: <Icons can receive any props depending on context>
   IconComponent?: ComponentType<any>;
+
+  color?: string;
+  variant?: string | VariantMarker;
 }

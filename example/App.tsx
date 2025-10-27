@@ -1,34 +1,30 @@
 import { ThemeProvider } from "@tracktor/design-system";
-import { lotOfMarkers } from "example/Markers.tsx";
-import MarkerMap from "@/components/MarkerMap/MarkerMap";
-import MapProvider from "@/context/MapProvider.tsx";
+import FeaturesExample from "example/FeaturesExample.tsx";
+import LandingPage from "example/LandingPage.tsx";
+import MarkersExample from "example/MarkersExample";
+import RouteExample from "example/RoutesExample";
+import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import MapProvider from "@/context/MapProvider";
 
+/**
+ * This is the main app entry point.
+ * It wraps all routes with providers and global components.
+ */
 const App = () => {
-  // console.warning if no .env found
-  if (!import.meta.env.VITE_MUI_LICENSE_KEY || !import.meta.env.VITE_MAPBOX_ACCESS_TOKEN) {
-    console.warn(
-      "No .env file found. Please create a .env file with the following variables: VITE_MUI_LICENSE_KEY and VITE_MAPBOX_ACCESS_TOKEN",
-    );
-  }
-
-  const handleMapClick = (lng: number, lat: number): void => {
-    console.log("Map clicked at:", { lat, lng });
-  };
+  const [themeMode, setThemeMode] = useState<"light" | "dark">("dark");
 
   return (
-    <ThemeProvider theme="dark">
+    <ThemeProvider theme={themeMode}>
       <MapProvider licenseMuiX={import.meta.env.VITE_MUI_LICENSE_KEY} licenceMapbox={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}>
-        <MarkerMap
-          openPopup="1"
-          markers={lotOfMarkers}
-          height={600}
-          width={600}
-          onMapClick={handleMapClick}
-          containerStyle={{
-            marginLeft: 3,
-            marginTop: 3,
-          }}
-        />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/markers" element={<MarkersExample themeMode={themeMode} setThemeMode={setThemeMode} />} />
+            <Route path="/features" element={<FeaturesExample themeMode={themeMode} setThemeMode={setThemeMode} />} />
+            <Route path="/route" element={<RouteExample themeMode={themeMode} setThemeMode={setThemeMode} />} />
+          </Routes>
+        </BrowserRouter>
       </MapProvider>
     </ThemeProvider>
   );
