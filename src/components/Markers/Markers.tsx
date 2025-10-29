@@ -21,7 +21,7 @@ interface MarkerProps {
 
 const isPredefinedVariant = (v: string): v is VariantMarker => v in variantMarkerColor;
 
-const DefaultMarker = ({ color, variant }: MarkerProps) => {
+const Markers = ({ color, variant }: MarkerProps) => {
   const { palette } = useTheme();
   const centerColor = palette.mode === "dark" ? BLACK : WHITE;
 
@@ -45,4 +45,4 @@ const DefaultMarker = ({ color, variant }: MarkerProps) => {
   );
 };
 
-export default DefaultMarker;
+export default Markers;

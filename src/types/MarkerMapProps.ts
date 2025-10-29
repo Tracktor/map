@@ -22,7 +22,6 @@ export interface FindNearestMarkerParams {
   destinations?: { lng: number; lat: number; id: number }[];
   onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
   profile?: Profile;
-  engine?: Engine;
 }
 
 export interface MarkerMapProps {

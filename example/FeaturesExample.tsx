@@ -2,7 +2,7 @@ import { Box, Button, MenuItem, Select, Stack, Typography } from "@tracktor/desi
 import Navbar from "example/Navbar";
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 import { useCallback, useMemo, useState } from "react";
-import MarkerMap from "@/Features/MarkerMap/MarkerMap";
+import MarkerMap from "@/features/MarkerMap/MarkerMap";
 
 const randomCoordInFrance = () => [2 + (Math.random() - 0.5) * 6, 46 + (Math.random() - 0.5) * 6];
 
@@ -118,6 +118,7 @@ const FeaturesExample = ({ themeMode, setThemeMode }: FeaturesExampleProps) => {
             display: "flex",
             flexDirection: "column",
             gap: 2,
+            overflowY: "auto",
             p: 2,
             width: 300,
           }}

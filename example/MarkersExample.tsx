@@ -18,8 +18,8 @@ import {
 import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
-import MarkerMap from "@/Features/MarkerMap/MarkerMap.tsx";
-import { VariantMarker, variantMarkerColor } from "@/Features/Markers/DefaultMarkers.tsx";
+import { VariantMarker, variantMarkerColor } from "@/components/Markers/Markers.tsx";
+import MarkerMap from "@/features/MarkerMap/MarkerMap.tsx";
 import { MarkerProps } from "@/types/MarkerProps";
 
 const MAX_MARKERS = 1000;
@@ -139,6 +139,7 @@ const MarkersExample = ({ themeMode, setThemeMode }: MarkerExampleProps) => {
             display: "flex",
             flexDirection: "column",
             gap: 2,
+            overflowY: "auto",
             p: 2,
             width: 300,
           }}

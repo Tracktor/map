@@ -1,9 +1,9 @@
 import type { Feature, GeoJsonProperties, LineString } from "geojson";
 import { useEffect, useState } from "react";
 import { Layer, Source } from "react-map-gl";
-import mapboxRoute from "@/services/Mapbox/mapboxRoute.ts";
-import OSRMRoute from "@/services/OSRM/OSRMRoute.ts";
-import { Engine, ItineraryLineStyle, Profile } from "@/types/MarkerMapProps.ts";
+import MapboxService from "@/services/Mapbox";
+import OSRMService from "@/services/OSRM";
+import { Engine, ItineraryLineStyle, Profile } from "@/types/MarkerMapProps";
 
 type ItineraryProps = {
   from?: [number, number];
@@ -53,7 +53,7 @@ const Itinerary = ({ profile, engine, to, from, itineraryLineStyle }: ItineraryP
     (async () => {
       try {
         // Choose routing service based on prop
-        const r = engine === "OSRM" ? await OSRMRoute(from, to, profile) : await mapboxRoute(from, to, profile);
+        const r = engine === "OSRM" ? await OSRMService.getRoute(from, to, profile) : await MapboxService.getRoute(from, to, profile);
 
         // Update state if a route was found
         if (r) {

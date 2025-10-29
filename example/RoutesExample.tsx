@@ -2,7 +2,7 @@ import { Box, Button, MenuItem, Select, Stack, Switch, Typography } from "@track
 import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
-import MarkerMap from "@/Features/MarkerMap/MarkerMap";
+import MarkerMap from "@/features/MarkerMap/MarkerMap";
 
 const predefinedRoutes = [
   {
@@ -86,6 +86,7 @@ const RouteExample = ({ themeMode, setThemeMode }: RouteExampleProps) => {
             display: "flex",
             flexDirection: "column",
             gap: 2,
+            overflowY: "auto",
             p: 2,
             width: 300,
           }}

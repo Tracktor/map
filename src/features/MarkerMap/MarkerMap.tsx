@@ -3,12 +3,12 @@ import { memo, ReactElement, useEffect, useMemo, useRef, useState } from "react"
 import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
+import FeatureCollection from "@/components/FeatureCollection/FeatureCollection";
+import Markers from "@/components/Markers/Markers";
 import mapboxGlobalStyles from "@/constants/globalStyle";
-import FitBounds from "@/Features/Bounds/FitsBounds";
-import Itinerary from "@/Features/Itinerary/Itinerary.tsx";
-import DefaultMarker from "@/Features/Markers/DefaultMarkers";
-import NearestPointItinerary from "@/Features/NearestPointItinerary/NearestPointItinary.tsx";
-import RenderFeatures from "@/Features/RenderFeature/RenderFeature.tsx";
+import FitBounds from "@/features/Bounds/FitsBounds";
+import Itinerary from "@/features/Itinerary/Itinerary";
+import NearestPointItinerary from "@/features/NearestPointItinerary/NearestPointItinary";
 import isValidMarker from "@/types/isValidMarker.ts";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
@@ -184,7 +184,7 @@ const MarkerMap = ({
                 onMouseLeave={() => handleMarkerHover(null)}
                 style={{ cursor: m.Tooltip ? "pointer" : "default" }}
               >
-                {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <DefaultMarker color={m.color} variant={m.variant} />}
+                {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <Markers color={m.color} variant={m.variant} />}
               </Box>
             </Marker>
           ))}
@@ -215,12 +215,12 @@ const MarkerMap = ({
             destinations={findNearestMarker?.destinations}
             onNearestFound={onNearestFound}
             maxDistanceMeters={findNearestMarker?.maxDistanceMeters}
-            engine={findNearestMarker?.engine}
+            engine={engine}
             profile={profile}
           />
 
           {/* Render custom GeoJSON features */}
-          {features && <RenderFeatures features={features} />}
+          {features && <FeatureCollection features={features} />}
 
           {/* Auto-fit bounds to all visible map objects */}
           {fitBounds && (

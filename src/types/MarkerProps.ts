@@ -1,5 +1,5 @@
 import { ComponentType, ReactNode } from "react";
-import { VariantMarker } from "@/Features/Markers/DefaultMarkers.tsx";
+import { VariantMarker } from "@/components/Markers/Markers.tsx";
 
 interface CustomMarkerMapProps {
   geometry: {

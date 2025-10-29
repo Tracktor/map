@@ -1,8 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
-import Itinerary from "@/Features/Itinerary/Itinerary.tsx";
-import mapboxFindNearestPoint from "@/services/Mapbox/mapboxFindNearestPoint.ts";
-import findNearestWithOSRMTable from "@/services/OSRM/OSRMfindNearestPoint.ts";
-import type { FindNearestMarkerParams } from "@/types/MarkerMapProps";
+import Itinerary from "@/features/Itinerary/Itinerary";
+import MapboxService from "@/services/Mapbox";
+import OSRMService from "@/services/OSRM";
+import type { Engine, FindNearestMarkerParams } from "@/types/MarkerMapProps";
 
 export interface NearestResult {
   id: number | string;
@@ -36,19 +36,22 @@ const NearestPointItinerary = ({
   onNearestFound,
   profile = "driving",
   engine = "OSRM",
-}: FindNearestMarkerParams) => {
+}: FindNearestMarkerParams & { engine: Engine }) => {
   const [nearestResult, setNearestResult] = useState<NearestResult | null>(null);
   const lastNotifiedRef = useRef<NearestResult | null>(null);
-
-  console.log("engine:", engine);
 
   /**
    * Step 1 — Compute nearest destination when input changes.
    */
   useEffect(() => {
+    let cancelled = false;
+
     if (!origin || origin.length !== 2 || !destinations?.length) {
+      setNearestResult(null);
       return;
     }
+
+    setNearestResult(null);
 
     const formattedDestinations = destinations.map((m) => ({
       coords: [m.lng, m.lat] as [number, number],
@@ -56,14 +59,17 @@ const NearestPointItinerary = ({
     }));
 
     (async () => {
-      const finder = engine === "OSRM" ? findNearestWithOSRMTable : mapboxFindNearestPoint;
-
+      const finder = engine === "OSRM" ? OSRMService.findNearest : MapboxService.findNearest;
       const nearest = await finder(origin, formattedDestinations, profile, maxDistanceMeters);
 
-      if (nearest) {
-        setNearestResult((prev) => (!prev || prev.id !== nearest.id || prev.distance !== nearest.distance ? nearest : prev));
+      if (!cancelled && nearest) {
+        setNearestResult(nearest);
       }
     })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [origin, maxDistanceMeters, destinations, profile, engine]);
 
   /**
@@ -95,6 +101,8 @@ const NearestPointItinerary = ({
   if (!nearestResult?.point) {
     return null;
   }
+
+  console.log("nearestResult", nearestResult);
 
   return <Itinerary from={origin} to={nearestResult.point} profile={profile} engine={engine} />;
 };

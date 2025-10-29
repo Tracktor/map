@@ -16,23 +16,23 @@ import {
 import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
-import MarkerMap from "@/Features/MarkerMap/MarkerMap";
+import MarkerMap from "@/features/MarkerMap/MarkerMap";
 import { Engine } from "@/types/MarkerMapProps.ts";
 
 const predefinedOrigins = [
-  { coords: [2.3522, 48.8566] as [number, number], id: "origin-paris", name: "Paris (origin)" },
-  { coords: [4.8357, 45.764] as [number, number], id: "origin-lyon", name: "Lyon (origin)" },
-  { coords: [-0.5792, 44.8378] as [number, number], id: "origin-bordeaux", name: "Bordeaux (origin)" },
-  { coords: [5.3698, 43.2965] as [number, number], id: "origin-marseille", name: "Marseille (origin)" },
-  { coords: [1.4442, 43.6047] as [number, number], id: "origin-toulouse", name: "Toulouse (origin)" },
+  { coords: [2.3522, 48.8566], id: "origin-paris", name: "Paris (origin)" },
+  { coords: [4.8357, 45.764], id: "origin-lyon", name: "Lyon (origin)" },
+  { coords: [-0.5792, 44.8378], id: "origin-bordeaux", name: "Bordeaux (origin)" },
+  { coords: [5.375, 43.2965], id: "origin-marseille", name: "Marseille (origin)" },
+  { coords: [1.4442, 43.6047], id: "origin-toulouse", name: "Toulouse (origin)" },
 ];
 
 const predefinedDestinations = [
   { id: 1, lat: 50.6292, lng: 3.0573, name: "Lille" },
-  { id: 2, lat: 43.2965, lng: 5.375, name: "Marseille Old Port" },
+  { id: 2, lat: 43.2965, lng: 5.375, name: "Marseille" },
   { id: 3, lat: 44.8378, lng: -0.5792, name: "Bordeaux" },
   { id: 4, lat: 45.764, lng: 4.8357, name: "Lyon" },
-  { id: 5, lat: 43.604, lng: 1.444, name: "Toulouse Capitole" },
+  { id: 5, lat: 43.6047, lng: 1.4442, name: "Toulouse" },
   { id: 6, lat: 43.6108, lng: 3.8767, name: "Montpellier" },
   { id: 7, lat: 43.7102, lng: 7.262, name: "Nice" },
   { id: 8, lat: 47.2184, lng: -1.5536, name: "Nantes" },
@@ -54,7 +54,7 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
   const [profile, setProfile] = useState<"driving" | "walking" | "cycling">("driving");
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
-  const [selectedOrigin, setSelectedOrigin] = useState(predefinedOrigins[0]);
+  const [origins, setOrigins] = useState([predefinedOrigins[0]]);
   const [searchRadius, setSearchRadius] = useState(3_000_000);
   const [nearestId, setNearestId] = useState<number | null>(null);
   const [nearestInfo, setNearestInfo] = useState<{ name: string; distance: number } | null>(null);
@@ -64,16 +64,15 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
   const [filteredDestinations, setFilteredDestinations] = useState(predefinedDestinations);
 
   const originMarker = useMemo(
-    () => [
-      {
-        id: "origin",
-        lat: selectedOrigin.coords[1],
-        lng: selectedOrigin.coords[0],
-        popup: selectedOrigin.name,
+    () =>
+      origins.map((o, index) => ({
+        id: `origin-${index}`,
+        lat: o.coords[1],
+        lng: o.coords[0],
+        popup: o.name,
         variant: "success",
-      },
-    ],
-    [selectedOrigin],
+      })),
+    [origins],
   );
 
   const destinationMarkers = filteredDestinations.map((m) => ({
@@ -107,10 +106,10 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
             }}
             findNearestMarker={{
               destinations: filteredDestinations,
-              engine: engine,
               maxDistanceMeters: searchRadius,
-              origin: selectedOrigin.coords,
+              origin: (origins.at(-1)?.coords as [number, number]) ?? predefinedOrigins[0].coords,
             }}
+            engine={engine}
             onNearestFound={(id, _coords, distanceMeters) => {
               setNearestId(id as number);
               const info = filteredDestinations.find((d) => d.id === id);
@@ -140,6 +139,7 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
             display: "flex",
             flexDirection: "column",
             gap: 2,
+            overflowY: "auto",
             p: 2,
             width: 300,
           }}
@@ -176,12 +176,40 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
             Origin
           </Typography>
           <Select
-            value={selectedOrigin.id}
+            value={origins.at(-1)?.id ?? ""}
             onChange={(e) => {
-              const origin = predefinedOrigins.find((o) => o.id === e.target.value);
-              if (origin) {
-                setSelectedOrigin(origin);
+              const newOrigin = predefinedOrigins.find((o) => o.id === e.target.value);
+              if (!newOrigin) {
+                return;
               }
+
+              setOrigins([newOrigin]);
+
+              setFilteredDestinations((prev) => {
+                const lastOrigin = origins.at(-1);
+
+                const cleaned = prev.filter((d) => d.lat !== newOrigin.coords[1] || d.lng !== newOrigin.coords[0]);
+
+                if (lastOrigin) {
+                  const wasAlreadyIn = cleaned.some((d) => d.lat === lastOrigin.coords[1] && d.lng === lastOrigin.coords[0]);
+                  if (!wasAlreadyIn) {
+                    const nextId = cleaned.length ? Math.max(...cleaned.map((d) => d.id)) + 1 : 1;
+
+                    return [
+                      ...cleaned,
+                      {
+                        id: nextId,
+                        lat: lastOrigin.coords[1],
+                        lng: lastOrigin.coords[0],
+                        name: lastOrigin.name.replace(" (origin)", ""),
+                      },
+                    ];
+                  }
+                }
+
+                return cleaned;
+              });
+
               setNearestId(null);
               setNearestInfo(null);
             }}
