@@ -45,6 +45,7 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
   const [nearestId, setNearestId] = useState<number | null>(null);
   const [nearestInfo, setNearestInfo] = useState<{ name: string; distance: number } | null>(null);
   const [engine, setEngine] = useState<Engine>("OSRM");
+  const [showIntroModal, setShowIntroModal] = useState(true);
 
   const [filteredDestinations, setFilteredDestinations] = useState(predefinedDestinations);
 
@@ -254,6 +255,41 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
             </Typography>
           </Stack>
         </Box>
+
+        {showIntroModal && (
+          <Box
+            sx={{
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              inset: 0,
+              justifyContent: "center",
+              position: "fixed",
+              zIndex: 9999,
+            }}
+          >
+            <Box
+              sx={{
+                backgroundColor: "background.paper",
+                borderRadius: 2,
+                boxShadow: 4,
+                maxWidth: 380,
+                p: 3,
+                textAlign: "center",
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                💡 Quick tip
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Click on any <b>orange destination point</b> to remove it from the map.
+              </Typography>
+              <Button variant="contained" onClick={() => setShowIntroModal(false)}>
+                Got it
+              </Button>
+            </Box>
+          </Box>
+        )}
       </Stack>
     </>
   );
