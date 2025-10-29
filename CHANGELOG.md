@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/Tracktor/map/compare/v1.4.4...v1.5.0) (2025-10-29)
+
+
+### ✨ Features
+
+* add isochrone functionality with Mapbox API and integrate into MarkerMap ([6da9ebe](https://github.com/Tracktor/map/commit/6da9ebe6e1cd9e2e77237875e4158ed26deccdf8))
+
 ### [1.4.4](https://github.com/Tracktor/map/compare/v1.4.3...v1.4.4) (2025-10-29)
 
 
