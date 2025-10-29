@@ -1,4 +1,19 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
+import { WarningAmberRounded } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Switch,
+  Typography,
+} from "@tracktor/design-system";
 import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
@@ -255,42 +270,52 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
             </Typography>
           </Stack>
         </Box>
-
-        {showIntroModal && (
-          <Box
-            sx={{
-              alignItems: "center",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              display: "flex",
-              inset: 0,
-              justifyContent: "center",
-              position: "fixed",
-              zIndex: 9999,
-            }}
-          >
-            <Box
-              sx={{
-                backgroundColor: "background.paper",
-                borderRadius: 2,
-                boxShadow: 4,
-                maxWidth: 380,
-                p: 3,
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h6" gutterBottom>
-                💡 Quick tip
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Click on any <b>orange destination point</b> to remove it from the map.
-              </Typography>
-              <Button variant="contained" onClick={() => setShowIntroModal(false)}>
-                Got it
-              </Button>
-            </Box>
-          </Box>
-        )}
       </Stack>
+      <Dialog
+        open={showIntroModal}
+        onClose={() => setShowIntroModal(false)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            "@keyframes fadeInScale": {
+              from: { opacity: 0, transform: "scale(0.95)" },
+              to: { opacity: 1, transform: "scale(1)" },
+            },
+            animation: "fadeInScale 0.35s ease-out",
+            backgroundColor: "background.paper",
+            borderRadius: 3,
+            boxShadow: 6,
+            p: 2,
+            textAlign: "center",
+          },
+        }}
+      >
+        <DialogTitle>
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+            <WarningAmberRounded color="warning" fontSize="large" />
+            <Typography variant="h6" fontWeight={700}>
+              Quick tip
+            </Typography>
+          </Stack>
+        </DialogTitle>
+
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Click on any{" "}
+            <Box component="span" sx={{ fontWeight: 600 }}>
+              destination
+            </Box>{" "}
+            point to remove it from the map.
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button variant="contained" onClick={() => setShowIntroModal(false)} sx={{ minWidth: 100 }}>
+            Got it
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
