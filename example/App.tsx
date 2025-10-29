@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@tracktor/design-system";
 import FeaturesExample from "example/FeaturesExample.tsx";
+import IsochroneExample from "example/IsochroneExample.tsx";
 import LandingPage from "example/LandingPage.tsx";
 import MarkersExample from "example/MarkersExample";
 import NearestMarkerExample from "example/NearestMarkerExample.tsx";
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/features" element={<FeaturesExample themeMode={themeMode} setThemeMode={setThemeMode} />} />
           <Route path="/route" element={<RouteExample themeMode={themeMode} setThemeMode={setThemeMode} />} />
           <Route path="/nearest-marker" element={<NearestMarkerExample themeMode={themeMode} setThemeMode={setThemeMode} />} />
+          <Route path="/isochrone" element={<IsochroneExample themeMode={themeMode} setThemeMode={setThemeMode} />} />
         </Routes>
       </MapProvider>
     </ThemeProvider>

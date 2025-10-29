@@ -53,7 +53,8 @@ const Itinerary = ({ profile, engine, to, from, itineraryLineStyle }: ItineraryP
     (async () => {
       try {
         // Choose routing service based on prop
-        const r = engine === "OSRM" ? await OSRMService.getRoute(from, to, profile) : await MapboxService.getRoute(from, to, profile);
+        const r =
+          engine === "OSRM" ? await OSRMService.getItinerary(from, to, profile) : await MapboxService.getItinerary(from, to, profile);
 
         // Update state if a route was found
         if (r) {

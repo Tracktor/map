@@ -1,4 +1,4 @@
-import { RoutingProfile } from "@/services/OSRM/types";
+import { RoutingProfile } from "@/services/core/interface.ts";
 
 const PROFILE_MAP: Record<RoutingProfile, string> = {
   cycling: "routed-bike",

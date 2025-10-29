@@ -1,9 +1,10 @@
-import { getOSRMRoute } from "@/services/OSRM/route.ts";
-import { findNearestWithOSRMTable } from "@/services/OSRM/table.ts";
+import { MapRoutingProvider } from "@/services/core/interface.ts";
+import findNearestDestination from "@/services/OSRM/findNearestDestination.ts";
+import getItinerary from "@/services/OSRM/getItinerary";
 
-const OSRMService = {
-  findNearest: findNearestWithOSRMTable,
-  getRoute: getOSRMRoute,
+const OSRMService: MapRoutingProvider = {
+  findNearest: findNearestDestination,
+  getItinerary: getItinerary,
 };
 
 export default OSRMService;

@@ -7,6 +7,7 @@ const navItems = [
   { icon: "🧭", label: "Route", path: "/route" },
   { icon: "🗺️", label: "Features", path: "/features" },
   { icon: "🔎", label: "Nearest Marker", path: "/nearest-marker" },
+  { icon: "⏱️", label: "Isochrone", path: "/isochrone" },
 ];
 
 const Navbar = () => {
@@ -21,7 +22,7 @@ const Navbar = () => {
         left: 16,
         p: 0.5,
         position: "fixed",
-        top: "15%",
+        top: "20%",
         transform: "translateY(-50%)",
         zIndex: 1000,
       }}

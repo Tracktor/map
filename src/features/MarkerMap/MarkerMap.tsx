@@ -7,6 +7,7 @@ import FeatureCollection from "@/components/FeatureCollection/FeatureCollection"
 import Markers from "@/components/Markers/Markers";
 import mapboxGlobalStyles from "@/constants/globalStyle";
 import FitBounds from "@/features/Bounds/FitsBounds";
+import Isochrone from "@/features/Isochrone/Isochrone.tsx";
 import Itinerary from "@/features/Itinerary/Itinerary";
 import NearestPointItinerary from "@/features/NearestPointItinerary/NearestPointItinary";
 import isValidMarker from "@/types/isValidMarker.ts";
@@ -69,6 +70,7 @@ const MarkerMap = ({
   engine = "OSRM",
   findNearestMarker,
   onNearestFound,
+  isochrone,
 }: MarkerMapProps): ReactElement => {
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
@@ -188,7 +190,6 @@ const MarkerMap = ({
               </Box>
             </Marker>
           ))}
-
           {/* Popup for selected marker */}
           {selectedMarker?.Tooltip && (
             <Popup
@@ -205,23 +206,33 @@ const MarkerMap = ({
               </Box>
             </Popup>
           )}
-
           {/* Route between two points */}
           <Itinerary from={from} to={to} profile={profile} engine={engine} itineraryLineStyle={itineraryLineStyle} />
 
           {/* Nearest route (from origin to the closest destination) */}
-          <NearestPointItinerary
-            origin={findNearestMarker?.origin}
-            destinations={findNearestMarker?.destinations}
-            onNearestFound={onNearestFound}
-            maxDistanceMeters={findNearestMarker?.maxDistanceMeters}
-            engine={engine}
-            profile={profile}
-          />
+          {findNearestMarker && (
+            <NearestPointItinerary
+              origin={findNearestMarker?.origin}
+              destinations={findNearestMarker?.destinations}
+              onNearestFound={onNearestFound}
+              maxDistanceMeters={findNearestMarker?.maxDistanceMeters}
+              engine={engine}
+              profile={profile}
+            />
+          )}
+
+          {/* Isochrone rendering */}
+          {isochrone && (
+            <Isochrone
+              origin={isochrone.origin}
+              profile={isochrone.profile}
+              onIsochroneLoaded={isochrone.onIsochroneLoaded}
+              intervals={isochrone.intervals}
+            />
+          )}
 
           {/* Render custom GeoJSON features */}
           {features && <FeatureCollection features={features} />}
-
           {/* Auto-fit bounds to all visible map objects */}
           {fitBounds && (
             <FitBounds

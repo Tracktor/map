@@ -1,8 +1,16 @@
 import { SxProps } from "@tracktor/design-system";
-import type { Feature, FeatureCollection } from "geojson";
+import type { Feature, FeatureCollection, Polygon } from "geojson";
 import { LngLatLike } from "mapbox-gl";
 import type { ProjectionSpecification as ReactMapProjection } from "react-map-gl";
+import type { RoutingProfile } from "@/services/core/interface.ts";
 import { MarkerProps } from "@/types/MarkerProps";
+
+export interface IsochroneProps {
+  origin: [number, number];
+  profile?: RoutingProfile;
+  intervals?: number[];
+  onIsochroneLoaded?: (data: FeatureCollection<Polygon> | null) => void;
+}
 
 export interface ItineraryLineStyle {
   color: string;
@@ -216,4 +224,14 @@ export interface MarkerMapProps {
    * @param coords
    */
   onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
+
+  /**
+   * Parameters for displaying isochrones on the map.
+   * If provided, isochrones will be rendered based on the specified origin and intervals.
+   * @param origin
+   * @param profile
+   * @param intervals
+   * @param onIsochroneLoaded
+   */
+  isochrone?: IsochroneProps;
 }

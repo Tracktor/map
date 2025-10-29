@@ -1,5 +1,5 @@
+import type { RouteFeature, RoutingProfile } from "@/services/core/interface";
 import { buildMapboxUrl, fetchMapbox } from "@/services/Mapbox/client";
-import type { MapboxProfile, RouteFeature } from "@/services/Mapbox/types";
 
 interface MapboxRouteResponse {
   routes: {
@@ -13,10 +13,10 @@ interface MapboxRouteResponse {
  * Get a route between two points using Mapbox Directions API.
  * Returns a GeoJSON Feature (LineString) or null if not found.
  */
-export const getMapboxRoute = async (
+const getItinerary = async (
   from: [number, number],
   to: [number, number],
-  profile: MapboxProfile = "driving",
+  profile: RoutingProfile = "driving",
 ): Promise<RouteFeature | null> => {
   const coords = `${from.join(",")};${to.join(",")}`;
   const url = buildMapboxUrl("directions", "v5", profile, coords, {
@@ -39,3 +39,5 @@ export const getMapboxRoute = async (
     type: "Feature",
   };
 };
+
+export default getItinerary;

@@ -1,6 +1,6 @@
 import type { LineString } from "geojson";
+import type { RouteFeature, RoutingProfile } from "@/services/core/interface";
 import { buildOSRMUrl, fetchOSRM } from "@/services/OSRM/client";
-import type { RouteFeature, RoutingProfile } from "@/services/OSRM/types";
 
 interface OSRMRouteResponse {
   routes: {
@@ -14,7 +14,7 @@ interface OSRMRouteResponse {
  * Get a route between two points using the OSRM API.
  * Returns a GeoJSON Feature (LineString) or null if not found.
  */
-export const getOSRMRoute = async (
+const getItinerary = async (
   from: [number, number],
   to: [number, number],
   profile: RoutingProfile = "driving",
@@ -40,3 +40,5 @@ export const getOSRMRoute = async (
     type: "Feature",
   };
 };
+
+export default getItinerary;

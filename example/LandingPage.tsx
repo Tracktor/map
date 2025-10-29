@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@tracktor/design-system";
 import FeaturesPreview from "example/public/assets/features-preview.png";
+import IsochronePreview from "example/public/assets/isochrone-preview.png";
 import MarkerPreview from "example/public/assets/markers-preview.png";
 import NearestPreview from "example/public/assets/nearest-preview.png";
 import RoutePreview from "example/public/assets/route-preview.png";
@@ -29,196 +30,11 @@ const dracula: PrismTheme = {
 
 const propsData = [
   {
-    def: "false",
-    description: "Automatically adjusts the map's zoom and center so all markers and features fit within the visible area.",
-    name: "fitBounds",
-    type: "boolean",
-  },
-  {
     def: "-",
-    description: "Extra padding (in pixels) around the edges when `fitBounds` is applied.",
-    name: "fitBoundsPadding",
-    type: "number",
-  },
-  {
-    def: "-",
-    description: "Initial map center coordinates. Format: `[longitude, latitude]`.",
-    name: "center",
-    type: "LngLatLike | number[]",
-  },
-  {
-    def: `"streets-v11"`,
-    description: "Mapbox style URL or ID (e.g. `mapbox://styles/mapbox/streets-v11`). Controls the visual appearance of the map.",
-    name: "mapStyle",
-    type: "string",
-  },
-  {
-    def: "5",
-    description: "Initial zoom level. A higher number provides a closer view.",
-    name: "zoom",
-    type: "number",
-  },
-  {
-    def: "-",
-    description: "Maximum width of marker popups (in pixels or any CSS unit).",
-    name: "popupMaxWidth",
-    type: "string",
-  },
-  {
-    def: `"100%"`,
-    description: "Width of the map container. Accepts px, %, or other CSS units.",
-    name: "width",
-    type: "number | string",
-  },
-  {
-    def: `"300"`,
-    description: "Height of the map container. Accepts px, %, or other CSS units.",
-    name: "height",
-    type: "number | string",
-  },
-  {
-    def: "false",
-    description: "Displays a skeleton overlay when true, typically used while loading data or routes.",
-    name: "loading",
-    type: "boolean",
-  },
-  {
-    def: "-",
-    description: "Custom image URL for the default marker icon.",
-    name: "markerImageURL",
-    type: "string",
-  },
-  {
-    def: "-",
-    description: "Custom styling applied to the map container using MUI's `SxProps` system.",
-    name: "containerStyle",
-    type: "SxProps",
-  },
-  {
-    def: "false",
-    description: "Disables map animations such as `fitBounds` transitions.",
-    name: "disableAnimation",
-    type: "boolean",
-  },
-  {
-    def: "-",
-    description: "Duration of the `fitBounds` animation in milliseconds.",
-    name: "fitBoundDuration",
-    type: "number",
-  },
-  {
-    def: "-",
-    description: "Unique key that forces the map to re-run the `fitBounds` animation when changed.",
-    name: "fitBoundsAnimationKey",
-    type: "unknown",
-  },
-  {
-    def: "false",
-    description: "Forces the map container to be square by matching width and height.",
-    name: "square",
-    type: "boolean",
-  },
-  {
-    def: "-",
-    description: "Opens a specific marker popup on initial load, based on its ID.",
-    name: "openPopup",
-    type: "number | string",
-  },
-  {
-    def: "false",
-    description: "Automatically opens popups when hovering over markers.",
-    name: "openPopupOnHover",
-    type: "boolean",
-  },
-  {
-    def: "[]",
-    description: "Array of markers to render on the map. Each marker supports custom icons, popups, and events.",
-    name: "markers",
-    type: "MarkerProps[]",
-  },
-  {
-    def: "-",
-    description: "Callback fired when the map is clicked. Returns longitude and latitude of the click.",
-    name: "onMapClick",
-    type: "(lng: number, lat: number) => void",
-  },
-  {
-    def: `"light"`,
-    description: "Defines the color theme of the map interface.",
-    name: "theme",
-    type: `"dark" | "light"`,
-  },
-  {
-    def: `"mercator"`,
-    description: "Defines the map projection type, e.g. Mercator or Globe.",
-    name: "projection",
-    type: "ReactMapProjection",
-  },
-  {
-    def: `"street"`,
-    description: "Base layer mode: street (default) or satellite imagery.",
-    name: "baseMapView",
-    type: `"satellite" | "street"`,
-  },
-  {
-    def: "true",
-    description: "Enables cooperative gestures, requiring two-finger panning on touch devices to prevent accidental scrolls.",
-    name: "cooperativeGestures",
-    type: "boolean",
-  },
-  {
-    def: "true",
-    description: "Toggles the ability to zoom in/out with double-click.",
-    name: "doubleClickZoom",
-    type: "boolean",
-  },
-  {
-    def: "-",
-    description: "Displays one or multiple GeoJSON features (e.g., lines, polygons, points) on the map.",
-    name: "features",
-    type: "Feature | Feature[] | FeatureCollection",
-  },
-  {
-    def: "-",
-    description: "Starting point for route calculation `[longitude, latitude]`. Used with `to`.",
-    name: "from",
-    type: "[number, number]",
-  },
-  {
-    def: "-",
-    description: "Destination point for route calculation `[longitude, latitude]`. Used with `from`.",
-    name: "to",
-    type: "[number, number]",
-  },
-  {
-    def: `"driving"`,
-    description: "Transportation mode for routing (driving, walking, or cycling).",
-    name: "profile",
-    type: `"driving" | "walking" | "cycling"`,
-  },
-  {
-    def: `{ color: "#3b82f6", width: 4, opacity: 0.8 }`,
-    description: "Defines the line color, width, and opacity for the route displayed on the map.",
-    name: "itineraryLineStyle",
-    type: "Partial<ItineraryLineStyle>",
-  },
-  {
-    def: `"OSRM"`,
-    description: "Specifies the engine service to use (`OSRM` for open source, or `Mapbox` for premium routes).",
-    name: "Engine",
-    type: `"OSRM" | "Mapbox"`,
-  },
-  {
-    def: "-",
-    description: "Parameters for detecting the closest marker to a given origin. Automatically centers and zooms on it.",
-    name: "findNearestMarker",
-    type: "FindNearestMarkerParams",
-  },
-  {
-    def: "-",
-    description: "Callback fired when the nearest marker is found. Provides its ID, coordinates, and distance (in meters).",
-    name: "onNearestFound",
-    type: "(id, coords, distanceMeters) => void",
+    description:
+      "Displays travel-time polygons (isochrones) from a given origin using the Mapbox Isochrone API. Useful for accessibility and reachability analyses.",
+    name: "isochrone",
+    type: "IsochroneConfig",
   },
 ];
 
@@ -246,6 +62,12 @@ const cardData = [
     image: NearestPreview,
     path: "/nearest-marker",
     title: "📌 Nearest Marker Example",
+  },
+  {
+    description: "Generate and display isochrone polygons showing areas reachable within specific travel times.",
+    image: IsochronePreview,
+    path: "/isochrone",
+    title: "🕒 Isochrone Example",
   },
 ];
 
@@ -316,6 +138,7 @@ const LandingPage = () => {
             <li>🗺️ Automatic fit bounds for multiple markers</li>
             <li>🚗 Route drawing between two points (driving, walking, cycling)</li>
             <li>🧭 Line overlays with custom styling</li>
+            <li>🕒 Isochrone generation using the Mapbox Isochrone API</li>
             <li>🎨 Light/Dark themes and satellite or street base layers</li>
             <li>🪄 Projection support and advanced gesture handling</li>
           </ul>
@@ -406,6 +229,12 @@ export default function App() {
         },
       ]}
       fitBounds
+      // 🕒 Example: Add isochrone display
+      isochrone={{
+        origin: [2.3522, 48.8566],
+        profile: "driving",
+        intervals: [5, 10, 15],
+      }}
     />
   );
 }`}
@@ -435,7 +264,7 @@ export default function App() {
 
         <Typography variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
           👉 You can enhance this example by enabling <code>openPopupOnHover</code>, adding routes via <code>from</code> and <code>to</code>
-          , or customizing markers with your own <code>IconComponent</code>.
+          , or using <code>isochrone</code> to visualize reachable areas.
         </Typography>
       </Paper>
 
@@ -444,8 +273,8 @@ export default function App() {
           ⚙️ API Reference
         </Typography>
         <Typography variant="body1" sx={{ mb: 2, opacity: 0.85 }}>
-          The <code>MarkerMap</code> component is highly flexible, supporting advanced configuration for visuals, gestures, routing, and
-          data visualization — all while keeping a clean, declarative API.
+          The <code>MarkerMap</code> component is highly flexible, supporting advanced configuration for visuals, gestures, routing,
+          isochrone analysis, and data visualization — all while keeping a clean, declarative API.
         </Typography>
       </Box>
 
