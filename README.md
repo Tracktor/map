@@ -101,3 +101,14 @@ Contributions are welcome! Please follow the coding conventions and include test
 ## 📄 License
 
 MIT © [Kevin Graff / Tracktor]
+
+
+## GH-Pages
+This project uses GitHub Pages for documentation hosting. To deploy the documentation, run:
+
+```
+bun run deploy:example
+```
+This will build the documentation and push it to the `gh-pages` branch.
+
+GH-Pages URL: https://tracktor.github.io/map/
