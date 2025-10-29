@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -291,16 +290,13 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
           },
         }}
       >
-        <DialogTitle>
+        <DialogContent>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
             <WarningAmberRounded color="warning" fontSize="large" />
             <Typography variant="h6" fontWeight={700}>
               Quick tip
             </Typography>
           </Stack>
-        </DialogTitle>
-
-        <DialogContent>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             Click on any{" "}
             <Box component="span" sx={{ fontWeight: 600 }}>
