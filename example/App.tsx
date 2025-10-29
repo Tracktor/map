@@ -10,7 +10,6 @@ import MapProvider from "@/context/MapProvider";
 
 const App = () => {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("dark");
-  console.log("MAPBOX TOKEN =", import.meta.env.VITE_MAPBOX_ACCESS_TOKEN);
 
   return (
     <ThemeProvider theme={themeMode}>

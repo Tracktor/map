@@ -13,18 +13,49 @@ type ItineraryProps = {
   itineraryLineStyle?: Partial<ItineraryLineStyle>;
 };
 
+/**
+ * Itinerary Component
+ * -------------------
+ * Renders a route line between two geographical points on a Mapbox map.
+ *
+ * Workflow:
+ * 1. Fetches the route geometry between `from` and `to` coordinates.
+ * 2. Uses either OSRM or Mapbox routing services depending on the `routeService` prop.
+ * 3. Displays the resulting route as a line layer via `react-map-gl`.
+ *
+ * Props:
+ * - `from`: starting point [lng, lat].
+ * - `to`: destination point [lng, lat].
+ * - `profile`: routing mode ("driving", "walking", or "cycling").
+ * - `routeService`: which routing engine to use ("OSRM" or "Mapbox").
+ * - `itineraryLineStyle`: optional line style overrides (color, opacity, width).
+ *
+ * Dependencies:
+ * - `OSRMRoute`: returns a GeoJSON LineString from OSRM.
+ * - `mapboxRoute`: returns a GeoJSON LineString from Mapbox Directions API.
+ * - `react-map-gl`: used for rendering the map layers.
+ *
+ */
 const Itinerary = ({ profile, routeService, to, from, itineraryLineStyle }: ItineraryProps) => {
   const [route, setRoute] = useState<Feature<LineString, GeoJsonProperties> | null>(null);
 
+  /**
+   * Fetch and draw the route between `from` and `to` points.
+   * Automatically switches between OSRM and Mapbox routing APIs.
+   */
   useEffect(() => {
+    // Skip if one of the points is missing
     if (!(from && to)) {
       return;
     }
 
+    // Fetch route asynchronously to avoid blocking UI
     (async () => {
       try {
+        // Choose routing service based on prop
         const r = routeService === "OSRM" ? await OSRMRoute(from, to, profile) : await mapboxRoute(from, to, profile);
 
+        // Update state if a route was found
         if (r) {
           setRoute(r);
         } else {
@@ -32,6 +63,7 @@ const Itinerary = ({ profile, routeService, to, from, itineraryLineStyle }: Itin
           setRoute(null);
         }
       } catch (error) {
+        // Log and reset on any network or parsing error
         console.error("Error fetching route:", error);
         setRoute(null);
       }

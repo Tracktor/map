@@ -42,6 +42,8 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
   const [nearestId, setNearestId] = useState<number | null>(null);
   const [nearestInfo, setNearestInfo] = useState<{ name: string; distance: number } | null>(null);
 
+  const [filteredDestinations, setFilteredDestinations] = useState(predefinedDestinations);
+
   const originMarker = useMemo(
     () => [
       {
@@ -55,17 +57,13 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
     [selectedOrigin],
   );
 
-  const destinationMarkers = useMemo(
-    () =>
-      predefinedDestinations.map((m) => ({
-        color: m.id === nearestId ? "#2563eb" : "#f59e0b", // 🔵 blue if nearest, 🟠 orange otherwise
-        id: m.id,
-        lat: m.lat,
-        lng: m.lng,
-        popup: `🎯 ${m.name}`,
-      })),
-    [nearestId],
-  );
+  const destinationMarkers = filteredDestinations.map((m) => ({
+    color: m.id === nearestId ? "#2563eb" : "#f59e0b",
+    id: m.id,
+    lat: m.lat,
+    lng: m.lng,
+    popup: `🎯 ${m.name}`,
+  }));
 
   const allMarkers = useMemo(() => [...destinationMarkers, ...originMarker], [originMarker, destinationMarkers]);
 
@@ -89,15 +87,25 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
               width: 2,
             }}
             findNearestMarker={{
-              destinations: predefinedDestinations,
+              destinations: filteredDestinations,
               maxDistanceMeters: searchRadius,
               origin: selectedOrigin.coords,
             }}
             onNearestFound={(id, _coords, distanceMeters) => {
               setNearestId(id as number);
-              const info = predefinedDestinations.find((d) => d.id === id);
+              const info = filteredDestinations.find((d) => d.id === id);
               if (info) {
                 setNearestInfo({ distance: Math.round(distanceMeters), name: info.name });
+              }
+            }}
+            onMapClick={(_lng, _lat, clickedMarker) => {
+              if (clickedMarker?.id && typeof clickedMarker.id === "number") {
+                setFilteredDestinations((prev) => prev.filter((d) => d.id !== clickedMarker.id));
+
+                if (clickedMarker.id === nearestId) {
+                  setNearestId(null);
+                  setNearestInfo(null);
+                }
               }
             }}
           />
@@ -117,6 +125,15 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
           }}
         >
           <Typography variant="h6">🧭 Nearest marker test</Typography>
+
+          {/* Bouton de reset 🔵 */}
+          <Button
+            variant="outlined"
+            onClick={() => setFilteredDestinations(predefinedDestinations)}
+            disabled={filteredDestinations.length === predefinedDestinations.length}
+          >
+            Reset destinations
+          </Button>
 
           <Typography variant="body2" color="text.secondary">
             Theme

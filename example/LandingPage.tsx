@@ -28,34 +28,198 @@ const dracula: PrismTheme = {
 };
 
 const propsData = [
-  { def: "false", description: "Automatically adjusts zoom to fit all markers.", name: "fitBounds", type: "boolean" },
-  { def: "-", description: "Padding (in px) around the bounds when fitting.", name: "fitBoundsPadding", type: "number" },
-  { def: "-", description: "Initial center of the map [lng, lat].", name: "center", type: "LngLatLike | number[]" },
-  { def: "streets-v11", description: "Mapbox style URL or ID.", name: "mapStyle", type: "string" },
-  { def: "5", description: "Initial zoom level of the map.", name: "zoom", type: "number" },
-  { def: "-", description: "Max width of popups.", name: "popupMaxWidth", type: "string" },
-  { def: "100%", description: "Map container width.", name: "width", type: "number | string" },
-  { def: "300", description: "Map container height.", name: "height", type: "number | string" },
-  { def: "false", description: "Show skeleton overlay when true.", name: "loading", type: "boolean" },
-  { def: "-", description: "Custom default marker image.", name: "markerImageURL", type: "string" },
-  { def: "-", description: "Custom map container styles.", name: "containerStyle", type: "SxProps" },
-  { def: "false", description: "Disable fitBounds animation.", name: "disableAnimation", type: "boolean" },
-  { def: "-", description: "fitBounds animation duration in ms.", name: "fitBoundDuration", type: "number" },
-  { def: "-", description: "Key to re-trigger fitBounds animation.", name: "fitBoundsAnimationKey", type: "unknown" },
-  { def: "false", description: "Forces the container to be square.", name: "square", type: "boolean" },
-  { def: "-", description: "ID of marker popup to open on load.", name: "openPopup", type: "number | string" },
-  { def: "false", description: "Opens popup on marker hover.", name: "openPopupOnHover", type: "boolean" },
-  { def: "[]", description: "Array of markers to display.", name: "markers", type: "MarkerProps[]" },
-  { def: "-", description: "Callback on map click.", name: "onMapClick", type: "(lng: number, lat: number) => void" },
-  { def: `"light"`, description: "UI color theme.", name: "theme", type: `"dark" | "light"` },
-  { def: `"mercator"`, description: "Map projection type.", name: "projection", type: "ReactMapProjection" },
-  { def: `"street"`, description: "Base map mode.", name: "baseMapView", type: `"satellite" | "street"` },
-  { def: "true", description: "Enable cooperative gestures.", name: "cooperativeGestures", type: "boolean" },
-  { def: "true", description: "Enable double-click zoom.", name: "doubleClickZoom", type: "boolean" },
-  { def: "-", description: "GeoJSON line feature to display.", name: "line", type: "Feature" },
-  { def: "-", description: "Starting point for routing.", name: "from", type: "[number, number]" },
-  { def: "-", description: "Ending point for routing.", name: "to", type: "[number, number]" },
-  { def: `"driving"`, description: "Routing profile.", name: "profile", type: `"driving" | "walking" | "cycling"` },
+  {
+    def: "false",
+    description: "Automatically adjusts the map's zoom and center so all markers and features fit within the visible area.",
+    name: "fitBounds",
+    type: "boolean",
+  },
+  {
+    def: "-",
+    description: "Extra padding (in pixels) around the edges when `fitBounds` is applied.",
+    name: "fitBoundsPadding",
+    type: "number",
+  },
+  {
+    def: "-",
+    description: "Initial map center coordinates. Format: `[longitude, latitude]`.",
+    name: "center",
+    type: "LngLatLike | number[]",
+  },
+  {
+    def: `"streets-v11"`,
+    description: "Mapbox style URL or ID (e.g. `mapbox://styles/mapbox/streets-v11`). Controls the visual appearance of the map.",
+    name: "mapStyle",
+    type: "string",
+  },
+  {
+    def: "5",
+    description: "Initial zoom level. A higher number provides a closer view.",
+    name: "zoom",
+    type: "number",
+  },
+  {
+    def: "-",
+    description: "Maximum width of marker popups (in pixels or any CSS unit).",
+    name: "popupMaxWidth",
+    type: "string",
+  },
+  {
+    def: `"100%"`,
+    description: "Width of the map container. Accepts px, %, or other CSS units.",
+    name: "width",
+    type: "number | string",
+  },
+  {
+    def: `"300"`,
+    description: "Height of the map container. Accepts px, %, or other CSS units.",
+    name: "height",
+    type: "number | string",
+  },
+  {
+    def: "false",
+    description: "Displays a skeleton overlay when true, typically used while loading data or routes.",
+    name: "loading",
+    type: "boolean",
+  },
+  {
+    def: "-",
+    description: "Custom image URL for the default marker icon.",
+    name: "markerImageURL",
+    type: "string",
+  },
+  {
+    def: "-",
+    description: "Custom styling applied to the map container using MUI's `SxProps` system.",
+    name: "containerStyle",
+    type: "SxProps",
+  },
+  {
+    def: "false",
+    description: "Disables map animations such as `fitBounds` transitions.",
+    name: "disableAnimation",
+    type: "boolean",
+  },
+  {
+    def: "-",
+    description: "Duration of the `fitBounds` animation in milliseconds.",
+    name: "fitBoundDuration",
+    type: "number",
+  },
+  {
+    def: "-",
+    description: "Unique key that forces the map to re-run the `fitBounds` animation when changed.",
+    name: "fitBoundsAnimationKey",
+    type: "unknown",
+  },
+  {
+    def: "false",
+    description: "Forces the map container to be square by matching width and height.",
+    name: "square",
+    type: "boolean",
+  },
+  {
+    def: "-",
+    description: "Opens a specific marker popup on initial load, based on its ID.",
+    name: "openPopup",
+    type: "number | string",
+  },
+  {
+    def: "false",
+    description: "Automatically opens popups when hovering over markers.",
+    name: "openPopupOnHover",
+    type: "boolean",
+  },
+  {
+    def: "[]",
+    description: "Array of markers to render on the map. Each marker supports custom icons, popups, and events.",
+    name: "markers",
+    type: "MarkerProps[]",
+  },
+  {
+    def: "-",
+    description: "Callback fired when the map is clicked. Returns longitude and latitude of the click.",
+    name: "onMapClick",
+    type: "(lng: number, lat: number) => void",
+  },
+  {
+    def: `"light"`,
+    description: "Defines the color theme of the map interface.",
+    name: "theme",
+    type: `"dark" | "light"`,
+  },
+  {
+    def: `"mercator"`,
+    description: "Defines the map projection type, e.g. Mercator or Globe.",
+    name: "projection",
+    type: "ReactMapProjection",
+  },
+  {
+    def: `"street"`,
+    description: "Base layer mode: street (default) or satellite imagery.",
+    name: "baseMapView",
+    type: `"satellite" | "street"`,
+  },
+  {
+    def: "true",
+    description: "Enables cooperative gestures, requiring two-finger panning on touch devices to prevent accidental scrolls.",
+    name: "cooperativeGestures",
+    type: "boolean",
+  },
+  {
+    def: "true",
+    description: "Toggles the ability to zoom in/out with double-click.",
+    name: "doubleClickZoom",
+    type: "boolean",
+  },
+  {
+    def: "-",
+    description: "Displays one or multiple GeoJSON features (e.g., lines, polygons, points) on the map.",
+    name: "features",
+    type: "Feature | Feature[] | FeatureCollection",
+  },
+  {
+    def: "-",
+    description: "Starting point for route calculation `[longitude, latitude]`. Used with `to`.",
+    name: "from",
+    type: "[number, number]",
+  },
+  {
+    def: "-",
+    description: "Destination point for route calculation `[longitude, latitude]`. Used with `from`.",
+    name: "to",
+    type: "[number, number]",
+  },
+  {
+    def: `"driving"`,
+    description: "Transportation mode for routing (driving, walking, or cycling).",
+    name: "profile",
+    type: `"driving" | "walking" | "cycling"`,
+  },
+  {
+    def: `{ color: "#3b82f6", width: 4, opacity: 0.8 }`,
+    description: "Defines the line color, width, and opacity for the route displayed on the map.",
+    name: "itineraryLineStyle",
+    type: "Partial<ItineraryLineStyle>",
+  },
+  {
+    def: `"OSRM"`,
+    description: "Specifies the routing service to use (`OSRM` for open source, or `Mapbox` for premium routes).",
+    name: "routeService",
+    type: `"OSRM" | "Mapbox"`,
+  },
+  {
+    def: "-",
+    description: "Parameters for detecting the closest marker to a given origin. Automatically centers and zooms on it.",
+    name: "findNearestMarker",
+    type: "FindNearestMarkerParams",
+  },
+  {
+    def: "-",
+    description: "Callback fired when the nearest marker is found. Provides its ID, coordinates, and distance (in meters).",
+    name: "onNearestFound",
+    type: "(id, coords, distanceMeters) => void",
+  },
 ];
 
 const cardData = [
@@ -72,7 +236,7 @@ const cardData = [
     title: "🚗 Route Example",
   },
   {
-    description: "Render FeatureCollection Polygons, MultiPolygons, Lines, MultiLines and Points on the map.",
+    description: "Render FeatureCollection Polygons, MultiPolygons, Lines, and Points on the map.",
     image: FeaturesPreview,
     path: "/features",
     title: "🗺 Features Example",
@@ -143,60 +307,49 @@ const LandingPage = () => {
           It provides an intuitive <code>MarkerMap</code> component designed to simplify interactive map integrations in modern
           applications.
         </Typography>
-        <Typography component="div" variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
-          The component comes with powerful built-in features including:
-          <ul style={{ marginTop: 8 }}>
-            <li>
-              📍 <strong>Customizable markers</strong> with hover and click interactions
-            </li>
-            <li>
-              💬 <strong>Popup management</strong> (click or hover-based)
-            </li>
-            <li>
-              🗺️ <strong>Automatic fit bounds</strong> for multiple markers
-            </li>
-            <li>
-              🚗 <strong>Route drawing</strong> between two points (driving, walking, cycling)
-            </li>
-            <li>
-              🧭 <strong>Line overlays</strong> with custom styling
-            </li>
-            <li>
-              🎨 <strong>Light / Dark themes</strong> and satellite or street base layers
-            </li>
-            <li>
-              🧭 <strong>Projection support</strong> and advanced gesture handling
-            </li>
-          </ul>
-        </Typography>
 
-        <Typography variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
-          Whether you're displaying a single marker or an entire network of routes, <code>MarkerMap</code> is built for flexibility, high
-          performance, and a clean developer experience.
+        <Typography component="div" variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
+          The component includes:
+          <ul style={{ marginTop: 8 }}>
+            <li>📍 Customizable markers with hover and click interactions</li>
+            <li>💬 Popup management (click or hover-based)</li>
+            <li>🗺️ Automatic fit bounds for multiple markers</li>
+            <li>🚗 Route drawing between two points (driving, walking, cycling)</li>
+            <li>🧭 Line overlays with custom styling</li>
+            <li>🎨 Light/Dark themes and satellite or street base layers</li>
+            <li>🪄 Projection support and advanced gesture handling</li>
+          </ul>
         </Typography>
       </Box>
 
       <Box
         sx={{
+          "&::-webkit-scrollbar": {
+            height: 8,
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#ccc",
+            borderRadius: 4,
+          },
           display: "flex",
-          flexWrap: "wrap",
           gap: 3,
-          justifyContent: "center",
-          mb: 6,
+          overflowX: "auto",
+          pb: 2,
+          px: 1,
+          scrollSnapType: "x mandatory",
         }}
       >
         {cardData.map((card) => (
           <Card
             key={card.path}
             sx={{
-              "&:hover": { boxShadow: 6 },
-              alignItems: "center",
+              "&:hover": { transform: "scale(1.03)" },
               cursor: "pointer",
               display: "flex",
+              flex: "0 0 300px",
               flexDirection: "column",
-              overflow: "hidden",
-              transition: "0.2s",
-              width: { md: "30%", sm: "45%", xs: "100%" },
+              scrollSnapAlign: "center",
+              transition: "transform 0.2s",
             }}
             onClick={() => navigate(card.path)}
           >
@@ -210,19 +363,15 @@ const LandingPage = () => {
                 width: "100%",
               }}
             />
-
             <CardContent
               sx={{
-                alignItems: "center",
-                display: "flex",
-                flexDirection: "column",
                 textAlign: "center",
               }}
             >
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
                 {card.title}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 2, opacity: 0.85 }}>
+              <Typography variant="body1" sx={{ opacity: 0.85 }}>
                 {card.description}
               </Typography>
             </CardContent>
@@ -230,16 +379,13 @@ const LandingPage = () => {
         ))}
       </Box>
 
-      <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
+      <Typography variant="h4" sx={{ fontWeight: 600, mb: 2, mt: 4 }}>
         🚀 Getting Started
       </Typography>
       <Typography variant="body1" sx={{ mb: 2, opacity: 0.85 }}>
-        Using <code>MarkerMap</code> is simple and intuitive. Start by importing the component and passing a minimal set of props such as{" "}
-        <code>center</code>, <code>zoom</code>, and <code>markers</code>. From there, you can progressively enable more advanced features
-        like popups, routes, or line overlays depending on your use case.
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 2, opacity: 0.85 }}>
-        Here's a basic example that displays a marker in Paris with a popup:
+        Using <code>MarkerMap</code> is simple and intuitive. Start by importing it and passing a few props such as <code>center</code>,{" "}
+        <code>zoom</code>, and <code>markers</code>. Then, progressively enable more advanced features like popups, routes, or GeoJSON
+        overlays.
       </Typography>
 
       <Paper sx={{ p: 3 }}>
@@ -288,8 +434,8 @@ export default function App() {
         </Highlight>
 
         <Typography variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
-          👉 You can enhance this example by adding <code>openPopupOnHover</code> for interactivity,
-          <code>from</code> and <code>to</code> for route calculation, or even a custom <code>IconComponent</code> for markers.
+          👉 You can enhance this example by enabling <code>openPopupOnHover</code>, adding routes via <code>from</code> and <code>to</code>
+          , or customizing markers with your own <code>IconComponent</code>.
         </Typography>
       </Paper>
 
@@ -298,12 +444,8 @@ export default function App() {
           ⚙️ API Reference
         </Typography>
         <Typography variant="body1" sx={{ mb: 2, opacity: 0.85 }}>
-          The <code>MarkerMap</code> component is designed to be highly flexible and configurable through a set of well-defined props. Each
-          prop controls a specific aspect of the map — from basic display options like <code>center</code> and <code>zoom</code>, to more
-          advanced features like <code>fitBounds</code>, <code>projection</code>, and <code>routing</code>.
-        </Typography>
-        <Typography variant="body1" sx={{ opacity: 0.85 }}>
-          You can use these props individually or in combination to build rich and interactive mapping experiences with minimal setup.
+          The <code>MarkerMap</code> component is highly flexible, supporting advanced configuration for visuals, gestures, routing, and
+          data visualization — all while keeping a clean, declarative API.
         </Typography>
       </Box>
 

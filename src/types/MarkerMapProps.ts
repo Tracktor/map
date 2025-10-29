@@ -15,6 +15,7 @@ export interface FindNearestMarkerParams {
   maxDistanceMeters?: number;
   destinations?: { lng: number; lat: number; id: number }[];
   onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
+  profile?: "driving" | "walking" | "cycling";
 }
 
 export interface MarkerMapProps {
@@ -119,9 +120,10 @@ export interface MarkerMapProps {
 
   /**
    * Callback triggered when the map is clicked.
-   * Returns the longitude and latitude of the clicked point.
+   * Returns the longitude and latitude of the clicked point,
+   * and optionally the marker object if the click occurred on one.
    */
-  onMapClick?: (lng: number, lat: number) => void;
+  onMapClick?: (lng: number, lat: number, clickedMarker?: MarkerProps | null) => void;
 
   /**
    * The color theme of the map UI.
