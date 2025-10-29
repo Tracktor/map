@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/Tracktor/map/compare/v1.3.1...v1.3.2) (2025-10-29)
+
+
+### 🐛 Fixes
+
+* enhance MarkerMap and FitBounds components with improved functionality and documentation ([0b9b598](https://github.com/Tracktor/map/commit/0b9b59899f644b55ddc911219cafef4ae1a9d664))
+
 ### [1.3.1](https://github.com/Tracktor/map/compare/v1.3.0...v1.3.1) (2025-10-29)
 
 ## [1.3.0](https://github.com/Tracktor/map/compare/v1.2.7...v1.3.0) (2025-10-29)
