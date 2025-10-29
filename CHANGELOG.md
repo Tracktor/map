@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/Tracktor/map/compare/v1.3.2...v1.4.0) (2025-10-29)
+
+
+### ✨ Features
+
+* refactor routing logic to use engine type and add mapboxFindNearestPoint service ([f5a3c04](https://github.com/Tracktor/map/commit/f5a3c040c9c3722f6e9c5588c82ce2e5758dd5ad))
+
 ### [1.3.2](https://github.com/Tracktor/map/compare/v1.3.1...v1.3.2) (2025-10-29)
 
 
