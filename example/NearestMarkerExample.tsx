@@ -3,6 +3,7 @@ import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import MarkerMap from "@/Features/MarkerMap/MarkerMap";
+import { Engine } from "@/types/MarkerMapProps.ts";
 
 const predefinedOrigins = [
   { coords: [2.3522, 48.8566] as [number, number], id: "origin-paris", name: "Paris (origin)" },
@@ -32,6 +33,8 @@ interface NearestMarkerExampleProps {
   setThemeMode: (mode: "light" | "dark") => void;
 }
 
+const engines = ["OSRM", "Mapbox"] as const;
+
 const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleProps) => {
   const [projection, setProjection] = useState<ProjectionSpecification>({ name: "mercator" });
   const [profile, setProfile] = useState<"driving" | "walking" | "cycling">("driving");
@@ -41,6 +44,7 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
   const [searchRadius, setSearchRadius] = useState(3_000_000);
   const [nearestId, setNearestId] = useState<number | null>(null);
   const [nearestInfo, setNearestInfo] = useState<{ name: string; distance: number } | null>(null);
+  const [engine, setEngine] = useState<Engine>("OSRM");
 
   const [filteredDestinations, setFilteredDestinations] = useState(predefinedDestinations);
 
@@ -88,6 +92,7 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
             }}
             findNearestMarker={{
               destinations: filteredDestinations,
+              engine: engine,
               maxDistanceMeters: searchRadius,
               origin: selectedOrigin.coords,
             }}
@@ -126,7 +131,13 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
         >
           <Typography variant="h6">🧭 Nearest marker test</Typography>
 
-          {/* Bouton de reset 🔵 */}
+          <Typography variant="body2" color="text.secondary">
+            Theme
+          </Typography>
+          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
+            {themeMode === "dark" ? "Light mode" : "Dark mode"}
+          </Button>
+
           <Button
             variant="outlined"
             onClick={() => setFilteredDestinations(predefinedDestinations)}
@@ -136,11 +147,15 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
           </Button>
 
           <Typography variant="body2" color="text.secondary">
-            Theme
+            Engine
           </Typography>
-          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-            {themeMode === "dark" ? "Light mode" : "Dark mode"}
-          </Button>
+          <Select value={engine} onChange={(e) => setEngine(e.target.value as Engine)} size="small">
+            {engines.map((eng) => (
+              <MenuItem key={eng} value={eng}>
+                {eng}
+              </MenuItem>
+            ))}
+          </Select>
 
           <Typography variant="body2" color="text.secondary">
             Origin

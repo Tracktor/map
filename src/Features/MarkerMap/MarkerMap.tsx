@@ -66,7 +66,7 @@ const MarkerMap = ({
   to,
   profile = "driving",
   itineraryLineStyle,
-  routeService = "OSRM",
+  engine = "OSRM",
   findNearestMarker,
   onNearestFound,
 }: MarkerMapProps): ReactElement => {
@@ -207,14 +207,16 @@ const MarkerMap = ({
           )}
 
           {/* Route between two points */}
-          <Itinerary from={from} to={to} profile={profile} routeService={routeService} itineraryLineStyle={itineraryLineStyle} />
+          <Itinerary from={from} to={to} profile={profile} engine={engine} itineraryLineStyle={itineraryLineStyle} />
 
-          {/* Nearest route (from origin to closest destination) */}
+          {/* Nearest route (from origin to the closest destination) */}
           <NearestPointItinerary
             origin={findNearestMarker?.origin}
             destinations={findNearestMarker?.destinations}
             onNearestFound={onNearestFound}
             maxDistanceMeters={findNearestMarker?.maxDistanceMeters}
+            engine={findNearestMarker?.engine}
+            profile={profile}
           />
 
           {/* Render custom GeoJSON features */}

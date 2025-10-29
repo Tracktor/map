@@ -204,8 +204,8 @@ const propsData = [
   },
   {
     def: `"OSRM"`,
-    description: "Specifies the routing service to use (`OSRM` for open source, or `Mapbox` for premium routes).",
-    name: "routeService",
+    description: "Specifies the engine service to use (`OSRM` for open source, or `Mapbox` for premium routes).",
+    name: "Engine",
     type: `"OSRM" | "Mapbox"`,
   },
   {

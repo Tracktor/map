@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { Layer, Source } from "react-map-gl";
 import mapboxRoute from "@/services/Mapbox/mapboxRoute.ts";
 import OSRMRoute from "@/services/OSRM/OSRMRoute.ts";
-import { ItineraryLineStyle } from "@/types/MarkerMapProps.ts";
+import { Engine, ItineraryLineStyle, Profile } from "@/types/MarkerMapProps.ts";
 
 type ItineraryProps = {
   from?: [number, number];
   to?: [number, number];
-  profile?: "driving" | "walking" | "cycling";
-  routeService?: "OSRM" | "Mapbox";
+  profile?: Profile;
+  engine?: Engine;
   itineraryLineStyle?: Partial<ItineraryLineStyle>;
 };
 
@@ -36,7 +36,7 @@ type ItineraryProps = {
  * - `react-map-gl`: used for rendering the map layers.
  *
  */
-const Itinerary = ({ profile, routeService, to, from, itineraryLineStyle }: ItineraryProps) => {
+const Itinerary = ({ profile, engine, to, from, itineraryLineStyle }: ItineraryProps) => {
   const [route, setRoute] = useState<Feature<LineString, GeoJsonProperties> | null>(null);
 
   /**
@@ -53,7 +53,7 @@ const Itinerary = ({ profile, routeService, to, from, itineraryLineStyle }: Itin
     (async () => {
       try {
         // Choose routing service based on prop
-        const r = routeService === "OSRM" ? await OSRMRoute(from, to, profile) : await mapboxRoute(from, to, profile);
+        const r = engine === "OSRM" ? await OSRMRoute(from, to, profile) : await mapboxRoute(from, to, profile);
 
         // Update state if a route was found
         if (r) {
@@ -68,7 +68,7 @@ const Itinerary = ({ profile, routeService, to, from, itineraryLineStyle }: Itin
         setRoute(null);
       }
     })();
-  }, [from, to, profile, routeService]);
+  }, [from, to, profile, engine]);
 
   if (!route) {
     return null;

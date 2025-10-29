@@ -10,12 +10,19 @@ export interface ItineraryLineStyle {
   opacity: number;
 }
 
+export const engines = ["OSRM", "Mapbox"] as const;
+export type Engine = (typeof engines)[number];
+
+export const profiles = ["driving", "walking", "cycling"] as const;
+export type Profile = (typeof profiles)[number];
+
 export interface FindNearestMarkerParams {
   origin?: [number, number];
   maxDistanceMeters?: number;
   destinations?: { lng: number; lat: number; id: number }[];
   onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
-  profile?: "driving" | "walking" | "cycling";
+  profile?: Profile;
+  engine?: Engine;
 }
 
 export interface MarkerMapProps {
@@ -179,7 +186,7 @@ export interface MarkerMapProps {
    * Transportation profile used for route calculation.
    * @default "driving"
    */
-  profile?: "driving" | "walking" | "cycling";
+  profile?: Profile;
 
   /**
    * Custom styles for the itinerary line displayed on the map.
@@ -189,13 +196,13 @@ export interface MarkerMapProps {
   itineraryLineStyle?: Partial<ItineraryLineStyle>;
 
   /**
-   * Route service to use for calculating routes.
+   * Engine to use for calculating routes.
    * @default "OSRM"
    * Options are:
    * - "OSRM": Uses the public OSRM API for routing.
    * - "Mapbox": Uses the Mapbox Directions API for routing.
    */
-  routeService?: "OSRM" | "Mapbox";
+  engine?: Engine;
 
   /**
    * Parameters for finding the nearest marker to a given point.
