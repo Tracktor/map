@@ -1,6 +1,6 @@
 import type { Feature, GeoJsonProperties, LineString } from "geojson";
 
-const getRoute = async (
+const mapboxRoute = async (
   from: [number, number],
   to: [number, number],
   profile: "driving" | "walking" | "cycling" = "driving",
@@ -23,4 +23,4 @@ const getRoute = async (
   };
 };
 
-export default getRoute;
+export default mapboxRoute;

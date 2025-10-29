@@ -1,9 +1,7 @@
 import { useTheme } from "@tracktor/design-system";
 import { isArray } from "@tracktor/react-utils";
-import type { Feature, GeoJsonProperties, LineString } from "geojson";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MapRef } from "react-map-gl";
-import getRoute from "@/services/getRoute.ts";
 import type { MarkerMapProps } from "@/types/MarkerMapProps";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
@@ -19,13 +17,9 @@ const useMarkerMap = ({
   cooperativeGestures,
   doubleClickZoom,
   theme: themeOverride,
-  from,
-  to,
-  profile,
 }: MarkerMapProps) => {
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
-  const [route, setRoute] = useState<Feature<LineString, GeoJsonProperties> | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
   const [isMapReady, setIsMapReady] = useState(false);
 
@@ -84,18 +78,6 @@ const useMarkerMap = ({
     setSelected(openPopup ?? null);
   }, [openPopup]);
 
-  useEffect(() => {
-    if (!(from && to)) {
-      return;
-    }
-
-    getRoute(from, to, profile).then((r) => {
-      if (r) {
-        setRoute(r);
-      }
-    });
-  }, [from, profile, to]);
-
   return {
     coopGestures,
     coreStyle,
@@ -106,7 +88,6 @@ const useMarkerMap = ({
     initialCenter,
     isMapReady,
     mapRef,
-    route,
     selected,
     selectedMarker,
     setSelected,

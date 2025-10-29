@@ -13,6 +13,7 @@ import {
 } from "@tracktor/design-system";
 import FeaturesPreview from "example/public/assets/features-preview.png";
 import MarkerPreview from "example/public/assets/markers-preview.png";
+import NearestPreview from "example/public/assets/nearest-preview.png";
 import RoutePreview from "example/public/assets/route-preview.png";
 import type { PrismTheme } from "prism-react-renderer";
 import { Highlight } from "prism-react-renderer";
@@ -75,6 +76,12 @@ const cardData = [
     image: FeaturesPreview,
     path: "/features",
     title: "🗺 Features Example",
+  },
+  {
+    description: "Find and highlight the nearest marker from a given origin point.",
+    image: NearestPreview,
+    path: "/nearest-marker",
+    title: "📌 Nearest Marker Example",
   },
 ];
 

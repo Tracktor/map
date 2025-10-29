@@ -3,11 +3,12 @@ import { memo, ReactElement } from "react";
 import MapboxMap, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isNumber } from "@tracktor/react-utils";
-import { Layer, Source } from "react-map-gl";
 import mapboxGlobalStyles from "@/constants/globalStyle";
 import FitBounds from "@/Features/Bounds/FitsBounds";
+import Itinerary from "@/Features/Itinerary/Itinerary.tsx";
 import useMarkerMap from "@/Features/MarkerMap/useMarkerMap.ts";
 import DefaultMarker from "@/Features/Markers/DefaultMarkers";
+import NearestPointItinerary from "@/Features/NearestPointItinerary/NearestPointItinary.tsx";
 import RenderFeatures from "@/Features/RenderFeature/RenderFeature.tsx";
 import isValidMarker from "@/types/isValidMarker.ts";
 import { MarkerMapProps } from "@/types/MarkerMapProps";
@@ -41,6 +42,9 @@ const MarkerMap = ({
   to,
   profile = "driving",
   itineraryLineStyle,
+  routeService = "OSRM",
+  findNearestMarker,
+  onNearestFound,
 }: MarkerMapProps): ReactElement => {
   const {
     selectedMarker,
@@ -53,13 +57,13 @@ const MarkerMap = ({
     initialCenter,
     coreStyle,
     coopGestures,
-    route,
     isMapReady,
   } = useMarkerMap({
     baseMapView,
     center,
     cooperativeGestures,
     doubleClickZoom,
+    findNearestMarker,
     from,
     mapStyle,
     markers,
@@ -67,6 +71,7 @@ const MarkerMap = ({
     openPopupOnHover,
     profile,
     projection,
+    routeService,
     theme,
     to,
     zoom,
@@ -92,7 +97,7 @@ const MarkerMap = ({
 
       {!loading && (
         <MapboxMap
-          key={`${coopGestures}-${dblZoom}-${projection}-${mapStyle}`}
+          key={`${coopGestures}-${dblZoom}-${projection}-${mapStyle}-${findNearestMarker?.maxDistanceMeters}`}
           ref={mapRef}
           onLoad={handleMapLoad}
           cooperativeGestures={coopGestures}
@@ -147,21 +152,17 @@ const MarkerMap = ({
             </Popup>
           )}
 
-          {isMapReady && route && (
-            <Source type="geojson" data={route}>
-              <Layer
-                type="line"
-                paint={{
-                  "line-color": itineraryLineStyle?.color ?? "#9c3333",
-                  "line-opacity": itineraryLineStyle?.opacity ?? 0.8,
-                  "line-width": itineraryLineStyle?.width ?? 4,
-                }}
-                layout={{
-                  "line-cap": "round",
-                  "line-join": "round",
-                }}
-              />
-            </Source>
+          {isMapReady && (
+            <Itinerary from={from} to={to} profile={profile} routeService={routeService} itineraryLineStyle={itineraryLineStyle} />
+          )}
+
+          {isMapReady && (
+            <NearestPointItinerary
+              origin={findNearestMarker?.origin}
+              destinations={findNearestMarker?.destinations}
+              onNearestFound={onNearestFound}
+              maxDistanceMeters={findNearestMarker?.maxDistanceMeters}
+            />
           )}
 
           {features && <RenderFeatures features={features} />}

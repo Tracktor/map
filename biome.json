@@ -1,3 +1,6 @@
 {
-  "extends": ["@tracktor/biome-config-react"]
+  "extends": ["@tracktor/biome-config-react"],
+  "files": {
+    "includes": ["src/**", "!example/dist"]
+  }
 }

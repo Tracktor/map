@@ -4,6 +4,19 @@ import { LngLatLike } from "mapbox-gl";
 import type { ProjectionSpecification as ReactMapProjection } from "react-map-gl";
 import { MarkerProps } from "@/types/MarkerProps";
 
+export interface ItineraryLineStyle {
+  color: string;
+  width: number;
+  opacity: number;
+}
+
+export interface FindNearestMarkerParams {
+  origin?: [number, number];
+  maxDistanceMeters?: number;
+  destinations?: { lng: number; lat: number; id: number }[];
+  onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
+}
+
 export interface MarkerMapProps {
   /**
    * Automatically adjusts the map's zoom and center
@@ -171,9 +184,28 @@ export interface MarkerMapProps {
    * If not provided, default styles will be used.
    * @default { color: "#3b82f6", width: 4, opacity: 0.8 }
    */
-  itineraryLineStyle?: Partial<{
-    color: string;
-    width: number;
-    opacity: number;
-  }>;
+  itineraryLineStyle?: Partial<ItineraryLineStyle>;
+
+  /**
+   * Route service to use for calculating routes.
+   * @default "OSRM"
+   * Options are:
+   * - "OSRM": Uses the public OSRM API for routing.
+   * - "Mapbox": Uses the Mapbox Directions API for routing.
+   */
+  routeService?: "OSRM" | "Mapbox";
+
+  /**
+   * Parameters for finding the nearest marker to a given point.
+   * If provided, the map will automatically center and zoom
+   * to include the nearest marker within the specified distance.
+   */
+  findNearestMarker?: FindNearestMarkerParams;
+
+  /**
+   * Callback triggered when the nearest marker is found.
+   * @param id
+   * @param coords
+   */
+  onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
 }

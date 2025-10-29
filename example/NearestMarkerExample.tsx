@@ -1,0 +1,230 @@
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
+import Navbar from "example/Navbar.tsx";
+import { useMemo, useState } from "react";
+import type { ProjectionSpecification } from "react-map-gl";
+import MarkerMap from "@/Features/MarkerMap/MarkerMap";
+
+const predefinedOrigins = [
+  { coords: [2.3522, 48.8566] as [number, number], id: "origin-paris", name: "Paris (origin)" },
+  { coords: [4.8357, 45.764] as [number, number], id: "origin-lyon", name: "Lyon (origin)" },
+  { coords: [-0.5792, 44.8378] as [number, number], id: "origin-bordeaux", name: "Bordeaux (origin)" },
+  { coords: [5.3698, 43.2965] as [number, number], id: "origin-marseille", name: "Marseille (origin)" },
+  { coords: [1.4442, 43.6047] as [number, number], id: "origin-toulouse", name: "Toulouse (origin)" },
+];
+
+const predefinedDestinations = [
+  { id: 1, lat: 50.6292, lng: 3.0573, name: "Lille" },
+  { id: 2, lat: 43.2965, lng: 5.375, name: "Marseille Old Port" },
+  { id: 3, lat: 44.8378, lng: -0.5792, name: "Bordeaux" },
+  { id: 4, lat: 45.764, lng: 4.8357, name: "Lyon" },
+  { id: 5, lat: 43.604, lng: 1.444, name: "Toulouse Capitole" },
+  { id: 6, lat: 43.6108, lng: 3.8767, name: "Montpellier" },
+  { id: 7, lat: 43.7102, lng: 7.262, name: "Nice" },
+  { id: 8, lat: 47.2184, lng: -1.5536, name: "Nantes" },
+  { id: 9, lat: 48.5734, lng: 7.7521, name: "Strasbourg" },
+  { id: 10, lat: 49.2583, lng: 4.0317, name: "Reims" },
+  { id: 11, lat: 47.322, lng: 5.0415, name: "Dijon" },
+  { id: 12, lat: 45.7833, lng: 3.0833, name: "Clermont-Ferrand" },
+];
+
+interface NearestMarkerExampleProps {
+  themeMode: "light" | "dark";
+  setThemeMode: (mode: "light" | "dark") => void;
+}
+
+const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleProps) => {
+  const [projection, setProjection] = useState<ProjectionSpecification>({ name: "mercator" });
+  const [profile, setProfile] = useState<"driving" | "walking" | "cycling">("driving");
+  const [cooperativeGestures, setCooperativeGestures] = useState(true);
+  const [doubleClickZoom, setDoubleClickZoom] = useState(true);
+  const [selectedOrigin, setSelectedOrigin] = useState(predefinedOrigins[0]);
+  const [searchRadius, setSearchRadius] = useState(3_000_000);
+  const [nearestId, setNearestId] = useState<number | null>(null);
+  const [nearestInfo, setNearestInfo] = useState<{ name: string; distance: number } | null>(null);
+
+  const originMarker = useMemo(
+    () => [
+      {
+        id: "origin",
+        lat: selectedOrigin.coords[1],
+        lng: selectedOrigin.coords[0],
+        popup: selectedOrigin.name,
+        variant: "success",
+      },
+    ],
+    [selectedOrigin],
+  );
+
+  const destinationMarkers = useMemo(
+    () =>
+      predefinedDestinations.map((m) => ({
+        color: m.id === nearestId ? "#2563eb" : "#f59e0b", // 🔵 blue if nearest, 🟠 orange otherwise
+        id: m.id,
+        lat: m.lat,
+        lng: m.lng,
+        popup: `🎯 ${m.name}`,
+      })),
+    [nearestId],
+  );
+
+  const allMarkers = useMemo(() => [...destinationMarkers, ...originMarker], [originMarker, destinationMarkers]);
+
+  return (
+    <>
+      <Navbar />
+      <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
+        <Box sx={{ flex: 1 }}>
+          <MarkerMap
+            markers={allMarkers}
+            profile={profile}
+            cooperativeGestures={cooperativeGestures}
+            doubleClickZoom={doubleClickZoom}
+            projection={projection}
+            fitBounds
+            height="100%"
+            width="100%"
+            itineraryLineStyle={{
+              color: "#2563eb",
+              opacity: 0.8,
+              width: 2,
+            }}
+            findNearestMarker={{
+              destinations: predefinedDestinations,
+              maxDistanceMeters: searchRadius,
+              origin: selectedOrigin.coords,
+            }}
+            onNearestFound={(id, _coords, distanceMeters) => {
+              setNearestId(id as number);
+              const info = predefinedDestinations.find((d) => d.id === id);
+              if (info) {
+                setNearestInfo({ distance: Math.round(distanceMeters), name: info.name });
+              }
+            }}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            backgroundColor: "background.paper",
+            borderColor: "divider",
+            borderLeft: "1px solid",
+            color: "text.primary",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            p: 2,
+            width: 300,
+          }}
+        >
+          <Typography variant="h6">🧭 Nearest marker test</Typography>
+
+          <Typography variant="body2" color="text.secondary">
+            Theme
+          </Typography>
+          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
+            {themeMode === "dark" ? "Light mode" : "Dark mode"}
+          </Button>
+
+          <Typography variant="body2" color="text.secondary">
+            Origin
+          </Typography>
+          <Select
+            value={selectedOrigin.id}
+            onChange={(e) => {
+              const origin = predefinedOrigins.find((o) => o.id === e.target.value);
+              if (origin) {
+                setSelectedOrigin(origin);
+              }
+              setNearestId(null);
+              setNearestInfo(null);
+            }}
+            size="small"
+          >
+            {predefinedOrigins.map((o) => (
+              <MenuItem key={o.id} value={o.id}>
+                {o.name}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <Typography variant="body2" color="text.secondary">
+            Profile
+          </Typography>
+          <Select value={profile} onChange={(e) => setProfile(e.target.value as "driving" | "walking" | "cycling")} size="small">
+            <MenuItem value="driving">🚗 Driving</MenuItem>
+            <MenuItem value="walking">🚶 Walking</MenuItem>
+            <MenuItem value="cycling">🚴 Cycling</MenuItem>
+          </Select>
+
+          <Typography variant="body2" color="text.secondary">
+            Interactions
+          </Typography>
+          <Stack spacing={1}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="body2">Cooperative gestures</Typography>
+              <Switch checked={cooperativeGestures} onChange={(e) => setCooperativeGestures(e.target.checked)} />
+            </Stack>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="body2">Double click zoom</Typography>
+              <Switch checked={doubleClickZoom} onChange={(e) => setDoubleClickZoom(e.target.checked)} />
+            </Stack>
+          </Stack>
+
+          <Typography variant="body2" color="text.secondary">
+            Projection
+          </Typography>
+          <Select
+            value={projection.name}
+            onChange={(e) => setProjection({ name: e.target.value as ProjectionSpecification["name"] })}
+            size="small"
+          >
+            <MenuItem value="mercator">Mercator</MenuItem>
+            <MenuItem value="globe">Globe</MenuItem>
+            <MenuItem value="albers">Albers</MenuItem>
+            <MenuItem value="equalEarth">Equal Earth</MenuItem>
+            <MenuItem value="equirectangular">Equirectangular</MenuItem>
+            <MenuItem value="naturalEarth">Natural Earth</MenuItem>
+          </Select>
+
+          <FormControl size="small">
+            <InputLabel>Max distance (m)</InputLabel>
+            <Select value={searchRadius} label="Max distance (m)" onChange={(e) => setSearchRadius(Number(e.target.value))}>
+              <MenuItem value={10000}>10 km</MenuItem>
+              <MenuItem value={50000}>50 km</MenuItem>
+              <MenuItem value={100000}>100 km</MenuItem>
+              <MenuItem value={500000}>500 km</MenuItem>
+              <MenuItem value={1000000}>1000 km</MenuItem>
+              <MenuItem value={3000000}>∞ (no limit)</MenuItem>
+            </Select>
+          </FormControl>
+
+          {nearestInfo && (
+            <Box>
+              <Typography variant="body2" fontWeight="bold">
+                Nearest destination:
+              </Typography>
+              <Typography variant="body2">{nearestInfo.name}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {(nearestInfo.distance / 1000).toFixed(1)} km away
+              </Typography>
+            </Box>
+          )}
+
+          <Stack direction="column" spacing={0.5}>
+            <Typography variant="caption" color="text.secondary">
+              🟢 Origin = green
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              🟠 Destination = orange
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              🔵 Nearest = blue
+            </Typography>
+          </Stack>
+        </Box>
+      </Stack>
+    </>
+  );
+};
+
+export default NearestMarkerExample;

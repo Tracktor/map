@@ -6,6 +6,7 @@ const navItems = [
   { icon: "📍", label: "Markers", path: "/markers" },
   { icon: "🧭", label: "Route", path: "/route" },
   { icon: "🗺️", label: "Features", path: "/features" },
+  { icon: "🔎", label: "Nearest Marker", path: "/nearest-marker" },
 ];
 
 const Navbar = () => {
