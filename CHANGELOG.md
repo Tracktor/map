@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/Tracktor/map/compare/v1.5.1...v1.6.0) (2025-10-30)
+
+
+### ✨ Features
+
+* refactor map components to use MapView and implement ThemeModeProvider for theme management ([c193afe](https://github.com/Tracktor/map/commit/c193afece5e1725ef50508cc425126ad34ab6727))
+
 ### [1.5.1](https://github.com/Tracktor/map/compare/v1.5.0...v1.5.1) (2025-10-30)
 
 ## [1.5.0](https://github.com/Tracktor/map/compare/v1.4.4...v1.5.0) (2025-10-29)
