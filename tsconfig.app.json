@@ -7,5 +7,6 @@
     "noEmit": false
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "example", "vite.config.ts"]
+  "exclude": ["node_modules", "dist",
+    "sandbox", "vite.config.ts"]
 }

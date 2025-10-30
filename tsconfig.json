@@ -30,7 +30,7 @@
   "files": [],
   "include": [
     "src",
-    "example",
+    "sandbox",
     "test",
     "test/setup.ts"
   ],

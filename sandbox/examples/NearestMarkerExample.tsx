@@ -13,11 +13,11 @@ import {
   Switch,
   Typography,
 } from "@tracktor/design-system";
-import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import Navbar from "sandbox/features/Navbar";
 import MarkerMap from "@/features/MarkerMap/MarkerMap";
-import { Engine } from "@/types/MarkerMapProps.ts";
+import { Engine } from "@/types/MarkerMapProps";
 
 const predefinedOrigins = [
   { coords: [2.3522, 48.8566], id: "origin-paris", name: "Paris (origin)" },

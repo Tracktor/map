@@ -11,14 +11,14 @@ import {
   TableRow,
   Typography,
 } from "@tracktor/design-system";
-import FeaturesPreview from "example/public/assets/features-preview.png";
-import IsochronePreview from "example/public/assets/isochrone-preview.png";
-import MarkerPreview from "example/public/assets/markers-preview.png";
-import NearestPreview from "example/public/assets/nearest-preview.png";
-import RoutePreview from "example/public/assets/route-preview.png";
 import type { PrismTheme } from "prism-react-renderer";
 import { Highlight } from "prism-react-renderer";
 import { useNavigate } from "react-router-dom";
+import FeaturesPreview from "sandbox/public/assets/features-preview.png";
+import IsochronePreview from "sandbox/public/assets/isochrone-preview.png";
+import MarkerPreview from "sandbox/public/assets/markers-preview.png";
+import NearestPreview from "sandbox/public/assets/nearest-preview.png";
+import RoutePreview from "sandbox/public/assets/route-preview.png";
 
 const dracula: PrismTheme = {
   plain: {

@@ -6,9 +6,7 @@ import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import dts from "vite-plugin-dts";
 import { dependencies, name, peerDependencies } from "./package.json";
 
-// eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);
-// eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
@@ -17,8 +15,12 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/main.ts"),
       fileName: (format) => {
-        if (format === "es") return "main.js";
-        if (format === "umd") return "main.umd.cjs";
+        if (format === "es") {
+          return "main.js";
+        }
+        if (format === "umd") {
+          return "main.umd.cjs";
+        }
         return "main.js";
       },
       formats: ["es", "umd"],
@@ -39,7 +41,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
-      exclude: ["vite.config.ts", "example"],
+      exclude: ["vite.config.ts", "sandbox"],
       tsconfigPath: "./tsconfig.app.json",
     }),
     // Mapbox requires CSS to be imported to render correctly (imported from provider)
@@ -49,7 +51,7 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: "@", replacement: resolve(__dirname, "src") },
-      { find: "example", replacement: resolve(__dirname, "example") },
+      { find: "sandbox", replacement: resolve(__dirname, "sandbox") },
     ],
     dedupe: ["react", "react-dom"],
   },

@@ -1,12 +1,12 @@
 import { ThemeProvider } from "@tracktor/design-system";
-import FeaturesExample from "example/FeaturesExample.tsx";
-import IsochroneExample from "example/IsochroneExample.tsx";
-import LandingPage from "example/LandingPage.tsx";
-import MarkersExample from "example/MarkersExample";
-import NearestMarkerExample from "example/NearestMarkerExample.tsx";
-import RouteExample from "example/RoutesExample";
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import FeaturesExample from "sandbox/examples/FeaturesExample";
+import IsochroneExample from "sandbox/examples/IsochroneExample";
+import MarkersExample from "sandbox/examples/MarkersExample";
+import NearestMarkerExample from "sandbox/examples/NearestMarkerExample";
+import RouteExample from "sandbox/examples/RoutesExample";
+import LandingPage from "sandbox/features/LandingPage";
 import MapProvider from "@/context/MapProvider";
 
 const App = () => {

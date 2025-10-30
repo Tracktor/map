@@ -15,11 +15,11 @@ import {
   TextField,
   Typography,
 } from "@tracktor/design-system";
-import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
-import { VariantMarker, variantMarkerColor } from "@/components/Markers/Markers.tsx";
-import MarkerMap from "@/features/MarkerMap/MarkerMap.tsx";
+import Navbar from "sandbox/features/Navbar";
+import { VariantMarker, variantMarkerColor } from "@/components/Markers/Markers";
+import MarkerMap from "@/features/MarkerMap/MarkerMap";
 import { MarkerProps } from "@/types/MarkerProps";
 
 const MAX_MARKERS = 1000;

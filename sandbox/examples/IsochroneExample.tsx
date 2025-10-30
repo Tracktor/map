@@ -1,10 +1,10 @@
 import { Box, Button, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
-import Navbar from "example/Navbar.tsx";
 import { useEffect, useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import Navbar from "sandbox/features/Navbar";
 import MarkerMap from "@/features/MarkerMap/MarkerMap";
 import type { RoutingProfile } from "@/services/core/interface";
-import isPointInGeoJSON from "@/utils/isPointInGeoJSON"; // ✅ ta version maison
+import isPointInGeoJSON from "@/utils/isPointInGeoJSON";
 
 const predefinedOrigins = [
   { coords: [2.3522, 48.8566], id: "paris", name: "Paris" },

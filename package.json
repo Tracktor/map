@@ -16,20 +16,20 @@
     }
   },
   "scripts": {
-    "example": "vite --config vite.config.example.ts",
+    "sandbox": "vite --config vite.config.sandbox.ts",
+    "dev:sandbox": "vite --config vite.config.sandbox.ts",
+    "build:sandbox": "vite build --config vite.config.sandbox.ts",
+    "deploy:sandbox": "bun run build:sandbox && cp dist-sandbox/index.html dist-sandbox/404.html && gh-pages -d dist-sandbox",
     "build": "bunx tsc && bunx vite build",
     "lint": "bunx biome check --diagnostic-level=error . && bunx tsc --noEmit --incremental",
     "lint:fix": "bunx biome check . --write",
     "prepublishOnly": "bun run build",
     "preview": "bunx vite preview",
-    "release": "bun run build && bun publish --access example/public",
+    "release": "bun run build && bun publish --access public",
     "version": "bunx standard-version",
     "prepare": "husky",
     "test": "bun test --preload ./test/setup.ts",
-    "test:watch": "bun test --watch --preload ./test/setup.ts",
-    "dev:example": "vite --config vite.config.example.ts",
-    "build:example": "vite build --config vite.config.example.ts",
-    "deploy:example": "bun run build:example && cp dist-example/index.html dist-example/404.html && gh-pages -d dist-example"
+    "test:watch": "bun test --watch --preload ./test/setup.ts"
   },
   "files": [
     "dist"

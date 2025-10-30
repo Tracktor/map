@@ -15,30 +15,40 @@ import { MarkerMapProps } from "@/types/MarkerMapProps";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
 /**
- * MarkerMap Component
+ * MapView Component
  * -------------------
- * A complete interactive map component using Mapbox GL.
+ * A full-featured interactive map view built on top of `react-map-gl`.
  *
- * Features:
- * - Displays markers with optional custom icons and tooltips.
+ * This component serves as the main container for all map-related features,
+ * including markers, routes, popups, and geospatial overlays.
+ *
+ * Key Features:
+ * - Renders markers with optional custom icons and tooltips.
  * - Supports hover and click interactions for popups.
- * - Automatically fits bounds to visible markers/features.
- * - Can display a route (`Itinerary`) or nearest route (`NearestPointItinerary`).
- * - Integrates with OSRM or Mapbox routing services.
+ * - Automatically fits bounds to visible markers or GeoJSON features.
+ * - Displays routes (`Itinerary`) or nearest routes (`NearestPointItinerary`).
+ * - Supports isochrone visualization and GeoJSON feature collections.
+ * - Integrates with OSRM or Mapbox routing engines.
  *
- * Props come from `MarkerMapProps`.
+ * Map Styles:
+ * - Works with both Mapbox styles (`mapbox://styles/...`) and custom raster/vector styles (e.g., OpenStreetMap).
+ * - A Mapbox access token is only required if you use Mapbox-hosted styles or sources.
+ *
+ * Props:
+ * - Fully typed via `MarkerMapProps`.
  *
  * Dependencies:
- * - `react-map-gl` and `mapbox-gl` for rendering.
- * - `FitBounds`, `Itinerary`, `NearestPointItinerary`, and `RenderFeatures` for map behavior.
- * - `@tracktor/design-system` for consistent UI (Skeleton, Box, GlobalStyles).
+ * - `react-map-gl` and `mapbox-gl` for rendering and interaction.
+ * - `@tracktor/design-system` for consistent layout and skeleton UI.
+ * - Custom sub-features: `FitBounds`, `Itinerary`, `NearestPointItinerary`, `Isochrone`, and `FeatureCollection`.
  *
  * Maintenance Notes:
- * - Keep map ref logic inside the component; Mapbox events are handled through `onLoad`.
- * - If performance issues arise with large marker lists, consider memoizing marker rendering.
- * - For dynamic data (GPS tracking), you can debounce `fitBounds` or use `animationKey` to limit updates.
+ * - Keep map ref logic inside the component (Mapbox events handled via `onLoad`).
+ * - For large datasets, consider memoizing marker rendering.
+ * - For dynamic data (e.g., GPS tracking), you can debounce `fitBounds`
+ *   or control re-renders using the `fitBoundsAnimationKey` prop.
  */
-const MarkerMap = ({
+const MapView = ({
   containerStyle,
   square,
   loading,
@@ -250,4 +260,4 @@ const MarkerMap = ({
   );
 };
 
-export default memo(MarkerMap);
+export default memo(MapView);

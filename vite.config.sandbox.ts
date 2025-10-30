@@ -1,4 +1,3 @@
-// vite.config.example.ts
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig, loadEnv } from "vite";
@@ -12,7 +11,7 @@ export default defineConfig(({ mode }) => {
     build: {
       chunkSizeWarningLimit: 1500,
       emptyOutDir: true,
-      outDir: "../dist-example",
+      outDir: "../dist-sandbox",
     },
     define: {
       "import.meta.env.VITE_MAPBOX_ACCESS_TOKEN": JSON.stringify(env.VITE_MAPBOX_ACCESS_TOKEN),
@@ -22,10 +21,10 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: [
         { find: "@", replacement: resolve(__dirname, "src") },
-        { find: "example", replacement: resolve(__dirname, "example") },
+        { find: "sandbox", replacement: resolve(__dirname, "sandbox") }, // ✅ MAJ alias
       ],
     },
-    root: "example",
+    root: "sandbox",
     server: {
       port: 5174,
     },

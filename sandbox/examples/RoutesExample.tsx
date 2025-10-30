@@ -1,7 +1,7 @@
 import { Box, Button, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
-import Navbar from "example/Navbar.tsx";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import Navbar from "sandbox/features/Navbar";
 import MarkerMap from "@/features/MarkerMap/MarkerMap";
 
 const predefinedRoutes = [

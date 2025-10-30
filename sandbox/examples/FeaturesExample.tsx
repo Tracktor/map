@@ -1,8 +1,8 @@
 import { Box, Button, MenuItem, Select, Stack, Typography } from "@tracktor/design-system";
-import Navbar from "example/Navbar";
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 import { useCallback, useMemo, useState } from "react";
-import MarkerMap from "@/features/MarkerMap/MarkerMap";
+import Navbar from "sandbox/features/Navbar";
+import MarkerMap from "@/features/MarkerMap/MarkerMap.tsx";
 
 const randomCoordInFrance = () => [2 + (Math.random() - 0.5) * 6, 46 + (Math.random() - 0.5) * 6];
 

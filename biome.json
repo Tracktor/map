@@ -1,6 +1,6 @@
 {
   "extends": ["@tracktor/biome-config-react"],
   "files": {
-    "includes": ["src/**", "!example/dist"]
+    "includes": ["src/**", "sandbox/**", "vite.config.sandbox.ts", "vite.config.ts", "!dist-sandbox", "!sandbox/dist", "!dist"]
   }
 }
