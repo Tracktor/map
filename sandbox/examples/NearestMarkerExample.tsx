@@ -15,8 +15,10 @@ import {
 } from "@tracktor/design-system";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import MapSidebar from "sandbox/features/MapSideBar";
 import Navbar from "sandbox/features/Navbar";
-import MarkerMap from "@/features/MarkerMap/MarkerMap";
+import ThemeSwitch from "sandbox/features/ThemeSwitch";
+import MapView from "@/features/MapView/MapView";
 import { Engine } from "@/types/MarkerMapProps";
 
 const predefinedOrigins = [
@@ -42,14 +44,9 @@ const predefinedDestinations = [
   { id: 12, lat: 45.7833, lng: 3.0833, name: "Clermont-Ferrand" },
 ];
 
-interface NearestMarkerExampleProps {
-  themeMode: "light" | "dark";
-  setThemeMode: (mode: "light" | "dark") => void;
-}
-
 const engines = ["OSRM", "Mapbox"] as const;
 
-const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleProps) => {
+const NearestMarkerExample = () => {
   const [projection, setProjection] = useState<ProjectionSpecification>({ name: "mercator" });
   const [profile, setProfile] = useState<"driving" | "walking" | "cycling">("driving");
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
@@ -90,7 +87,7 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
       <Navbar />
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         <Box sx={{ flex: 1 }}>
-          <MarkerMap
+          <MapView
             markers={allMarkers}
             profile={profile}
             cooperativeGestures={cooperativeGestures}
@@ -128,31 +125,10 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
               }
             }}
           />
+          <ThemeSwitch />
         </Box>
 
-        <Box
-          sx={{
-            backgroundColor: "background.paper",
-            borderColor: "divider",
-            borderLeft: "1px solid",
-            color: "text.primary",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            overflowY: "auto",
-            p: 2,
-            width: 300,
-          }}
-        >
-          <Typography variant="h6">🧭 Nearest marker test</Typography>
-
-          <Typography variant="body2" color="text.secondary">
-            Theme
-          </Typography>
-          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-            {themeMode === "dark" ? "Light mode" : "Dark mode"}
-          </Button>
-
+        <MapSidebar>
           <Button
             variant="outlined"
             onClick={() => setFilteredDestinations(predefinedDestinations)}
@@ -296,8 +272,9 @@ const NearestMarkerExample = ({ themeMode, setThemeMode }: NearestMarkerExampleP
               🔵 Nearest = blue
             </Typography>
           </Stack>
-        </Box>
+        </MapSidebar>
       </Stack>
+
       <Dialog
         open={showIntroModal}
         onClose={() => setShowIntroModal(false)}

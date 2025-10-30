@@ -1,8 +1,10 @@
 import { Box, Button, MenuItem, Select, Stack, Typography } from "@tracktor/design-system";
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 import { useCallback, useMemo, useState } from "react";
+import MapSidebar from "sandbox/features/MapSideBar";
 import Navbar from "sandbox/features/Navbar";
-import MarkerMap from "@/features/MarkerMap/MarkerMap.tsx";
+import ThemeSwitch from "sandbox/features/ThemeSwitch";
+import MapView from "@/features/MapView/MapView";
 
 const randomCoordInFrance = () => [2 + (Math.random() - 0.5) * 6, 46 + (Math.random() - 0.5) * 6];
 
@@ -51,12 +53,7 @@ const createRandomPolygon = (): Feature<Polygon> => {
   };
 };
 
-interface FeaturesExampleProps {
-  themeMode: "light" | "dark";
-  setThemeMode: (mode: "light" | "dark") => void;
-}
-
-const FeaturesExample = ({ themeMode, setThemeMode }: FeaturesExampleProps) => {
+const FeaturesExample = () => {
   const [featureList, setFeatureList] = useState<Feature[]>([]);
   const [baseMapView, setBaseMapView] = useState<"street" | "satellite">("street");
 
@@ -106,32 +103,11 @@ const FeaturesExample = ({ themeMode, setThemeMode }: FeaturesExampleProps) => {
       <Navbar />
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         <Box sx={{ flex: 1 }}>
-          <MarkerMap markers={markers} features={features} fitBounds baseMapView={baseMapView} height="100%" width="100%" />
+          <MapView markers={markers} features={features} fitBounds baseMapView={baseMapView} height="100%" width="100%" />
+          <ThemeSwitch />
         </Box>
 
-        <Box
-          sx={{
-            backgroundColor: "background.paper",
-            borderColor: "divider",
-            borderLeft: "1px solid",
-            color: "text.primary",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            overflowY: "auto",
-            p: 2,
-            width: 300,
-          }}
-        >
-          <Typography variant="h6">🧭 Options</Typography>
-
-          <Typography variant="body2" color="text.secondary">
-            Theme
-          </Typography>
-          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-            {themeMode === "dark" ? "Light mode" : "Dark mode"}
-          </Button>
-
+        <MapSidebar>
           <Typography variant="body2" color="text.secondary">
             Base Map View
           </Typography>
@@ -161,7 +137,7 @@ const FeaturesExample = ({ themeMode, setThemeMode }: FeaturesExampleProps) => {
               🗑 Clear all
             </Button>
           )}
-        </Box>
+        </MapSidebar>
       </Stack>
     </>
   );

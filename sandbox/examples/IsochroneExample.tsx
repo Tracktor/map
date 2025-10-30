@@ -1,8 +1,10 @@
-import { Box, Button, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
+import { Box, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
 import { useEffect, useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import MapSidebar from "sandbox/features/MapSideBar";
 import Navbar from "sandbox/features/Navbar";
-import MarkerMap from "@/features/MarkerMap/MarkerMap";
+import ThemeSwitch from "sandbox/features/ThemeSwitch";
+import MapView from "@/features/MapView/MapView";
 import type { RoutingProfile } from "@/services/core/interface";
 import isPointInGeoJSON from "@/utils/isPointInGeoJSON";
 
@@ -12,12 +14,7 @@ const predefinedOrigins = [
   { coords: [-0.5792, 44.8378], id: "bordeaux", name: "Bordeaux" },
 ];
 
-interface IsochroneExampleProps {
-  themeMode: "light" | "dark";
-  setThemeMode: (mode: "light" | "dark") => void;
-}
-
-const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) => {
+const IsochroneExample = () => {
   const [projection, setProjection] = useState<ProjectionSpecification>({ name: "mercator" });
   const [profile, setProfile] = useState<RoutingProfile>("driving");
   const [origin, setOrigin] = useState(predefinedOrigins[0]);
@@ -26,13 +23,12 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
 
-  // ✅ markers autour de l’origine
   const generateMarkers = (base: typeof origin) =>
     Array.from({ length: 12 }, (_, i) => {
       const offsetLng = (Math.random() - 0.5) * 0.5;
       const offsetLat = (Math.random() - 0.5) * 0.5;
       return {
-        color: "#f59e0b", // orange par défaut
+        color: "#f59e0b",
         id: i + 1,
         lat: base.coords[1] + offsetLat,
         lng: base.coords[0] + offsetLng,
@@ -79,7 +75,7 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         {/* 🗺️ MAP */}
         <Box sx={{ flex: 1 }}>
-          <MarkerMap
+          <MapView
             height="100%"
             width="100%"
             markers={allMarkers}
@@ -94,30 +90,10 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
               profile,
             }}
           />
+          <ThemeSwitch />
         </Box>
 
-        {/* ⚙️ PANNEAU DE CONTRÔLE */}
-        <Box
-          sx={{
-            backgroundColor: "background.paper",
-            borderColor: "divider",
-            borderLeft: "1px solid",
-            color: "text.primary",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            overflowY: "auto",
-            p: 2,
-            width: 300,
-          }}
-        >
-          <Typography variant="h6">🕒 Isochrone + Reachability</Typography>
-
-          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-            {themeMode === "dark" ? "Light mode" : "Dark mode"}
-          </Button>
-
-          {/* 🔽 Origine */}
+        <MapSidebar>
           <Typography variant="body2" color="text.secondary">
             Origin
           </Typography>
@@ -141,7 +117,6 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
             ))}
           </Select>
 
-          {/* 🛣️ Profile */}
           <Typography variant="body2" color="text.secondary">
             Profile
           </Typography>
@@ -151,7 +126,6 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
             <MenuItem value="cycling">🚴 Cycling</MenuItem>
           </Select>
 
-          {/* ⏱️ Intervalles */}
           <Typography variant="body2" color="text.secondary">
             Isochrone intervals (minutes)
           </Typography>
@@ -172,7 +146,6 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
             <MenuItem value="15,30,45">15 / 30 / 45 min</MenuItem>
           </Select>
 
-          {/* 🌍 Projection */}
           <Typography variant="body2" color="text.secondary">
             Projection
           </Typography>
@@ -186,7 +159,6 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
             <MenuItem value="naturalEarth">Natural Earth</MenuItem>
           </Select>
 
-          {/* ✋ Interactions */}
           <Typography variant="body2" color="text.secondary">
             Interactions
           </Typography>
@@ -204,7 +176,7 @@ const IsochroneExample = ({ themeMode, setThemeMode }: IsochroneExampleProps) =>
           <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
             🟢 inside isochrone | ⚫ outside | 🟠 pending
           </Typography>
-        </Box>
+        </MapSidebar>
       </Stack>
     </>
   );

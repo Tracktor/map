@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect, mock } from "bun:test";
-import MarkerMap from "@/features/MarkerMap/MarkerMap";
+import MarkerMap from "@/features/MapView/MapView";
 
 mock.module("react-map-gl", () => ({
     __esModule: true,

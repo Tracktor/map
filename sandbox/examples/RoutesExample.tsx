@@ -1,8 +1,10 @@
-import { Box, Button, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
+import { Box, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import MapSidebar from "sandbox/features/MapSideBar";
 import Navbar from "sandbox/features/Navbar";
-import MarkerMap from "@/features/MarkerMap/MarkerMap";
+import ThemeSwitch from "sandbox/features/ThemeSwitch";
+import MapView from "@/features/MapView/MapView";
 
 const predefinedRoutes = [
   {
@@ -31,12 +33,7 @@ const predefinedRoutes = [
   },
 ];
 
-interface RouteExampleProps {
-  themeMode: "light" | "dark";
-  setThemeMode: (mode: "light" | "dark") => void;
-}
-
-const RouteExample = ({ themeMode, setThemeMode }: RouteExampleProps) => {
+const RouteExample = () => {
   const [projection, setProjection] = useState<ProjectionSpecification>({
     name: "mercator",
   });
@@ -58,7 +55,7 @@ const RouteExample = ({ themeMode, setThemeMode }: RouteExampleProps) => {
       <Navbar />
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         <Box sx={{ flex: 1 }}>
-          <MarkerMap
+          <MapView
             markers={markers}
             from={selectedRoute.from as [number, number]}
             to={selectedRoute.to as [number, number]}
@@ -75,32 +72,10 @@ const RouteExample = ({ themeMode, setThemeMode }: RouteExampleProps) => {
               width: 2,
             }}
           />
+          <ThemeSwitch />
         </Box>
 
-        <Box
-          sx={{
-            backgroundColor: "background.paper",
-            borderColor: "divider",
-            borderLeft: "1px solid",
-            color: "text.primary",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            overflowY: "auto",
-            p: 2,
-            width: 300,
-          }}
-        >
-          <Typography variant="h6">🚗 Route options</Typography>
-
-          {/* Thème */}
-          <Typography variant="body2" color="text.secondary">
-            Theme
-          </Typography>
-          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-            {themeMode === "dark" ? "Light mode" : "Dark mode"}
-          </Button>
-
+        <MapSidebar>
           <Typography variant="body2" color="text.secondary">
             Predefined routes
           </Typography>
@@ -159,7 +134,7 @@ const RouteExample = ({ themeMode, setThemeMode }: RouteExampleProps) => {
             <MenuItem value="equirectangular">Equirectangular</MenuItem>
             <MenuItem value="naturalEarth">Natural Earth</MenuItem>
           </Select>
-        </Box>
+        </MapSidebar>
       </Stack>
     </>
   );

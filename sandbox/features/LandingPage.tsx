@@ -21,236 +21,153 @@ import NearestPreview from "sandbox/public/assets/nearest-preview.png";
 import RoutePreview from "sandbox/public/assets/route-preview.png";
 
 const dracula: PrismTheme = {
-  plain: {
-    backgroundColor: "#282a36",
-    color: "#f8f8f2",
-  },
+  plain: { backgroundColor: "#0d1117", color: "#e6edf3" },
   styles: [],
 };
 
-const propsData = [
-  {
-    def: "-",
-    description:
-      "Displays travel-time polygons (isochrones) from a given origin using the Mapbox Isochrone API. Useful for accessibility and reachability analyses.",
-    name: "isochrone",
-    type: "IsochroneConfig",
-  },
-];
-
-const cardData = [
-  {
-    description: "Display custom markers with popups and clustering.",
-    image: MarkerPreview,
-    path: "/markers",
-    title: "📍 Markers Example",
-  },
-  {
-    description: "Calculate and display routes between two points.",
-    image: RoutePreview,
-    path: "/route",
-    title: "🚗 Route Example",
-  },
-  {
-    description: "Render FeatureCollection Polygons, MultiPolygons, Lines, and Points on the map.",
-    image: FeaturesPreview,
-    path: "/features",
-    title: "🗺 Features Example",
-  },
-  {
-    description: "Find and highlight the nearest marker from a given origin point.",
-    image: NearestPreview,
-    path: "/nearest-marker",
-    title: "📌 Nearest Marker Example",
-  },
-  {
-    description: "Generate and display isochrone polygons showing areas reachable within specific travel times.",
-    image: IsochronePreview,
-    path: "/isochrone",
-    title: "🕒 Isochrone Example",
-  },
-];
-
 const PropsTable = () => (
-  <Paper sx={{ mb: 4, p: 3 }}>
-    <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
-      ⚙️ Main Props
+  <Paper
+    sx={{
+      backgroundColor: "background.paper",
+      borderRadius: 4,
+      boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+      p: 4,
+    }}
+  >
+    <Typography variant="h5" fontWeight={600} mb={3}>
+      ⚙️ Props Overview
     </Typography>
     <TableContainer>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: 600 }}>Prop</TableCell>
-            <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
-            <TableCell sx={{ fontWeight: 600 }}>Default</TableCell>
-            <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
+            {["Prop", "Type", "Default", "Description"].map((col) => (
+              <TableCell key={col} sx={{ fontWeight: 600, opacity: 0.8 }}>
+                {col}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {propsData.map((prop) => (
-            <TableRow key={prop.name}>
-              <TableCell>
-                <code>{prop.name}</code>
-              </TableCell>
-              <TableCell>
-                <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
-                  {prop.type}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
-                  {prop.def}
-                </Typography>
-              </TableCell>
-              <TableCell>{prop.description}</TableCell>
-            </TableRow>
-          ))}
+          <TableRow>
+            <TableCell>
+              <code>isochrone</code>
+            </TableCell>
+            <TableCell sx={{ fontFamily: "monospace", opacity: 0.85 }}>IsochroneConfig</TableCell>
+            <TableCell sx={{ fontFamily: "monospace", opacity: 0.5 }}>-</TableCell>
+            <TableCell sx={{ opacity: 0.8 }}>Displays reachability polygons based on travel times.</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
   </Paper>
 );
 
-const LandingPage = () => {
+const cardData = [
+  { desc: "Customizable markers with tooltips.", image: MarkerPreview, path: "/markers", title: "📍 Markers" },
+  { desc: "Compute and display routes easily.", image: RoutePreview, path: "/route", title: "🚗 Route" },
+  { desc: "Render GeoJSON layers elegantly.", image: FeaturesPreview, path: "/features", title: "🗺 Features" },
+  { desc: "Find the closest marker dynamically.", image: NearestPreview, path: "/nearest-marker", title: "📌 Nearest Marker" },
+  { desc: "Display travel-time areas visually.", image: IsochronePreview, path: "/isochrone", title: "🕒 Isochrone" },
+];
+
+export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ maxWidth: 1200, mx: "auto", px: 2, py: 4 }}>
-      <Typography variant="h3" sx={{ fontWeight: 600, mb: 4, textAlign: "center" }}>
-        @tracktor/map
-      </Typography>
-
-      <Box sx={{ maxWidth: 800, mb: 5, mx: "auto", textAlign: "justify" }}>
-        <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
-          🧭 About this project
+    <Box sx={{ maxWidth: 1200, mx: "auto", px: 3, py: 8 }}>
+      {/* Hero Section */}
+      <Box textAlign="center" mb={8}>
+        <Typography
+          variant="h2"
+          fontWeight={700}
+          sx={{ background: "linear-gradient(90deg,#007AFF,#00C6FF)", color: "transparent", mb: 1, WebkitBackgroundClip: "text" }}
+        >
+          @tracktor/map
         </Typography>
-        <Typography variant="body1" sx={{ opacity: 0.85 }}>
-          This project is a <strong>lightweight and performant React component library</strong> built on top of <strong>Mapbox GL</strong>.
-          It provides an intuitive <code>MarkerMap</code> component designed to simplify interactive map integrations in modern
-          applications.
-        </Typography>
-
-        <Typography component="div" variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
-          The component includes:
-          <ul style={{ marginTop: 8 }}>
-            <li>📍 Customizable markers with hover and click interactions</li>
-            <li>💬 Popup management (click or hover-based)</li>
-            <li>🗺️ Automatic fit bounds for multiple markers</li>
-            <li>🚗 Route drawing between two points (driving, walking, cycling)</li>
-            <li>🧭 Line overlays with custom styling</li>
-            <li>🕒 Isochrone generation using the Mapbox Isochrone API</li>
-            <li>🎨 Light/Dark themes and satellite or street base layers</li>
-            <li>🪄 Projection support and advanced gesture handling</li>
-          </ul>
+        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 700, mx: "auto" }}>
+          A lightweight and powerful React component built on top of react-map-gl, combining markers, routes, popups, and advanced
+          geospatial features in a single, declarative interface.
         </Typography>
       </Box>
 
+      {/* Feature Cards */}
+      {/* Feature Cards */}
       <Box
         sx={{
-          "&::-webkit-scrollbar": {
-            height: 8,
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#ccc",
-            borderRadius: 4,
-          },
           display: "flex",
-          gap: 3,
-          overflowX: "auto",
-          pb: 2,
-          px: 1,
-          scrollSnapType: "x mandatory",
+          flexDirection: "column",
+          gap: 4,
+          mb: 10,
         }}
       >
-        {cardData.map((card) => (
+        {cardData.map((card, i) => (
           <Card
-            key={card.path}
+            key={card.title}
+            onClick={() => navigate(card.path)}
             sx={{
-              "&:hover": { transform: "scale(1.03)" },
+              "&:hover": {
+                boxShadow: "0 6px 16px rgba(0,0,0,0.1)",
+                transform: "translateY(-3px)",
+              },
+              alignItems: "stretch",
+              borderRadius: 3,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
               cursor: "pointer",
               display: "flex",
-              flex: "0 0 300px",
-              flexDirection: "column",
-              scrollSnapAlign: "center",
-              transition: "transform 0.2s",
+              flexDirection: { md: i % 2 === 0 ? "row" : "row-reverse", xs: "column" },
+              overflow: "hidden",
+              transition: "transform 0.25s ease, box-shadow 0.25s ease",
             }}
-            onClick={() => navigate(card.path)}
           >
+            {/* Image */}
             <Box
               component="img"
               src={card.image}
               alt={card.title}
               sx={{
-                height: 180,
+                height: { md: 220, xs: 180 },
                 objectFit: "cover",
-                width: "100%",
+                width: { md: "38%", xs: "100%" },
               }}
             />
+
+            {/* Text */}
             <CardContent
               sx={{
-                textAlign: "center",
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                gap: 0.5,
+                justifyContent: "center",
+                p: { md: 4, xs: 2.5 },
               }}
             >
-              <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
+              <Typography variant="h5" fontWeight={600} mb={0.5}>
                 {card.title}
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.85 }}>
-                {card.description}
+              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                {card.desc}
               </Typography>
             </CardContent>
           </Card>
         ))}
       </Box>
 
-      <Typography variant="h4" sx={{ fontWeight: 600, mb: 2, mt: 4 }}>
-        🚀 Getting Started
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 2, opacity: 0.85 }}>
-        Using <code>MarkerMap</code> is simple and intuitive. Start by importing it and passing a few props such as <code>center</code>,{" "}
-        <code>zoom</code>, and <code>markers</code>. Then, progressively enable more advanced features like popups, routes, or GeoJSON
-        overlays.
-      </Typography>
-
-      <Paper sx={{ p: 3 }}>
+      {/* Code Example */}
+      <Paper sx={{ backgroundColor: "#0d1117", borderRadius: 4, boxShadow: "0 2px 12px rgba(0,0,0,0.2)", color: "#e6edf3", p: 4 }}>
         <Highlight
-          code={`import { MarkerMap } from "@tracktor/map-components";
-
-export default function App() {
-  return (
-    <MarkerMap
-      center={[2.3522, 48.8566]}
-      zoom={10}
-      markers={[
-        {
-          id: "paris-marker",
-          lat: 48.8566,
-          lng: 2.3522,
-          Tooltip: <div>📍 Hello from Paris!</div>,
-        },
-      ]}
-      fitBounds
-      // 🕒 Example: Add isochrone display
-      isochrone={{
-        origin: [2.3522, 48.8566],
-        profile: "driving",
-        intervals: [5, 10, 15],
-      }}
-    />
-  );
-}`}
-          language="typescript"
+          code={`<MarkerMap
+  center={[2.3522, 48.8566]}
+  zoom={10}
+  markers={[{ id: "paris", lat: 48.8566, lng: 2.3522, Tooltip: <div>Hello Paris!</div> }]}
+  fitBounds
+/>`}
+          language="tsx"
           theme={dracula}
         >
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre
-              className={className}
-              style={{
-                ...style,
-                borderRadius: "8px",
-                overflowX: "auto",
-                padding: "16px",
-              }}
-            >
+            <pre className={className} style={{ ...style, fontSize: 14, margin: 0, overflowX: "auto" }}>
               {tokens.map((line, i) => (
                 <div key={i} {...getLineProps({ line })}>
                   {line.map((token, key) => (
@@ -261,26 +178,14 @@ export default function App() {
             </pre>
           )}
         </Highlight>
-
-        <Typography variant="body1" sx={{ mt: 2, opacity: 0.85 }}>
-          👉 You can enhance this example by enabling <code>openPopupOnHover</code>, adding routes via <code>from</code> and <code>to</code>
-          , or using <code>isochrone</code> to visualize reachable areas.
-        </Typography>
       </Paper>
 
-      <Box sx={{ mb: 4 }} pt={4}>
-        <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
+      <Box mt={8}>
+        <Typography variant="h4" fontWeight={600} mb={3}>
           ⚙️ API Reference
         </Typography>
-        <Typography variant="body1" sx={{ mb: 2, opacity: 0.85 }}>
-          The <code>MarkerMap</code> component is highly flexible, supporting advanced configuration for visuals, gestures, routing,
-          isochrone analysis, and data visualization — all while keeping a clean, declarative API.
-        </Typography>
+        <PropsTable />
       </Box>
-
-      <PropsTable />
     </Box>
   );
-};
-
-export default LandingPage;
+}

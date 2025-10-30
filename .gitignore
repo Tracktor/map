@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 .env
 dist-example
+dist-sandbox
 
 tsconfig.tsbuildinfo

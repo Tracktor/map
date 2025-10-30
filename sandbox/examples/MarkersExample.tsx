@@ -2,7 +2,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import {
   Avatar,
   Box,
-  Button,
   Card,
   CardContent,
   Chip,
@@ -17,9 +16,11 @@ import {
 } from "@tracktor/design-system";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import MapSidebar from "sandbox/features/MapSideBar";
 import Navbar from "sandbox/features/Navbar";
+import ThemeSwitch from "sandbox/features/ThemeSwitch";
 import { VariantMarker, variantMarkerColor } from "@/components/Markers/Markers";
-import MarkerMap from "@/features/MarkerMap/MarkerMap";
+import MapView from "@/features/MapView/MapView";
 import { MarkerProps } from "@/types/MarkerProps";
 
 const MAX_MARKERS = 1000;
@@ -86,12 +87,7 @@ const generateMarkers = (
     };
   });
 
-interface MarkerExampleProps {
-  themeMode: "light" | "dark";
-  setThemeMode: (mode: "light" | "dark") => void;
-}
-
-const MarkersExample = ({ themeMode, setThemeMode }: MarkerExampleProps) => {
+const MarkersExample = () => {
   const [baseMapView, setBaseMapView] = useState<"street" | "satellite">("street");
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
@@ -115,7 +111,7 @@ const MarkersExample = ({ themeMode, setThemeMode }: MarkerExampleProps) => {
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         {/* 🗺️ Map */}
         <Box sx={{ flex: 1 }}>
-          <MarkerMap
+          <MapView
             openPopup={openPopupId}
             markers={markers}
             height="100%"
@@ -127,33 +123,12 @@ const MarkersExample = ({ themeMode, setThemeMode }: MarkerExampleProps) => {
             projection={projection}
             openPopupOnHover={openPopupOnHover}
           />
+
+          <ThemeSwitch />
         </Box>
 
         {/* ⚙️ Sidebar panel */}
-        <Box
-          sx={{
-            backgroundColor: "background.paper",
-            borderColor: "divider",
-            borderLeft: "1px solid",
-            color: "text.primary",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            overflowY: "auto",
-            p: 2,
-            width: 300,
-          }}
-        >
-          <Typography variant="h6">🧭 Options</Typography>
-
-          {/* Theme toggle */}
-          <Typography variant="body2" color="text.secondary">
-            Theme
-          </Typography>
-          <Button variant="outlined" onClick={() => setThemeMode(themeMode === "dark" ? "light" : "dark")}>
-            {themeMode === "dark" ? "Light mode" : "Dark mode"}
-          </Button>
-
+        <MapSidebar>
           {/* Base map style */}
           <Typography variant="body2" color="text.secondary">
             Base Map View
@@ -234,7 +209,7 @@ const MarkersExample = ({ themeMode, setThemeMode }: MarkerExampleProps) => {
             <MenuItem value="equirectangular">Equirectangular</MenuItem>
             <MenuItem value="naturalEarth">Natural Earth</MenuItem>
           </Select>
-        </Box>
+        </MapSidebar>
       </Stack>
     </>
   );
