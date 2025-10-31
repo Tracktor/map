@@ -2,7 +2,7 @@ import type { FeatureCollection, Polygon } from "geojson";
 import { memo, useEffect, useState } from "react";
 import RenderFeatures from "@/components/FeatureCollection/FeatureCollection";
 import MapboxService from "@/services/Mapbox";
-import { IsochroneProps } from "@/types/MarkerMapProps";
+import { IsochroneProps } from "@/types/MapViewProps.ts";
 
 /**
  * Isochrone Component

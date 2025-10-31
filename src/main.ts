@@ -3,7 +3,7 @@ export * from "@/context/MapProvider";
 export { default as MapProvider } from "@/context/MapProvider";
 export * from "@/features/MapView/MapView.tsx";
 export { default as MapView } from "@/features/MapView/MapView.tsx";
-export * from "@/types/MarkerMapProps";
+export * from "@/types/MapViewProps.ts";
 export * from "@/types/MarkerProps";
 export { default as isPointInGeoJSON } from "@/utils/isPointInGeoJSON.ts";
 export * from "@/utils/isValidLatLng";

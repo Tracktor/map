@@ -32,7 +32,7 @@ export interface FindNearestMarkerParams {
   profile?: Profile;
 }
 
-export interface MarkerMapProps {
+export interface MapViewProps {
   /**
    * Automatically adjusts the map's zoom and center
    * to ensure all markers are visible within the viewport.

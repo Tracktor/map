@@ -11,7 +11,7 @@ import Isochrone from "@/features/Isochrone/Isochrone.tsx";
 import Itinerary from "@/features/Itinerary/Itinerary";
 import NearestPointItinerary from "@/features/NearestPointItinerary/NearestPointItinary";
 import isValidMarker from "@/types/isValidMarker.ts";
-import { MarkerMapProps } from "@/types/MarkerMapProps";
+import { MapViewProps } from "@/types/MapViewProps.ts";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
 /**
@@ -81,7 +81,7 @@ const MapView = ({
   findNearestMarker,
   onNearestFound,
   isochrone,
-}: MarkerMapProps): ReactElement => {
+}: MapViewProps): ReactElement => {
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);

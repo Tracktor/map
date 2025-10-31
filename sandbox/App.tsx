@@ -6,7 +6,7 @@ import IsochroneExample from "sandbox/examples/IsochroneExample";
 import MarkersExample from "sandbox/examples/MarkersExample";
 import NearestMarkerExample from "sandbox/examples/NearestMarkerExample";
 import RouteExample from "sandbox/examples/RoutesExample";
-import LandingPage from "sandbox/features/LandingPage";
+import LandingPage from "sandbox/features/LandingPage/LandingPage";
 import MapProvider from "@/context/MapProvider";
 
 const App = () => {

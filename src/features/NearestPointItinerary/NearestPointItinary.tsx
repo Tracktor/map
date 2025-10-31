@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import Itinerary from "@/features/Itinerary/Itinerary";
 import MapboxService from "@/services/Mapbox";
 import OSRMService from "@/services/OSRM";
-import type { Engine, FindNearestMarkerParams } from "@/types/MarkerMapProps";
+import type { Engine, FindNearestMarkerParams } from "@/types/MapViewProps.ts";
 
 export interface NearestResult {
   id: number | string;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Layer, Source } from "react-map-gl";
 import MapboxService from "@/services/Mapbox";
 import OSRMService from "@/services/OSRM";
-import { Engine, ItineraryLineStyle, Profile } from "@/types/MarkerMapProps";
+import { Engine, ItineraryLineStyle, Profile } from "@/types/MapViewProps.ts";
 
 type ItineraryProps = {
   from?: [number, number];

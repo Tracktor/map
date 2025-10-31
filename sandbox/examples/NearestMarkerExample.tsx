@@ -19,7 +19,7 @@ import MapSidebar from "sandbox/features/MapSideBar";
 import Navbar from "sandbox/features/Navbar";
 import ThemeSwitch from "sandbox/features/ThemeSwitch";
 import MapView from "@/features/MapView/MapView";
-import { Engine } from "@/types/MarkerMapProps";
+import { Engine } from "@/types/MapViewProps.ts";
 
 const predefinedOrigins = [
   { coords: [2.3522, 48.8566], id: "origin-paris", name: "Paris (origin)" },
