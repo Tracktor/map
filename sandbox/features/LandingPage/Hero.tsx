@@ -141,7 +141,7 @@ const Hero = () => {
             color="primary"
             size="large"
             component="a"
-            href="https://github.com/tracktor-tech/tracktor-map"
+            href="https://github.com/Tracktor/map"
             target="_blank"
             startIcon={<GitHubIcon />}
             sx={{
