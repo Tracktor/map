@@ -14,7 +14,6 @@ const MapSidebar = ({ title, children }: MapSidebarProps) => {
 
   return (
     <>
-      {/* === Sidebar (drawer mobile + fixed desktop) === */}
       <Box
         sx={{
           backdropFilter: "blur(10px)",
@@ -60,7 +59,6 @@ const MapSidebar = ({ title, children }: MapSidebarProps) => {
         {children}
       </Box>
 
-      {/* === Toggle bar (mobile only) === */}
       <Box
         sx={{
           "&:hover": {
@@ -69,7 +67,7 @@ const MapSidebar = ({ title, children }: MapSidebarProps) => {
           },
           alignItems: "center",
           backdropFilter: "blur(10px)",
-          background: "rgba(15, 17, 20, 0.9)", // ✅ plus foncée
+          background: "rgba(15, 17, 20, 0.9)",
           borderLeft: "1px solid rgba(0,198,255,0.1)",
           borderRadius: "8px 0 0 8px",
           boxShadow: "0 0 8px rgba(0,198,255,0.15)",
@@ -77,7 +75,7 @@ const MapSidebar = ({ title, children }: MapSidebarProps) => {
           cursor: "pointer",
           display: { md: "none", xs: "flex" },
           flexDirection: "column",
-          height: "100vh", // 👈 pleine hauteur
+          height: "100vh",
           justifyContent: "center",
           position: "fixed",
           right: 0,
