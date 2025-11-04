@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/Tracktor/map/compare/v1.6.5...v1.7.0) (2025-11-04)
+
+
+### ✨ Features
+
+* add LineLabel component and refactor itinerary handling in MapView ([776c3d4](https://github.com/Tracktor/map/commit/776c3d4aae3720572a6398f5caa9bbd2c9db398f))
+* enhance MapView component with detailed documentation and improve itinerary label display ([796f6eb](https://github.com/Tracktor/map/commit/796f6eb0febe38601d9a761a3ed2dabea8373a31))
+* upgrade map ([1756417](https://github.com/Tracktor/map/commit/17564174c28ecbbd9d70a6f5a692bf5d048b65c0))
+
 ### [1.6.5](https://github.com/Tracktor/map/compare/v1.6.4...v1.6.5) (2025-10-31)
 
 ### [1.6.4](https://github.com/Tracktor/map/compare/v1.6.3...v1.6.4) (2025-10-31)
