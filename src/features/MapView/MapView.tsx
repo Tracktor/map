@@ -39,11 +39,12 @@ const MapView = ({
   projection,
   theme: themeOverride,
   features,
-  from,
-  to,
-  profile = "driving",
-  itineraryLineStyle,
-  engine = "OSRM",
+  itineraryParams,
+  // from,
+  // to,
+  // profile = "driving",
+  // itineraryLineStyle,
+  // engine = "OSRM",
   findNearestMarker,
   isochrone,
 }: MapViewProps): ReactElement => {
@@ -178,7 +179,18 @@ const MapView = ({
             </Popup>
           )}
 
-          <Itinerary from={from} to={to} profile={profile} engine={engine} itineraryLineStyle={itineraryLineStyle} />
+          {itineraryParams && (
+            <Itinerary
+              from={itineraryParams.from}
+              to={itineraryParams.to}
+              profile={itineraryParams.profile}
+              engine={itineraryParams.engine}
+              itineraryLineStyle={itineraryParams.itineraryLineStyle}
+              initialRoute={itineraryParams.initialRoute}
+              onRouteComputed={itineraryParams.onRouteComputed}
+              itineraryLabel={itineraryParams.itineraryLabel}
+            />
+          )}
 
           {findNearestMarker && (
             <NearestPointItinerary
@@ -186,8 +198,10 @@ const MapView = ({
               destinations={findNearestMarker.destinations}
               onNearestFound={findNearestMarker.onNearestFound}
               maxDistanceMeters={findNearestMarker.maxDistanceMeters}
-              engine={engine}
-              profile={profile}
+              engine={findNearestMarker.engine}
+              profile={findNearestMarker.profile}
+              initialNearestResults={findNearestMarker.initialNearestResults}
+              itineraryLineStyle={findNearestMarker.itineraryLineStyle}
             />
           )}
 

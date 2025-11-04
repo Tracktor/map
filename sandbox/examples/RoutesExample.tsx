@@ -1,4 +1,4 @@
-import { Box, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
+import { Box, Card, CardContent, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import MapSidebar from "sandbox/features/MapSideBar";
@@ -33,6 +33,20 @@ const predefinedRoutes = [
   },
 ];
 
+const ItinerayLabel = ({ distance }: { distance: number | null }) => {
+  if (distance === null) {
+    return null;
+  }
+
+  return (
+    <Card>
+      <CardContent>
+        <Typography>Distance: {(distance / 1000).toFixed(2)} km</Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
 const RouteExample = () => {
   const [projection, setProjection] = useState<ProjectionSpecification>({
     name: "mercator",
@@ -41,6 +55,7 @@ const RouteExample = () => {
   const [profile, setProfile] = useState<"driving" | "walking" | "cycling">("driving");
   const [cooperativeGestures, setCooperativeGestures] = useState(true);
   const [doubleClickZoom, setDoubleClickZoom] = useState(true);
+  const [distance, setDistance] = useState<number | null>(null);
 
   const markers = useMemo(
     () => [
@@ -58,20 +73,27 @@ const RouteExample = () => {
           <MapView
             key={`${cooperativeGestures}-${doubleClickZoom}-${projection.name}-${profile}-${selectedRoute.id}`}
             markers={markers}
-            from={selectedRoute.from as [number, number]}
-            to={selectedRoute.to as [number, number]}
-            profile={profile}
+            itineraryParams={{
+              engine: "OSRM",
+              from: selectedRoute.from as [number, number],
+              itineraryLabel: <ItinerayLabel distance={distance} />,
+              itineraryLineStyle: {
+                color: "#b91037",
+                opacity: 0.9,
+                width: 2,
+              },
+              onRouteComputed: (route) => {
+                setDistance(route?.properties?.distance);
+              },
+              profile: profile,
+              to: selectedRoute.to as [number, number],
+            }}
             cooperativeGestures={cooperativeGestures}
             doubleClickZoom={doubleClickZoom}
             projection={projection}
             fitBounds
             height="100%"
             width="100%"
-            itineraryLineStyle={{
-              color: "#b91037",
-              opacity: 0.9,
-              width: 2,
-            }}
           />
           <ThemeSwitch />
         </Box>
