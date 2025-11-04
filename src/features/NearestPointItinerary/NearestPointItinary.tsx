@@ -10,25 +10,6 @@ export interface NearestResult {
   distance: number;
 }
 
-/**
- * NearestPointItinerary Component
- * --------------------------------
- * Displays a route between an origin and the nearest destination.
- * Supports both Mapbox Matrix API and OSRM Table API depending on the selected engine.
- *
- * Workflow:
- * 1. Computes the nearest reachable destination based on the selected engine.
- * 2. Notifies the parent component when the nearest destination changes.
- * 3. Renders the itinerary line using the chosen routing service.
- *
- * Props:
- * - `origin`: [lng, lat] coordinates of the starting point.
- * - `destinations`: array of markers `{ id, lat, lng }`.
- * - `maxDistanceMeters`: maximum distance threshold.
- * - `onNearestFound`: callback fired when nearest destination changes.
- * - `profile`: travel profile ("driving" | "walking" | "cycling").
- * - `engine`: which routing backend to use ("mapbox" | "osrm").
- */
 const NearestPointItinerary = ({
   origin,
   maxDistanceMeters,
@@ -37,21 +18,18 @@ const NearestPointItinerary = ({
   profile = "driving",
   engine = "OSRM",
 }: FindNearestMarkerParams & { engine: Engine }) => {
-  const [nearestResult, setNearestResult] = useState<NearestResult | null>(null);
-  const lastNotifiedRef = useRef<NearestResult | null>(null);
+  const [allResults, setAllResults] = useState<NearestResult[]>([]);
+  const lastResultsRef = useRef<NearestResult[] | null>(null);
 
-  /**
-   * Step 1 — Compute nearest destination when input changes.
-   */
   useEffect(() => {
     let cancelled = false;
 
     if (!origin || origin.length !== 2 || !destinations?.length) {
-      setNearestResult(null);
+      setAllResults([]);
       return;
     }
 
-    setNearestResult(null);
+    setAllResults([]);
 
     const formattedDestinations = destinations.map((m) => ({
       coords: [m.lng, m.lat] as [number, number],
@@ -59,11 +37,11 @@ const NearestPointItinerary = ({
     }));
 
     (async () => {
-      const finder = engine === "OSRM" ? OSRMService.findNearest : MapboxService.findNearest;
-      const nearest = await finder(origin, formattedDestinations, profile, maxDistanceMeters);
+      const service = engine === "OSRM" ? OSRMService : MapboxService;
+      const results = await service.findNearest(origin, formattedDestinations, profile, maxDistanceMeters);
 
-      if (!cancelled && nearest) {
-        setNearestResult(nearest);
+      if (!cancelled) {
+        setAllResults(results ?? []);
       }
     })();
 
@@ -73,38 +51,31 @@ const NearestPointItinerary = ({
   }, [origin, maxDistanceMeters, destinations, profile, engine]);
 
   /**
-   * Step 2 — Notify parent when nearest destination changes.
+   * Notify parent only when list changes (avoid infinite loops)
    */
   useEffect(() => {
-    if (!nearestResult) {
-      onNearestFound?.(null, null, 0);
-      lastNotifiedRef.current = null;
-      return;
-    }
+    const last = lastResultsRef.current;
 
-    if (maxDistanceMeters != null && nearestResult.distance > maxDistanceMeters) {
-      onNearestFound?.(null, null, 0);
-      lastNotifiedRef.current = null;
-      return;
-    }
+    const hasChanged =
+      !last ||
+      last.length !== allResults.length ||
+      last.some((r, i) => r.id !== allResults[i]?.id || r.distance !== allResults[i]?.distance);
 
-    const last = lastNotifiedRef.current;
-    if (!last || last.id !== nearestResult.id || last.distance !== nearestResult.distance) {
-      onNearestFound?.(nearestResult.id, nearestResult.point, nearestResult.distance);
-      lastNotifiedRef.current = nearestResult;
+    if (hasChanged) {
+      onNearestFound?.(allResults);
+      lastResultsRef.current = allResults;
     }
-  }, [nearestResult, onNearestFound, maxDistanceMeters]);
+  }, [allResults, onNearestFound]);
 
   /**
-   * Step 3 — Render itinerary line between origin and nearest point.
+   * Render nearest itinerary only if one exists
    */
-  if (!nearestResult?.point) {
+  const nearest = allResults[0];
+  if (!nearest) {
     return null;
   }
 
-  console.log("nearestResult", nearestResult);
-
-  return <Itinerary from={origin} to={nearestResult.point} profile={profile} engine={engine} />;
+  return <Itinerary from={origin} to={nearest.point} profile={profile} engine={engine} />;
 };
 
 export default memo(NearestPointItinerary);

@@ -3,44 +3,44 @@ import type { Destination, NearestResult, RoutingProfile } from "@/services/core
 const buildCoordsString = (from: [number, number], destinations: Destination[]) =>
   [from, ...destinations.map((d) => d.coords)].map((c) => c.join(",")).join(";");
 
+interface ChunkDistancesResult {
+  nearest: NearestResult | null;
+  all: NearestResult[];
+}
+
 /**
- * Find the nearest destination within a chunk of destinations,
- * given an array of distances.
+ * Compute nearest + list of all distances for a given chunk.
  */
-const findNearestInDistances = (chunk: Destination[], distances: number[], maxDistanceMeters?: number): NearestResult | null => {
-  const validDistances = distances
-    .map((distance, index) => ({ distance, index }))
-    .slice(1)
-    .filter(({ distance }) => distance != null);
+const computeChunkDistances = (chunk: Destination[], distances: number[], maxDistanceMeters?: number): ChunkDistancesResult => {
+  const results: NearestResult[] = distances
+    .map((distance, index) => {
+      if (index === 0 || distance == null) {
+        return null;
+      }
+      const dest = chunk[index - 1];
+      return dest ? { distance, id: dest.id, point: dest.coords } : null;
+    })
+    .filter((r): r is NearestResult => r !== null);
 
-  if (validDistances.length === 0) {
-    return null;
+  if (results.length === 0) {
+    return { all: [], nearest: null };
   }
 
-  const nearest = validDistances.reduce((prev, curr) => (curr.distance < prev.distance ? curr : prev));
-
-  const best = chunk[nearest.index - 1];
-  if (!best) {
-    return null;
-  }
+  const sorted = results.sort((a, b) => a.distance - b.distance);
+  const nearest = sorted[0];
 
   if (maxDistanceMeters && nearest.distance > maxDistanceMeters) {
-    return null;
+    return { all: sorted, nearest: null };
   }
 
-  return {
-    distance: nearest.distance,
-    id: best.id,
-    point: best.coords,
-  };
+  return { all: sorted, nearest };
 };
 
 /**
- * Factory to create a provider-specific "fetchNearestInChunk" function.
+ * Factory returning a provider-specific fetchNearestInChunk function.
  *
- * @param buildUrl - Function to build the API endpoint URL.
- * @param fetchData - Function to perform the API request and return parsed JSON.
- * @param extractDistances - Function to extract the distances array from the response.
+ * It now returns:
+ * { nearest, all }
  */
 export function createFetchNearestInChunk<TResponse>(
   buildUrl: (coords: string, profile: RoutingProfile) => string,
@@ -52,16 +52,19 @@ export function createFetchNearestInChunk<TResponse>(
     chunk: Destination[],
     profile: RoutingProfile,
     maxDistanceMeters?: number,
-  ): Promise<NearestResult | null> => {
+  ): Promise<ChunkDistancesResult> => {
     const coords = buildCoordsString(from, chunk);
     const url = buildUrl(coords, profile);
 
     const data = await fetchData(url);
-    const distances = data ? extractDistances(data)?.[0] : undefined;
-    if (!distances?.length) {
-      return null;
+
+    const distancesRow = data ? extractDistances(data)?.[0] : undefined;
+    if (!distancesRow?.length) {
+      return { all: [], nearest: null };
     }
 
-    return findNearestInDistances(chunk, distances, maxDistanceMeters);
+    return computeChunkDistances(chunk, distancesRow, maxDistanceMeters);
   };
 }
+
+export type { ChunkDistancesResult };

@@ -14,40 +14,6 @@ import isValidMarker from "@/types/isValidMarker.ts";
 import { MapViewProps } from "@/types/MapViewProps.ts";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
-/**
- * MapView Component
- * -------------------
- * A full-featured interactive map view built on top of `react-map-gl`.
- *
- * This component serves as the main container for all map-related features,
- * including markers, routes, popups, and geospatial overlays.
- *
- * Key Features:
- * - Renders markers with optional custom icons and tooltips.
- * - Supports hover and click interactions for popups.
- * - Automatically fits bounds to visible markers or GeoJSON features.
- * - Displays routes (`Itinerary`) or nearest routes (`NearestPointItinerary`).
- * - Supports isochrone visualization and GeoJSON feature collections.
- * - Integrates with OSRM or Mapbox routing engines.
- *
- * Map Styles:
- * - Works with both Mapbox styles (`mapbox://styles/...`) and custom raster/vector styles (e.g., OpenStreetMap).
- * - A Mapbox access token is only required if you use Mapbox-hosted styles or sources.
- *
- * Props:
- * - Fully typed via `MarkerMapProps`.
- *
- * Dependencies:
- * - `react-map-gl` and `mapbox-gl` for rendering and interaction.
- * - `@tracktor/design-system` for consistent layout and skeleton UI.
- * - Custom sub-features: `FitBounds`, `Itinerary`, `NearestPointItinerary`, `Isochrone`, and `FeatureCollection`.
- *
- * Maintenance Notes:
- * - Keep map ref logic inside the component (Mapbox events handled via `onLoad`).
- * - For large datasets, consider memoizing marker rendering.
- * - For dynamic data (e.g., GPS tracking), you can debounce `fitBounds`
- *   or control re-renders using the `fitBoundsAnimationKey` prop.
- */
 const MapView = ({
   containerStyle,
   square,
@@ -79,27 +45,23 @@ const MapView = ({
   itineraryLineStyle,
   engine = "OSRM",
   findNearestMarker,
-  onNearestFound,
   isochrone,
 }: MapViewProps): ReactElement => {
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-  // Initial map center and zoom setup
   const initialCenter = useMemo(() => {
-    if (isArray(center)) {
-      return { latitude: center[1], longitude: center[0], zoom };
-    }
+    const [lng = 2.3522, lat = 48.8566] = isArray(center) ? center : [];
+    return { latitude: lat, longitude: lng, zoom };
   }, [center, zoom]);
 
-  // Determine map style (base map + theme)
   const mapStyle = useMemo(
     () => baseMapStyle || getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
     [baseMapView, baseMapStyle, themeOverride, theme.palette.mode],
   );
 
-  // Compute full core map options (gesture, zoom, style, etc.)
   const {
     style: coreStyle,
     cooperativeGestures: coopGestures,
@@ -113,21 +75,18 @@ const MapView = ({
     theme: themeOverride ?? theme.palette.mode,
   });
 
-  // Handle marker click → opens popup (if click mode active)
   const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
     if (!openPopupOnHover && hasTooltip) {
       setSelected(id);
     }
   };
 
-  // Handle hover interactions (if hover mode active)
   const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
     if (openPopupOnHover) {
       setSelected(hasTooltip ? id : null);
     }
   };
 
-  // Update selected marker when openPopup prop changes
   useEffect(() => {
     setSelected(openPopup ?? null);
   }, [openPopup]);
@@ -138,7 +97,6 @@ const MapView = ({
     <Box data-testid="mapbox-container" sx={{ height, position: "relative", width, ...containerStyle }}>
       <GlobalStyles styles={mapboxGlobalStyles} />
 
-      {/* Skeleton loader during initialization */}
       {loading && (
         <Skeleton
           data-testid="skeleton-loader"
@@ -155,53 +113,56 @@ const MapView = ({
 
       {!loading && (
         <MapboxMap
-          key={`${coopGestures}-${dblZoom}-${projection}-${mapStyle}-${findNearestMarker?.maxDistanceMeters}`}
           ref={mapRef}
           cooperativeGestures={coopGestures}
           doubleClickZoom={dblZoom}
           mapStyle={coreStyle}
           projection={projection}
+          onLoad={() => {
+            setMapLoaded(true);
+            mapRef.current?.resize();
+          }}
           initialViewState={initialCenter}
           style={{ height: "100%", width: "100%" }}
           mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
           onClick={(e) => {
             const clickedMarker = markers.find((m) => {
               const { lng, lat } = e.lngLat;
-              const dx = Math.abs(Number(m.lng || null) - lng);
-              const dy = Math.abs(Number(m.lat || null) - lat);
+              const dx = Math.abs(Number(m.lng ?? 0) - lng);
+              const dy = Math.abs(Number(m.lat ?? 0) - lat);
               return dx < 0.01 && dy < 0.01;
             });
 
             onMapClick?.(e.lngLat.lng, e.lngLat.lat, clickedMarker ?? null);
           }}
         >
-          {/* Markers */}
-          {markers.filter(isValidMarker).map((m) => (
-            <Marker
-              key={m.id}
-              longitude={m.lng}
-              latitude={m.lat}
-              anchor="bottom"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
-
-                // 🔵 On transmet aussi via onMapClick le marker cliqué
-                onMapClick?.(m.lng, m.lat, m);
-              }}
-            >
-              <Box
-                component="div"
-                onMouseEnter={() => m.id && handleMarkerHover(m.id, Boolean(m.Tooltip))}
-                onMouseLeave={() => handleMarkerHover(null)}
-                style={{ cursor: m.Tooltip ? "pointer" : "default" }}
+          {/* Markers - only rendered after map fully initialized */}
+          {mapLoaded &&
+            markers.filter(isValidMarker).map((m) => (
+              <Marker
+                key={m.id}
+                longitude={m.lng}
+                latitude={m.lat}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
+                  onMapClick?.(m.lng, m.lat, m);
+                }}
               >
-                {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <Markers color={m.color} variant={m.variant} />}
-              </Box>
-            </Marker>
-          ))}
-          {/* Popup for selected marker */}
-          {selectedMarker?.Tooltip && (
+                <Box
+                  component="div"
+                  onMouseEnter={() => m.id && handleMarkerHover(m.id, Boolean(m.Tooltip))}
+                  onMouseLeave={() => handleMarkerHover(null)}
+                  style={{ cursor: m.Tooltip ? "pointer" : "default" }}
+                >
+                  {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <Markers color={m.color} variant={m.variant} />}
+                </Box>
+              </Marker>
+            ))}
+
+          {/* Popup */}
+          {mapLoaded && selectedMarker?.Tooltip && (
             <Popup
               longitude={isNumber(selectedMarker.lng) ? selectedMarker.lng : 0}
               latitude={isNumber(selectedMarker.lat) ? selectedMarker.lat : 0}
@@ -216,22 +177,20 @@ const MapView = ({
               </Box>
             </Popup>
           )}
-          {/* Route between two points */}
+
           <Itinerary from={from} to={to} profile={profile} engine={engine} itineraryLineStyle={itineraryLineStyle} />
 
-          {/* Nearest route (from origin to the closest destination) */}
           {findNearestMarker && (
             <NearestPointItinerary
-              origin={findNearestMarker?.origin}
-              destinations={findNearestMarker?.destinations}
-              onNearestFound={onNearestFound}
-              maxDistanceMeters={findNearestMarker?.maxDistanceMeters}
+              origin={findNearestMarker.origin}
+              destinations={findNearestMarker.destinations}
+              onNearestFound={findNearestMarker.onNearestFound}
+              maxDistanceMeters={findNearestMarker.maxDistanceMeters}
               engine={engine}
               profile={profile}
             />
           )}
 
-          {/* Isochrone rendering */}
           {isochrone && (
             <Isochrone
               origin={isochrone.origin}
@@ -241,9 +200,8 @@ const MapView = ({
             />
           )}
 
-          {/* Render custom GeoJSON features */}
           {features && <FeatureCollection features={features} />}
-          {/* Auto-fit bounds to all visible map objects */}
+
           {fitBounds && (
             <FitBounds
               markers={markers}

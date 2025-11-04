@@ -107,7 +107,12 @@ const CodeExample = () => {
 
               <Tooltip title={copied ? "Copied!" : "Copy code"} placement="left">
                 <IconButton
-                  onClick={handleCopy}
+                  component="div"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleCopy();
+                  }}
                   size="small"
                   sx={{
                     "&:hover": { color: "#00C6FF" },

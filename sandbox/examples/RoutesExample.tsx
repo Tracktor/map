@@ -56,6 +56,7 @@ const RouteExample = () => {
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         <Box sx={{ flex: 1 }}>
           <MapView
+            key={`${cooperativeGestures}-${doubleClickZoom}-${projection.name}-${profile}-${selectedRoute.id}`}
             markers={markers}
             from={selectedRoute.from as [number, number]}
             to={selectedRoute.to as [number, number]}

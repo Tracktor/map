@@ -24,12 +24,18 @@ export type Engine = (typeof engines)[number];
 export const profiles = ["driving", "walking", "cycling"] as const;
 export type Profile = (typeof profiles)[number];
 
+export interface NearestResult {
+  id: number | string;
+  point: [number, number];
+  distance: number;
+}
+
 export interface FindNearestMarkerParams {
-  origin?: [number, number];
+  origin: [number, number];
+  destinations: { id: string | number; lat: number; lng: number }[];
   maxDistanceMeters?: number;
-  destinations?: { lng: number; lat: number; id: number }[];
-  onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
-  profile?: Profile;
+  profile?: RoutingProfile;
+  onNearestFound?: (all: NearestResult[]) => void;
 }
 
 export interface MapViewProps {
@@ -217,13 +223,6 @@ export interface MapViewProps {
    * to include the nearest marker within the specified distance.
    */
   findNearestMarker?: FindNearestMarkerParams;
-
-  /**
-   * Callback triggered when the nearest marker is found.
-   * @param id
-   * @param coords
-   */
-  onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
 
   /**
    * Parameters for displaying isochrones on the map.
