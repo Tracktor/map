@@ -32,7 +32,6 @@ const Hero = () => {
       <Box
         sx={{
           "&::after": {
-            background: "radial-gradient(circle, rgba(0,198,255,0.10), transparent 70%)",
             bottom: "-20%",
             content: '""',
             filter: "blur(100px)",
@@ -42,7 +41,6 @@ const Hero = () => {
             width: 500,
           },
           "&::before": {
-            background: "radial-gradient(circle, rgba(0,122,255,0.15), transparent 70%)",
             content: '""',
             filter: "blur(100px)",
             height: 300,

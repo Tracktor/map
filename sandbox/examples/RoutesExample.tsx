@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
+import { Box, Card, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import MapSidebar from "sandbox/features/MapSideBar";
@@ -33,16 +33,19 @@ const predefinedRoutes = [
   },
 ];
 
-const ItinerayLabel = ({ distance }: { distance: number | null }) => {
+const ItineraryLabel = ({ label, distance }: { label?: string; distance: number | null }) => {
   if (distance === null) {
     return null;
   }
 
+  const km = (distance / 1000).toFixed(1);
+
   return (
     <Card>
-      <CardContent>
-        <Typography>Distance: {(distance / 1000).toFixed(2)} km</Typography>
-      </CardContent>
+      <Stack spacing={1} p={1.5}>
+        <Typography variant="subtitle2">{label}</Typography>
+        <Typography fontWeight={600}>🛣️ {km} km</Typography>
+      </Stack>
     </Card>
   );
 };
@@ -76,7 +79,7 @@ const RouteExample = () => {
             itineraryParams={{
               engine: "OSRM",
               from: selectedRoute.from as [number, number],
-              itineraryLabel: <ItinerayLabel distance={distance} />,
+              itineraryLabel: <ItineraryLabel label={selectedRoute.name} distance={distance} />,
               itineraryLineStyle: {
                 color: "#b91037",
                 opacity: 0.9,

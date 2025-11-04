@@ -14,6 +14,57 @@ import isValidMarker from "@/types/isValidMarker.ts";
 import { MapViewProps } from "@/types/MapViewProps.ts";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
+/**
+ * MapView
+ *
+ * A high-level Mapbox wrapper component providing an opinionated, feature-rich map
+ * ready for production use. It extends the native Mapbox map with several built-in
+ * capabilities, allowing developers to display interactive maps with minimal setup.
+ *
+ * Key Features Included:
+ *  • Marker rendering with support for:
+ *      – Custom icons/components
+ *      – Variants, colors, and hover/click interactions
+ *      – Optional Tooltip content
+ *  • Popup management (controlled or uncontrolled):
+ *      – Open on click or on hover
+ *      – Force opening a popup via the `openPopup` prop
+ *  • Auto-fit bounds to markers and/or GeoJSON features
+ *  • Route and navigation helpers:
+ *      – Display an itinerary (supports OSRM or custom engines)
+ *      – Compute and highlight the nearest marker to a given point
+ *  • Isochrones support (time/distance areas around a point)
+ *  • GeoJSON FeatureCollection rendering
+ *
+ * Additional Capabilities:
+ *  • Theme-aware Mapbox base style (light/dark mode, customizable)
+ *  • Fine-grained interaction configuration (gestures, double-click, zoom, projection…)
+ *  • Built-in skeleton loader
+ *  • Completely memoized (React.memo) to avoid unnecessary rerenders
+ *  • Delayed marker rendering until the map is fully loaded to avoid layout issues
+ *
+ * Key Props:
+ *  - `markers`: Array of map markers ({ id, lat, lng, IconComponent, Tooltip, ... })
+ *  - `openPopup` / `openPopupOnHover`: Controls how popups are triggered
+ *  - `fitBounds`: Automatically adapts the map viewport to visible markers/features
+ *  - `itineraryParams`: Displays a route between two locations
+ *  - `findNearestMarker`: Computes the closest marker to an origin and shows the route
+ *  - `isochrone`: Fetches and draws an isochrone from an external service
+ *  - `features`: Renders GeoJSON data on the map
+ *
+ * Example Usage:
+ *  <MapView
+ *    markers={[{ id: "1", lat: 48.8566, lng: 2.3522, Tooltip: <div>Paris</div> }]}
+ *    onMapClick={(lng, lat, marker) => console.log(lng, lat, marker)}
+ *    fitBounds
+ *    itineraryParams={{ from, to, profile: "driving" }}
+ *  />
+ *
+ * Notes:
+ *  - Map rendering starts only after `onLoad` to avoid resize issues.
+ *  - When `openPopup` changes, the corresponding marker popup updates accordingly.
+ *  - Designed to provide a plug-and-play mapping solution while remaining extensible.
+ */
 const MapView = ({
   containerStyle,
   square,
@@ -40,11 +91,6 @@ const MapView = ({
   theme: themeOverride,
   features,
   itineraryParams,
-  // from,
-  // to,
-  // profile = "driving",
-  // itineraryLineStyle,
-  // engine = "OSRM",
   findNearestMarker,
   isochrone,
 }: MapViewProps): ReactElement => {
