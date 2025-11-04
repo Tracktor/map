@@ -117,12 +117,6 @@ const propsData = [
     type: "FindNearestMarkerParams",
   },
   {
-    default: "-",
-    description: "Callback triggered when the nearest marker is found.",
-    prop: "onNearestFound",
-    type: "(id, coords, distanceMeters) => void",
-  },
-  {
     default: '"light"',
     description: "Color theme of the map UI.",
     prop: "theme",

@@ -1,22 +1,14 @@
-import { SxProps } from "@tracktor/design-system";
-import type { Feature, FeatureCollection, Polygon } from "geojson";
-import { LngLatLike } from "mapbox-gl";
+import type { SxProps } from "@tracktor/design-system";
+import type { Feature, FeatureCollection, GeoJsonProperties, LineString, Polygon } from "geojson";
+import type { LngLatLike } from "mapbox-gl";
+import type { ReactNode } from "react";
 import type { ProjectionSpecification as ReactMapProjection } from "react-map-gl";
 import type { RoutingProfile } from "@/services/core/interface.ts";
-import { MarkerProps } from "@/types/MarkerProps";
+import type { MarkerProps } from "@/types/MarkerProps";
 
-export interface IsochroneProps {
-  origin: [number, number];
-  profile?: RoutingProfile;
-  intervals?: number[];
-  onIsochroneLoaded?: (data: FeatureCollection<Polygon> | null) => void;
-}
-
-export interface ItineraryLineStyle {
-  color: string;
-  width: number;
-  opacity: number;
-}
+/* -------------------------------------------------------------------------- */
+/*                               Shared Types                                 */
+/* -------------------------------------------------------------------------- */
 
 export const engines = ["OSRM", "Mapbox"] as const;
 export type Engine = (typeof engines)[number];
@@ -24,214 +16,189 @@ export type Engine = (typeof engines)[number];
 export const profiles = ["driving", "walking", "cycling"] as const;
 export type Profile = (typeof profiles)[number];
 
-export interface FindNearestMarkerParams {
-  origin?: [number, number];
-  maxDistanceMeters?: number;
-  destinations?: { lng: number; lat: number; id: number }[];
-  onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
-  profile?: Profile;
+export interface ItineraryLineStyle {
+  color: string;
+  width: number;
+  opacity: number;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                             Feature: Isochrones                             */
+/* -------------------------------------------------------------------------- */
+
+export interface IsochroneProps {
+  /** Origin coordinates: [lng, lat] */
+  origin: [number, number];
+
+  /** Routing mode for isochrone calculation */
+  profile?: RoutingProfile;
+
+  /** Time ranges in minutes for each generated isochrone */
+  intervals?: number[];
+
+  /** Callback fired once isochrone data is retrieved */
+  onIsochroneLoaded?: (data: FeatureCollection<Polygon> | null) => void;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Feature: Itinerary                            */
+/* -------------------------------------------------------------------------- */
+
+export interface ItineraryParams {
+  /** Start coordinate: [lng, lat] */
+  from?: [number, number];
+
+  /** End coordinate: [lng, lat] */
+  to?: [number, number];
+
+  /** Routing mode */
+  profile?: Profile;
+
+  /** Routing engine to use (OSRM or Mapbox) */
+  engine?: Engine;
+
+  /** Optional style override for the drawn itinerary line */
+  itineraryLineStyle?: Partial<ItineraryLineStyle>;
+
+  /** Precomputed GeoJSON route used instead of fetching dynamically */
+  initialRoute?: Feature<LineString, GeoJsonProperties> | null;
+
+  /** Callback fired when a route is computed or loaded */
+  onRouteComputed?: (route: Feature<LineString, GeoJsonProperties> | null) => void;
+
+  /** Optional label displayed along the route (ex: "12 min") */
+  itineraryLabel?: ReactNode;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         Feature: Nearest Marker Search                      */
+/* -------------------------------------------------------------------------- */
+
+export interface NearestResult {
+  id: number | string;
+  /** Destination coordinate: [lng, lat] */
+  point: [number, number];
+  /** Straight-line or route distance in meters */
+  distance: number;
+  /** Optional precomputed itinerary route for this result */
+  routeFeature?: Feature<LineString, GeoJsonProperties> | null;
+}
+
+export interface FindNearestMarkerParams {
+  /** Origin coordinates: [lng, lat] */
+  origin: [number, number];
+
+  /** List of candidate destination markers */
+  destinations: { id: string | number; lat: number; lng: number }[];
+
+  /** Maximum allowed search distance in meters */
+  maxDistanceMeters?: number;
+
+  /** Routing profile for distance calculation */
+  profile?: RoutingProfile;
+
+  /** Fired with all nearest results whenever recalculated */
+  onNearestFound?: (all: NearestResult[]) => void;
+
+  /** Precomputed list of nearest results to avoid fetching again */
+  initialNearestResults?: NearestResult[];
+
+  /** Routing engine to use */
+  engine?: Engine;
+
+  /** Style override applied to the auto-generated itinerary */
+  itineraryLineStyle?: Partial<ItineraryLineStyle>;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               Map View Props                               */
+/* -------------------------------------------------------------------------- */
+
 export interface MapViewProps {
-  /**
-   * Automatically adjusts the map's zoom and center
-   * to ensure all markers are visible within the viewport.
-   */
+  /** Automatically fits map bounds to include all markers */
   fitBounds?: boolean;
 
-  /**
-   * Additional padding (in pixels) around the bounds
-   * when using `fitBounds`.
-   */
+  /** Padding used when applying fitBounds */
   fitBoundsPadding?: number;
 
-  /**
-   * Coordinates for the initial center of the map.
-   * Format: [longitude, latitude].
-   */
+  /** Initial map center: [lng, lat] */
   center?: LngLatLike | number[];
 
-  /**
-   * Mapbox style URL or predefined style ID
-   * (e.g., "mapbox://styles/mapbox/streets-v11").
-   */
+  /** Mapbox style URL or ID */
   mapStyle?: string;
 
-  /**
-   * Initial zoom level of the map.
-   * A higher number means a closer zoom.
-   */
+  /** Initial zoom level */
   zoom?: number;
 
-  /**
-   * Maximum width of popups in pixels or any valid CSS unit.
-   */
+  /** Max width of marker popups */
   popupMaxWidth?: string;
 
-  /**
-   * Width of the map container.
-   * Can be a number (px) or any CSS unit (e.g. "100%").
-   */
+  /** Map container width */
   width?: number | string;
 
-  /**
-   * Height of the map container.
-   * Can be a number (px) or any CSS unit (e.g. "100vh").
-   */
+  /** Map container height */
   height?: number | string;
 
-  /**
-   * Indicates whether the map is currently in a loading state.
-   * Displays a skeleton overlay when true.
-   */
+  /** Displays a loading skeleton on top of the map */
   loading?: boolean;
 
-  /**
-   * URL of a custom image used as the default marker icon.
-   */
+  /** Custom marker icon URL */
   markerImageURL?: string;
 
-  /**
-   * Custom styles applied to the map container.
-   * Uses MUI's `SxProps` system.
-   */
+  /** Custom styles for the map container */
   containerStyle?: SxProps;
 
-  /**
-   * Disables the map's fitBounds animation.
-   */
+  /** Disables animation when fitting bounds */
   disableAnimation?: boolean;
 
-  /**
-   * Duration (in ms) of the fitBounds animation.
-   */
+  /** Duration of fitBounds animation in ms */
   fitBoundDuration?: number;
 
-  /**
-   * Optional key that can be updated to re-trigger the fitBounds animation.
-   */
+  /** Changing this key retriggers fitBounds animation */
   fitBoundsAnimationKey?: unknown;
 
-  /**
-   * Forces the map container to have a square shape.
-   */
+  /** Forces a 1:1 ratio container size */
   square?: boolean;
 
-  /**
-   * ID of the marker whose popup should be open when the map loads.
-   */
+  /** ID of the marker whose popup should auto-open */
   openPopup?: number | string;
 
-  /**
-   * Opens marker popups automatically when hovering over them.
-   */
+  /** Opens popups on hover instead of click */
   openPopupOnHover?: boolean;
 
-  /**
-   * Array of markers to display on the map.
-   */
+  /** List of markers rendered on the map */
   markers?: MarkerProps[];
 
   /**
-   * Callback triggered when the map is clicked.
-   * Returns the longitude and latitude of the clicked point,
-   * and optionally the marker object if the click occurred on one.
+   * Triggered when clicking on the map or a marker.
+   * If a marker is clicked, the third argument contains the marker object.
    */
   onMapClick?: (lng: number, lat: number, clickedMarker?: MarkerProps | null) => void;
 
-  /**
-   * The color theme of the map UI.
-   * @default "light"
-   */
+  /** Map UI theme */
   theme?: "dark" | "light";
 
-  /**
-   * Map projection type to use.
-   * @default "mercator"
-   */
+  /** Map projection */
   projection?: ReactMapProjection;
 
-  /**
-   * Base map view mode.
-   * @default "street"
-   */
+  /** Base map layer */
   baseMapView?: "satellite" | "street";
 
-  /**
-   * Enables or disables cooperative gestures
-   * (e.g. requiring two-finger pan on touch devices).
-   * @default true
-   */
+  /** Enables touch-friendly gestures */
   cooperativeGestures?: boolean;
 
-  /**
-   * Enables or disables double-click zoom.
-   * @default true
-   */
+  /** Enables double-click zoom */
   doubleClickZoom?: boolean;
 
-  /**
-   * One or multiple GeoJSON line features to display on the map.
-   */
+  /** Single or multiple GeoJSON features displayed on the map */
   features?: Feature | Feature[] | FeatureCollection;
 
-  /**
-   * Starting point of the route.
-   * Format: [longitude, latitude].
-   * If both `from` and `to` are provided, a route will be calculated.
-   */
-  from?: [number, number];
+  /** Configuration for displaying a single itinerary */
+  itineraryParams?: ItineraryParams;
 
-  /**
-   * Ending point of the route.
-   * Format: [longitude, latitude].
-   * If both `from` and `to` are provided, a route will be calculated.
-   */
-  to?: [number, number];
-
-  /**
-   * Transportation profile used for route calculation.
-   * @default "driving"
-   */
-  profile?: Profile;
-
-  /**
-   * Custom styles for the itinerary line displayed on the map.
-   * If not provided, default styles will be used.
-   * @default { color: "#3b82f6", width: 4, opacity: 0.8 }
-   */
-  itineraryLineStyle?: Partial<ItineraryLineStyle>;
-
-  /**
-   * Engine to use for calculating routes.
-   * @default "OSRM"
-   * Options are:
-   * - "OSRM": Uses the public OSRM API for routing.
-   * - "Mapbox": Uses the Mapbox Directions API for routing.
-   */
-  engine?: Engine;
-
-  /**
-   * Parameters for finding the nearest marker to a given point.
-   * If provided, the map will automatically center and zoom
-   * to include the nearest marker within the specified distance.
-   */
+  /** Automatically find & display nearest destination marker */
   findNearestMarker?: FindNearestMarkerParams;
 
-  /**
-   * Callback triggered when the nearest marker is found.
-   * @param id
-   * @param coords
-   */
-  onNearestFound?: (id: number | string | null, coords: [number, number] | null, distanceMeters: number) => void;
-
-  /**
-   * Parameters for displaying isochrones on the map.
-   * If provided, isochrones will be rendered based on the specified origin and intervals.
-   * @param origin
-   * @param profile
-   * @param intervals
-   * @param onIsochroneLoaded
-   */
+  /** Configuration for displaying isochrones */
   isochrone?: IsochroneProps;
 }

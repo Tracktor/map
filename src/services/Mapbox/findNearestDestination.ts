@@ -1,15 +1,15 @@
-import chunkArray from "@/services/core/chunksArray.ts";
-import { createFetchNearestInChunk } from "@/services/core/fetchNearestInChunkFactory.ts";
+import chunkArray from "@/services/core/chunksArray";
+import { createFetchNearestInChunk } from "@/services/core/fetchNearestInChunkFactory";
 import type { Destination, NearestResult, RoutingProfile } from "@/services/core/interface";
-import processInBatches from "@/services/core/processInBatches.ts";
+import processInBatches from "@/services/core/processInBatches";
 import { buildMapboxUrl, fetchMapbox } from "@/services/Mapbox/client";
 
 interface MapboxMatrixResponse {
-  distances: number[][];
+  distances?: number[][] | null;
 }
 
-const MAX_MAPBOX_POINTS = 25; // Mapbox: 1 source + 24 destinations max per request
-const MAX_CONCURRENT_REQUESTS = 5; // Limit parallel API calls (avoid rate limiting)
+const MAX_MAPBOX_POINTS = 25; // Mapbox Matrix: 1 source + 24 destinations max
+const MAX_CONCURRENT_REQUESTS = 5;
 
 const buildMapboxMatrixUrl = (coords: string, profile: RoutingProfile) =>
   buildMapboxUrl("directions-matrix", "v1", profile, coords, {
@@ -17,39 +17,30 @@ const buildMapboxMatrixUrl = (coords: string, profile: RoutingProfile) =>
     sources: "0",
   });
 
-const fetchNearestInChunk = createFetchNearestInChunk<MapboxMatrixResponse>(buildMapboxMatrixUrl, fetchMapbox, (data) => data.distances);
+const extractDistances = (data: MapboxMatrixResponse) => data.distances ?? undefined;
+
+const fetchNearestInChunk = createFetchNearestInChunk<MapboxMatrixResponse>(buildMapboxMatrixUrl, fetchMapbox, extractDistances);
 
 /**
- * Find the nearest destination using the Mapbox Directions Matrix API.
- * Automatically splits large destination lists into chunks (<= 25 points)
- * and executes requests in limited parallel batches to avoid API throttling.
- *
- * @param from - The origin coordinate [longitude, latitude].
- * @param destinations - List of destination coordinates with IDs.
- * @param profile - Mapbox routing profile (driving, walking, cycling...).
- * @param maxDistanceMeters - Optional distance limit in meters.
- * @returns The nearest destination, or null if none found.
+ * Returns all destinations ordered by ascending distance using Mapbox Matrix API
  */
 const findNearestDestination = async (
   from: [number, number],
   destinations: Destination[],
   profile: RoutingProfile = "driving",
   maxDistanceMeters?: number,
-): Promise<NearestResult | null> => {
-  if (destinations.length === 0) {
-    return null;
+): Promise<NearestResult[]> => {
+  if (!destinations.length) {
+    return [];
   }
 
-  // Split destinations into chunks (1 source + 24 destinations per chunk)
   const chunks = chunkArray(destinations, MAX_MAPBOX_POINTS - 1);
 
-  // Process all chunks concurrently, respecting API rate limits
-  const results = await processInBatches(chunks, MAX_CONCURRENT_REQUESTS, (chunk) =>
+  const chunkResponses = await processInBatches(chunks, MAX_CONCURRENT_REQUESTS, (chunk) =>
     fetchNearestInChunk(from, chunk, profile, maxDistanceMeters),
   );
 
-  // Return globally the closest destination
-  return results.filter((r): r is NearestResult => r != null).sort((a, b) => a.distance - b.distance)[0] ?? null;
+  return chunkResponses.flatMap((res) => res.all).sort((a, b) => a.distance - b.distance);
 };
 
 export default findNearestDestination;

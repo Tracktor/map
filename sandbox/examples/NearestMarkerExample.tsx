@@ -15,11 +15,12 @@ import {
 } from "@tracktor/design-system";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
+import nearestPreCompute from "sandbox/examples/pre-compute/nearestPreCompute";
 import MapSidebar from "sandbox/features/MapSideBar";
 import Navbar from "sandbox/features/Navbar";
 import ThemeSwitch from "sandbox/features/ThemeSwitch";
 import MapView from "@/features/MapView/MapView";
-import { Engine } from "@/types/MapViewProps.ts";
+import { Engine } from "@/types/MapViewProps";
 
 const predefinedOrigins = [
   { coords: [2.3522, 48.8566], id: "origin-paris", name: "Paris (origin)" },
@@ -80,6 +81,9 @@ const NearestMarkerExample = () => {
     popup: `🎯 ${m.name}`,
   }));
 
+  const filteredInitialNearest = useMemo(() => {
+    return nearestPreCompute.filter((r) => filteredDestinations.some((d) => d.id === r.id));
+  }, [filteredDestinations]);
   const allMarkers = useMemo(() => [...destinationMarkers, ...originMarker], [originMarker, destinationMarkers]);
 
   return (
@@ -88,31 +92,37 @@ const NearestMarkerExample = () => {
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         <Box sx={{ flex: 1 }}>
           <MapView
+            key={`${cooperativeGestures}-${doubleClickZoom}-${projection.name}-${engine}-${profile}`}
             markers={allMarkers}
-            profile={profile}
             cooperativeGestures={cooperativeGestures}
             doubleClickZoom={doubleClickZoom}
             projection={projection}
             fitBounds
             height="100%"
             width="100%"
-            itineraryLineStyle={{
-              color: "#2563eb",
-              opacity: 0.8,
-              width: 2,
-            }}
             findNearestMarker={{
               destinations: filteredDestinations,
+              engine: engine,
+              initialNearestResults: filteredInitialNearest,
+              itineraryLineStyle: {
+                color: "#2563eb",
+                opacity: 0.8,
+                width: 2,
+              },
               maxDistanceMeters: searchRadius,
+              onNearestFound: (allResult) => {
+                const nearestElement = allResult[0] || {};
+                const { id, distance } = nearestElement;
+                console.log("Nearest results:", { allResult });
+                setNearestId(id as number);
+                const info = filteredDestinations.find((d) => d.id === id);
+
+                if (info) {
+                  setNearestInfo({ distance: Math.round(distance), name: info.name });
+                }
+              },
               origin: (origins.at(-1)?.coords as [number, number]) ?? predefinedOrigins[0].coords,
-            }}
-            engine={engine}
-            onNearestFound={(id, _coords, distanceMeters) => {
-              setNearestId(id as number);
-              const info = filteredDestinations.find((d) => d.id === id);
-              if (info) {
-                setNearestInfo({ distance: Math.round(distanceMeters), name: info.name });
-              }
+              profile: profile,
             }}
             onMapClick={(_lng, _lat, clickedMarker) => {
               if (clickedMarker?.id && typeof clickedMarker.id === "number") {

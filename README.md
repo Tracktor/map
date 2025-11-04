@@ -61,44 +61,44 @@ bun add @tracktor/map
 import { MapProvider, MarkerMap } from "@tracktor/map";
 
 const markers = [
-  {
-    id: 1,
-    lng: 2.3522,
-    lat: 48.8566,
-    Tooltip: <div>Paris</div>,
-    color: "primary",
-    variant: "default",
-  },
-  {
-    id: 2,
-    lng: -0.1276,
-    lat: 51.5074,
-    Tooltip: <div>London</div>,
-    color: "secondary",
-    variant: "default",
-  },
+    {
+        id: 1,
+        lng: 2.3522,
+        lat: 48.8566,
+        Tooltip: <div>Paris</div>,
+        color: "primary",
+        variant: "default",
+    },
+    {
+        id: 2,
+        lng: -0.1276,
+        lat: 51.5074,
+        Tooltip: <div>London</div>,
+        color: "secondary",
+        variant: "default",
+    },
 ];
 
 function App() {
-  return (
-    <MapProvider
-      licenseMuiX="your-muix-license"
-      licenceMapbox="your-mapbox-token"
-    >
-      <MarkerMap
-        markers={markers}
-        center={[2.3522, 48.8566]}
-        zoom={5}
-        fitBounds
-        height={500}
-        width="100%"
-        onMapClick={(lng, lat, marker) => {
-          console.log("Clicked at:", lng, lat);
-          if (marker) console.log("Marker clicked:", marker);
-        }}
-      />
-    </MapProvider>
-  );
+    return (
+        <MapProvider
+            licenseMuiX="your-muix-license"
+            licenceMapbox="your-mapbox-token"
+        >
+            <MarkerMap
+                markers={markers}
+                center={[2.3522, 48.8566]}
+                zoom={5}
+                fitBounds
+                height={500}
+                width="100%"
+                onMapClick={(lng, lat, marker) => {
+                    console.log("Clicked at:", lng, lat);
+                    if (marker) console.log("Marker clicked:", marker);
+                }}
+            />
+        </MapProvider>
+    );
 }
 ```
 
@@ -115,10 +115,10 @@ Wraps your map components and injects required providers (theme, tokens, MUI X l
 - `licenceMapbox` — Your Mapbox access token
 ```tsx
 <MapProvider
-  licenseMuiX="your-license"
-  licenceMapbox="your-token"
+    licenseMuiX="your-license"
+    licenceMapbox="your-token"
 >
-  {/* Your map components */}
+    {/* Your map components */}
 </MapProvider>
 ```
 
@@ -147,7 +147,7 @@ Main map component that handles:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `center` | `[lng, lat]` | `[2.3522, 48.8566]` | Initial map center coordinates |
+| `center` | `LngLatLike \| number[]` | `[2.3522, 48.8566]` | Initial map center coordinates [lng, lat] |
 | `zoom` | `number` | `5` | Initial zoom level (0-22) |
 | `width` | `string \| number` | `"100%"` | Map container width |
 | `height` | `string \| number` | `300` | Map container height |
@@ -170,13 +170,14 @@ Main map component that handles:
 |------|------|---------|-------------|
 | `cooperativeGestures` | `boolean` | `true` | Require modifier key for zoom/pan |
 | `doubleClickZoom` | `boolean` | `true` | Enable double-click to zoom |
-| `onMapClick` | `(lng, lat, marker?) => void` | - | Callback for map clicks |
+| `onMapClick` | `(lng, lat, marker?) => void` | - | Callback for map clicks (includes clicked marker if applicable) |
 
 #### Marker Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `markers` | `MarkerProps[]` | `[]` | Array of markers to display |
+| `markerImageURL` | `string` | - | Custom marker icon URL |
 | `openPopup` | `string \| number` | `undefined` | ID of marker with open popup |
 | `openPopupOnHover` | `boolean` | `false` | Open popups on hover instead of click |
 | `popupMaxWidth` | `string` | `"300px"` | Maximum popup width |
@@ -222,45 +223,68 @@ const marker = {
 
 ---
 
-### Routing Props
+### Itinerary Props (`itineraryParams`)
 
-Add a route between two points by providing `from` and `to` coordinates.
+Draw a route between two points with customizable styling and routing engines.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `from` | `[lng, lat]` | - | Route starting point |
-| `to` | `[lng, lat]` | - | Route ending point |
+| `from` | `[number, number]` | - | Route starting point [lng, lat] |
+| `to` | `[number, number]` | - | Route ending point [lng, lat] |
 | `profile` | `"driving" \| "walking" \| "cycling"` | `"driving"` | Transportation mode |
 | `engine` | `"OSRM" \| "Mapbox"` | `"OSRM"` | Routing service to use |
-| `itineraryLineStyle` | `{ color, width, opacity }` | `{ color: "#3b82f6", width: 4, opacity: 0.8 }` | Route line appearance |
+| `itineraryLineStyle` | `Partial<ItineraryLineStyle>` | `{ color: "#3b82f6", width: 4, opacity: 0.8 }` | Route line appearance |
+| `initialRoute` | `Feature<LineString>` | - | Precomputed GeoJSON route |
+| `onRouteComputed` | `(route) => void` | - | Callback fired when route is computed |
+| `itineraryLabel` | `ReactNode` | - | Label displayed along the route (e.g., "12 min") |
 
 **Example:**
 ```tsx
 <MapView
-  from={[2.3522, 48.8566]} // Paris
-  to={[-0.1276, 51.5074]}   // London
-  profile="driving"
-  engine="OSRM"
-  itineraryLineStyle={{
-    color: "#10b981",
-    width: 5,
-    opacity: 0.9
+  itineraryParams={{
+    from: [2.3522, 48.8566], // Paris
+    to: [-0.1276, 51.5074],   // London
+    profile: "driving",
+    engine: "OSRM",
+    itineraryLineStyle: {
+      color: "#10b981",
+      width: 5,
+      opacity: 0.9
+    },
+    itineraryLabel: <span>Route principale</span>,
+    onRouteComputed: (route) => {
+      console.log("Route computed:", route);
+    }
   }}
 />
 ```
 
 ---
 
-### Nearest Marker Search
+### Nearest Marker Search (`findNearestMarker`)
 
 Find and highlight the closest marker to a given point within a maximum distance.
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `findNearestMarker.origin` | `[lng, lat]` | Starting point for search |
-| `findNearestMarker.destinations` | `Array<{lng, lat, id}>` | Candidate destinations |
-| `findNearestMarker.maxDistanceMeters` | `number` | Maximum search radius |
-| `onNearestFound` | `(id, coords, distance) => void` | Callback with nearest result |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `origin` | `[number, number]` | - | Starting point for search [lng, lat] |
+| `destinations` | `Array<{id, lng, lat}>` | - | Candidate destinations |
+| `maxDistanceMeters` | `number` | - | Maximum search radius in meters |
+| `profile` | `"driving" \| "walking" \| "cycling"` | `"driving"` | Routing profile for distance calculation |
+| `engine` | `"OSRM" \| "Mapbox"` | `"OSRM"` | Routing engine to use |
+| `onNearestFound` | `(results) => void` | - | Callback with all nearest results |
+| `initialNearestResults` | `NearestResult[]` | - | Precomputed nearest results |
+| `itineraryLineStyle` | `Partial<ItineraryLineStyle>` | - | Style override for auto-generated itinerary |
+
+**NearestResult Type:**
+```tsx
+interface NearestResult {
+  id: number | string;
+  point: [number, number]; // [lng, lat]
+  distance: number; // in meters
+  routeFeature?: Feature<LineString> | null;
+}
+```
 
 **Example:**
 ```tsx
@@ -268,30 +292,35 @@ Find and highlight the closest marker to a given point within a maximum distance
   findNearestMarker={{
     origin: [2.3522, 48.8566],
     destinations: markers.map(m => ({ 
+      id: m.id, 
       lng: m.lng, 
-      lat: m.lat, 
-      id: m.id 
+      lat: m.lat 
     })),
     maxDistanceMeters: 5000,
-  }}
-  onNearestFound={(id, coords, distance) => {
-    console.log(`Nearest: ${id} at ${distance}m`);
+    profile: "walking",
+    engine: "OSRM",
+    onNearestFound: (results) => {
+      console.log(`Found ${results.length} markers within range`);
+      results.forEach(r => {
+        console.log(`Marker ${r.id} at ${r.distance}m`);
+      });
+    }
   }}
 />
 ```
 
 ---
 
-### Isochrone Props
+### Isochrone Props (`isochrone`)
 
 Compute and display areas reachable within specific time intervals.
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `isochrone.origin` | `[lng, lat]` | Center point for isochrone |
-| `isochrone.profile` | `"driving" \| "walking" \| "cycling"` | Transportation mode |
-| `isochrone.intervals` | `number[]` | Time intervals in minutes |
-| `isochrone.onIsochroneLoaded` | `(data) => void` | Callback with GeoJSON result |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `origin` | `[number, number]` | - | Center point for isochrone [lng, lat] |
+| `profile` | `"driving" \| "walking" \| "cycling"` | `"driving"` | Transportation mode |
+| `intervals` | `number[]` | `[5, 10, 15]` | Time intervals in minutes |
+| `onIsochroneLoaded` | `(data) => void` | - | Callback with GeoJSON result |
 
 **Example:**
 ```tsx
@@ -309,7 +338,7 @@ Compute and display areas reachable within specific time intervals.
 
 ---
 
-### GeoJSON Features
+### GeoJSON Features (`features`)
 
 Display custom vector features like polygons, lines, or points.
 
@@ -472,6 +501,44 @@ function InteractiveMap() {
 }
 ```
 
+### 🚗 Combined Routing & Nearest Search
+```tsx
+function DeliveryMap() {
+  const [origin] = useState([2.3522, 48.8566]);
+  const [destinations] = useState([
+    { id: 1, lng: 2.35, lat: 48.86 },
+    { id: 2, lng: 2.36, lat: 48.85 },
+    { id: 3, lng: 2.34, lat: 48.87 }
+  ]);
+
+  return (
+    <MapView
+      markers={destinations.map(d => ({
+        id: d.id,
+        lng: d.lng,
+        lat: d.lat,
+        Tooltip: <div>Destination {d.id}</div>
+      }))}
+      findNearestMarker={{
+        origin,
+        destinations,
+        maxDistanceMeters: 10000,
+        profile: "driving",
+        engine: "OSRM",
+        itineraryLineStyle: {
+          color: "#22c55e",
+          width: 4,
+          opacity: 0.8
+        },
+        onNearestFound: (results) => {
+          console.log("Nearest destinations:", results);
+        }
+      }}
+    />
+  );
+}
+```
+
 ---
 
 ## 💡 Tips & Best Practices
@@ -482,6 +549,7 @@ function InteractiveMap() {
 - **Use `fitBoundsAnimationKey`** to control when bounds recalculate
 - **Disable animations** for large datasets: `disableAnimation={true}`
 - **Debounce dynamic updates** when tracking real-time data
+- **Use `initialRoute` and `initialNearestResults`** to avoid redundant API calls
 
 ### UX Improvements
 
@@ -489,13 +557,15 @@ function InteractiveMap() {
 - Use `fitBoundsPadding` to ensure markers aren't at screen edges
 - Set appropriate `popupMaxWidth` for mobile responsiveness
 - Provide visual feedback with custom `IconComponent` states
+- Use `itineraryLabel` to display route duration or distance
 
 ### Routing Best Practices
 
 - **Use OSRM** (free) for basic routing needs
 - **Use Mapbox** for production apps requiring SLA and support
-- Cache route results to minimize API calls
-- Handle network errors gracefully
+- Cache route results with `initialRoute` to minimize API calls
+- Handle network errors gracefully with `onRouteComputed` callback
+- Combine `findNearestMarker` with `itineraryParams` for optimal routing workflows
 
 ---
 
@@ -647,10 +717,17 @@ This will:
 - Reduce marker count or use clustering
 - Disable animations for large datasets
 - Memoize marker data
+- Use `initialRoute` and `initialNearestResults` for cached data
+
+**Routing not working:**
+- Verify coordinates are in [lng, lat] format (not lat, lng)
+- Check that routing engine is accessible
+- Ensure profile matches your use case
+- Verify maxDistanceMeters is reasonable for nearest search
 
 ### Getting Help
 
-- 📖 Check the [documentation](https://tracktor.github.io/map)
+- 📖 Check the [documentation](https://github.com/Tracktor/map)
 - 🐛 [Report bugs](https://github.com/tracktor-tech/tracktor-map/issues)
 - 💬 Join discussions in GitHub Discussions
 
@@ -666,9 +743,10 @@ This will:
 ## 🧭 Links
 
 - 📦 **npm**: [@tracktor/map](https://www.npmjs.com/package/@tracktor/map)
-- 💻 **GitHub**: [tracktor-tech/tracktor-map](https://github.com/tracktor-tech/tracktor-map)
+- 💻 **GitHub**: [@tracktor/map](https://github.com/Tracktor/map)
 - 🌐 **Docs**: [tracktor.github.io/map](https://tracktor.github.io/map)
 - 🎨 **Design System**: [@tracktor/design-system](https://www.npmjs.com/package/@tracktor/design-system)
+- Sandbox Demo: [tracktor.github.io/map/sandbox](https://tracktor.github.io/map)
 
 ---
 

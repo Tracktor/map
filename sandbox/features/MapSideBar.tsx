@@ -17,7 +17,6 @@ const MapSidebar = ({ title, children }: MapSidebarProps) => {
       <Box
         sx={{
           backdropFilter: "blur(10px)",
-          background: "linear-gradient(180deg, rgba(10,12,15,0.95) 0%, rgba(15,18,22,0.85) 100%)",
           borderLeft: { md: "1px solid rgba(0,198,255,0.15)", xs: "none" },
           boxShadow: "0 0 20px rgba(0,198,255,0.05)",
           color: "text.primary",

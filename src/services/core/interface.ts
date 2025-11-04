@@ -23,7 +23,7 @@ export interface MapRoutingProvider {
     destinations: Destination[],
     profile?: RoutingProfile,
     maxDistanceMeters?: number,
-  ): Promise<NearestResult | null>;
+  ): Promise<NearestResult[]>;
   getIsochrone?(from: [number, number], profile?: RoutingProfile, intervals?: number[]): Promise<MapboxIsochroneResponse | null>;
 }
 

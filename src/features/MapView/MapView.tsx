@@ -15,38 +15,55 @@ import { MapViewProps } from "@/types/MapViewProps.ts";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
 /**
- * MapView Component
- * -------------------
- * A full-featured interactive map view built on top of `react-map-gl`.
+ * MapView
  *
- * This component serves as the main container for all map-related features,
- * including markers, routes, popups, and geospatial overlays.
+ * A high-level Mapbox wrapper component providing an opinionated, feature-rich map
+ * ready for production use. It extends the native Mapbox map with several built-in
+ * capabilities, allowing developers to display interactive maps with minimal setup.
  *
- * Key Features:
- * - Renders markers with optional custom icons and tooltips.
- * - Supports hover and click interactions for popups.
- * - Automatically fits bounds to visible markers or GeoJSON features.
- * - Displays routes (`Itinerary`) or nearest routes (`NearestPointItinerary`).
- * - Supports isochrone visualization and GeoJSON feature collections.
- * - Integrates with OSRM or Mapbox routing engines.
+ * Key Features Included:
+ *  • Marker rendering with support for:
+ *      – Custom icons/components
+ *      – Variants, colors, and hover/click interactions
+ *      – Optional Tooltip content
+ *  • Popup management (controlled or uncontrolled):
+ *      – Open on click or on hover
+ *      – Force opening a popup via the `openPopup` prop
+ *  • Auto-fit bounds to markers and/or GeoJSON features
+ *  • Route and navigation helpers:
+ *      – Display an itinerary (supports OSRM or custom engines)
+ *      – Compute and highlight the nearest marker to a given point
+ *  • Isochrones support (time/distance areas around a point)
+ *  • GeoJSON FeatureCollection rendering
  *
- * Map Styles:
- * - Works with both Mapbox styles (`mapbox://styles/...`) and custom raster/vector styles (e.g., OpenStreetMap).
- * - A Mapbox access token is only required if you use Mapbox-hosted styles or sources.
+ * Additional Capabilities:
+ *  • Theme-aware Mapbox base style (light/dark mode, customizable)
+ *  • Fine-grained interaction configuration (gestures, double-click, zoom, projection…)
+ *  • Built-in skeleton loader
+ *  • Completely memoized (React.memo) to avoid unnecessary rerenders
+ *  • Delayed marker rendering until the map is fully loaded to avoid layout issues
  *
- * Props:
- * - Fully typed via `MarkerMapProps`.
+ * Key Props:
+ *  - `markers`: Array of map markers ({ id, lat, lng, IconComponent, Tooltip, ... })
+ *  - `openPopup` / `openPopupOnHover`: Controls how popups are triggered
+ *  - `fitBounds`: Automatically adapts the map viewport to visible markers/features
+ *  - `itineraryParams`: Displays a route between two locations
+ *  - `findNearestMarker`: Computes the closest marker to an origin and shows the route
+ *  - `isochrone`: Fetches and draws an isochrone from an external service
+ *  - `features`: Renders GeoJSON data on the map
  *
- * Dependencies:
- * - `react-map-gl` and `mapbox-gl` for rendering and interaction.
- * - `@tracktor/design-system` for consistent layout and skeleton UI.
- * - Custom sub-features: `FitBounds`, `Itinerary`, `NearestPointItinerary`, `Isochrone`, and `FeatureCollection`.
+ * Example Usage:
+ *  <MapView
+ *    markers={[{ id: "1", lat: 48.8566, lng: 2.3522, Tooltip: <div>Paris</div> }]}
+ *    onMapClick={(lng, lat, marker) => console.log(lng, lat, marker)}
+ *    fitBounds
+ *    itineraryParams={{ from, to, profile: "driving" }}
+ *  />
  *
- * Maintenance Notes:
- * - Keep map ref logic inside the component (Mapbox events handled via `onLoad`).
- * - For large datasets, consider memoizing marker rendering.
- * - For dynamic data (e.g., GPS tracking), you can debounce `fitBounds`
- *   or control re-renders using the `fitBoundsAnimationKey` prop.
+ * Notes:
+ *  - Map rendering starts only after `onLoad` to avoid resize issues.
+ *  - When `openPopup` changes, the corresponding marker popup updates accordingly.
+ *  - Designed to provide a plug-and-play mapping solution while remaining extensible.
  */
 const MapView = ({
   containerStyle,
@@ -73,33 +90,25 @@ const MapView = ({
   projection,
   theme: themeOverride,
   features,
-  from,
-  to,
-  profile = "driving",
-  itineraryLineStyle,
-  engine = "OSRM",
+  itineraryParams,
   findNearestMarker,
-  onNearestFound,
   isochrone,
 }: MapViewProps): ReactElement => {
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-  // Initial map center and zoom setup
   const initialCenter = useMemo(() => {
-    if (isArray(center)) {
-      return { latitude: center[1], longitude: center[0], zoom };
-    }
+    const [lng = 2.3522, lat = 48.8566] = isArray(center) ? center : [];
+    return { latitude: lat, longitude: lng, zoom };
   }, [center, zoom]);
 
-  // Determine map style (base map + theme)
   const mapStyle = useMemo(
     () => baseMapStyle || getBaseMapStyle(baseMapView, themeOverride ?? theme.palette.mode),
     [baseMapView, baseMapStyle, themeOverride, theme.palette.mode],
   );
 
-  // Compute full core map options (gesture, zoom, style, etc.)
   const {
     style: coreStyle,
     cooperativeGestures: coopGestures,
@@ -113,21 +122,18 @@ const MapView = ({
     theme: themeOverride ?? theme.palette.mode,
   });
 
-  // Handle marker click → opens popup (if click mode active)
   const handleMarkerClick = (id: string | number, hasTooltip: boolean) => {
     if (!openPopupOnHover && hasTooltip) {
       setSelected(id);
     }
   };
 
-  // Handle hover interactions (if hover mode active)
   const handleMarkerHover = (id: string | number | null, hasTooltip?: boolean) => {
     if (openPopupOnHover) {
       setSelected(hasTooltip ? id : null);
     }
   };
 
-  // Update selected marker when openPopup prop changes
   useEffect(() => {
     setSelected(openPopup ?? null);
   }, [openPopup]);
@@ -138,7 +144,6 @@ const MapView = ({
     <Box data-testid="mapbox-container" sx={{ height, position: "relative", width, ...containerStyle }}>
       <GlobalStyles styles={mapboxGlobalStyles} />
 
-      {/* Skeleton loader during initialization */}
       {loading && (
         <Skeleton
           data-testid="skeleton-loader"
@@ -155,53 +160,56 @@ const MapView = ({
 
       {!loading && (
         <MapboxMap
-          key={`${coopGestures}-${dblZoom}-${projection}-${mapStyle}-${findNearestMarker?.maxDistanceMeters}`}
           ref={mapRef}
           cooperativeGestures={coopGestures}
           doubleClickZoom={dblZoom}
           mapStyle={coreStyle}
           projection={projection}
+          onLoad={() => {
+            setMapLoaded(true);
+            mapRef.current?.resize();
+          }}
           initialViewState={initialCenter}
           style={{ height: "100%", width: "100%" }}
           mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
           onClick={(e) => {
             const clickedMarker = markers.find((m) => {
               const { lng, lat } = e.lngLat;
-              const dx = Math.abs(Number(m.lng || null) - lng);
-              const dy = Math.abs(Number(m.lat || null) - lat);
+              const dx = Math.abs(Number(m.lng ?? 0) - lng);
+              const dy = Math.abs(Number(m.lat ?? 0) - lat);
               return dx < 0.01 && dy < 0.01;
             });
 
             onMapClick?.(e.lngLat.lng, e.lngLat.lat, clickedMarker ?? null);
           }}
         >
-          {/* Markers */}
-          {markers.filter(isValidMarker).map((m) => (
-            <Marker
-              key={m.id}
-              longitude={m.lng}
-              latitude={m.lat}
-              anchor="bottom"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
-
-                // 🔵 On transmet aussi via onMapClick le marker cliqué
-                onMapClick?.(m.lng, m.lat, m);
-              }}
-            >
-              <Box
-                component="div"
-                onMouseEnter={() => m.id && handleMarkerHover(m.id, Boolean(m.Tooltip))}
-                onMouseLeave={() => handleMarkerHover(null)}
-                style={{ cursor: m.Tooltip ? "pointer" : "default" }}
+          {/* Markers - only rendered after map fully initialized */}
+          {mapLoaded &&
+            markers.filter(isValidMarker).map((m) => (
+              <Marker
+                key={m.id}
+                longitude={m.lng}
+                latitude={m.lat}
+                anchor="bottom"
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
+                  onMapClick?.(m.lng, m.lat, m);
+                }}
               >
-                {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <Markers color={m.color} variant={m.variant} />}
-              </Box>
-            </Marker>
-          ))}
-          {/* Popup for selected marker */}
-          {selectedMarker?.Tooltip && (
+                <Box
+                  component="div"
+                  onMouseEnter={() => m.id && handleMarkerHover(m.id, Boolean(m.Tooltip))}
+                  onMouseLeave={() => handleMarkerHover(null)}
+                  style={{ cursor: m.Tooltip ? "pointer" : "default" }}
+                >
+                  {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <Markers color={m.color} variant={m.variant} />}
+                </Box>
+              </Marker>
+            ))}
+
+          {/* Popup */}
+          {mapLoaded && selectedMarker?.Tooltip && (
             <Popup
               longitude={isNumber(selectedMarker.lng) ? selectedMarker.lng : 0}
               latitude={isNumber(selectedMarker.lat) ? selectedMarker.lat : 0}
@@ -216,22 +224,33 @@ const MapView = ({
               </Box>
             </Popup>
           )}
-          {/* Route between two points */}
-          <Itinerary from={from} to={to} profile={profile} engine={engine} itineraryLineStyle={itineraryLineStyle} />
 
-          {/* Nearest route (from origin to the closest destination) */}
-          {findNearestMarker && (
-            <NearestPointItinerary
-              origin={findNearestMarker?.origin}
-              destinations={findNearestMarker?.destinations}
-              onNearestFound={onNearestFound}
-              maxDistanceMeters={findNearestMarker?.maxDistanceMeters}
-              engine={engine}
-              profile={profile}
+          {itineraryParams && (
+            <Itinerary
+              from={itineraryParams.from}
+              to={itineraryParams.to}
+              profile={itineraryParams.profile}
+              engine={itineraryParams.engine}
+              itineraryLineStyle={itineraryParams.itineraryLineStyle}
+              initialRoute={itineraryParams.initialRoute}
+              onRouteComputed={itineraryParams.onRouteComputed}
+              itineraryLabel={itineraryParams.itineraryLabel}
             />
           )}
 
-          {/* Isochrone rendering */}
+          {findNearestMarker && (
+            <NearestPointItinerary
+              origin={findNearestMarker.origin}
+              destinations={findNearestMarker.destinations}
+              onNearestFound={findNearestMarker.onNearestFound}
+              maxDistanceMeters={findNearestMarker.maxDistanceMeters}
+              engine={findNearestMarker.engine}
+              profile={findNearestMarker.profile}
+              initialNearestResults={findNearestMarker.initialNearestResults}
+              itineraryLineStyle={findNearestMarker.itineraryLineStyle}
+            />
+          )}
+
           {isochrone && (
             <Isochrone
               origin={isochrone.origin}
@@ -241,9 +260,8 @@ const MapView = ({
             />
           )}
 
-          {/* Render custom GeoJSON features */}
           {features && <FeatureCollection features={features} />}
-          {/* Auto-fit bounds to all visible map objects */}
+
           {fitBounds && (
             <FitBounds
               markers={markers}
