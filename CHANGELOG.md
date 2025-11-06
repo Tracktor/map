@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/Tracktor/map/compare/v1.7.1...v1.8.0) (2025-11-06)
+
+
+### ✨ Features
+
+* add latitude and longitude validation functions and enhance MarkerProps type guard ([aa480fe](https://github.com/Tracktor/map/commit/aa480fe5a6386f1aea678ad82c450f5e058f0ca5))
+
 ### [1.7.1](https://github.com/Tracktor/map/compare/v1.7.0...v1.7.1) (2025-11-04)
 
 ## [1.7.0](https://github.com/Tracktor/map/compare/v1.6.5...v1.7.0) (2025-11-04)
