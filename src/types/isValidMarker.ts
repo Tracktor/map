@@ -1,19 +1,37 @@
+import { isNumber, isString } from "@tracktor/react-utils";
 import type { MarkerProps } from "@/types/MarkerProps";
+
+/**
+ * Attempts to coerce a value to a number (if it's a numeric string)
+ */
+const toNumber = (value: unknown): number | null => {
+  if (isNumber(value)) {
+    return value;
+  }
+
+  if (isString(value) && value.trim() !== "") {
+    const num = Number(value);
+    return Number.isFinite(num) ? num : null;
+  }
+
+  return null;
+};
 
 /**
  * Checks if a value is a valid latitude.
  */
 export const isValidLatitude = (value: unknown): value is number => {
-  return typeof value === "number" && value >= -90 && value <= 90;
+  const num = toNumber(value);
+  return num !== null && num >= -90 && num <= 90;
 };
 
 /**
  * Checks if a value is a valid longitude.
  */
 export const isValidLongitude = (value: unknown): value is number => {
-  return typeof value === "number" && value >= -180 && value <= 180;
+  const num = toNumber(value);
+  return num !== null && num >= -180 && num <= 180;
 };
-
 /**
  * Checks if value is a valid [latitude, longitude] tuple.
  */
