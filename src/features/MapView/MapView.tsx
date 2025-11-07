@@ -218,7 +218,7 @@ const MapView = ({
                   key={m.id}
                   longitude={m.lng}
                   latitude={m.lat}
-                  anchor="bottom"
+                  anchor="center"
                   onClick={(e) => {
                     e.originalEvent.stopPropagation();
                     m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
