@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/Tracktor/map/compare/v1.8.0...v1.8.1) (2025-11-07)
+
+
+### 🐛 Fixes
+
+* add isValidLatLngTuple function to validate latitude and longitude tuples ([18b8f00](https://github.com/Tracktor/map/commit/18b8f008fda7b7d87fd3f4ccae61804f49e9679c))
+
 ## [1.8.0](https://github.com/Tracktor/map/compare/v1.7.1...v1.8.0) (2025-11-06)
 
 
