@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.7](https://github.com/Tracktor/map/compare/v1.8.6...v1.8.7) (2025-11-07)
+
+
+### 🐛 Fixes
+
+* update borderRadius in MapView for improved styling consistency ([e4dc421](https://github.com/Tracktor/map/commit/e4dc421b9c2d44d9a052603e0c875380a55aa061))
+
 ### [1.8.6](https://github.com/Tracktor/map/compare/v1.8.5...v1.8.6) (2025-11-07)
 
 
