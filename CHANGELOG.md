@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.2](https://github.com/Tracktor/map/compare/v1.8.1...v1.8.2) (2025-11-07)
+
+
+### 🐛 Fixes
+
+* enhance latitude and longitude validation by adding toNumber utility function ([1d0f4f3](https://github.com/Tracktor/map/commit/1d0f4f301ed5417dd4cfd733f7afe394509da8ba))
+
 ### [1.8.1](https://github.com/Tracktor/map/compare/v1.8.0...v1.8.1) (2025-11-07)
 
 
