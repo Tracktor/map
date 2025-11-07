@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.3](https://github.com/Tracktor/map/compare/v1.8.2...v1.8.3) (2025-11-07)
+
+
+### 🐛 Fixes
+
+* size & color marker props ([1a3da73](https://github.com/Tracktor/map/commit/1a3da73e7f6f081abccaabfa8dc03a07b0ab625d))
+
 ### [1.8.2](https://github.com/Tracktor/map/compare/v1.8.1...v1.8.2) (2025-11-07)
 
 
