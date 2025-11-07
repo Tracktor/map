@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.6](https://github.com/Tracktor/map/compare/v1.8.5...v1.8.6) (2025-11-07)
+
+
+### 🐛 Fixes
+
+* add square prop to MapView in multiple examples for consistent styling ([03e680e](https://github.com/Tracktor/map/commit/03e680e55e3c12f5eb846cf59c33693a5d134efd))
+
 ### [1.8.5](https://github.com/Tracktor/map/compare/v1.8.4...v1.8.5) (2025-11-07)
 
 
