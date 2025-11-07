@@ -21,17 +21,22 @@ interface MarkerProps {
   variant?: string | keyof typeof variantMarkerColor;
   color?: ThemeColor;
   size?: number;
+  type?: string;
 }
 
 const isPredefinedVariant = (v: string): v is VariantMarker => v in variantMarkerColor;
 
-const Markers = ({ color, variant, size = 28 }: MarkerProps) => {
+const Markers = ({ color, variant, type, size = 28 }: MarkerProps) => {
   const theme = useTheme();
   const centerColor = theme.palette.mode === "dark" ? BLACK : WHITE;
 
   const borderSize = Math.max(3, Math.round(size * 0.25));
 
   const resolvedColor = (() => {
+    if (type === "dropOff") {
+      return "#4e85e1";
+    }
+
     if (variant && isPredefinedVariant(variant)) {
       return variantMarkerColor[variant];
     }

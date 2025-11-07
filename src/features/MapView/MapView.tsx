@@ -203,7 +203,7 @@ const MapView = ({
                 return <m.IconComponent {...iconProps} />;
               })();
 
-              const defaultMarker = m.IconComponent ? null : <Markers color={m.color} variant={m.variant} size={size} />;
+              const defaultMarker = m.IconComponent ? null : <Markers color={m.color} variant={m.variant} size={size} type={m.type} />;
 
               const wrapperStyle: CSSProperties = {
                 alignItems: "center",
