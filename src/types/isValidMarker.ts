@@ -15,6 +15,13 @@ export const isValidLongitude = (value: unknown): value is number => {
 };
 
 /**
+ * Checks if value is a valid [latitude, longitude] tuple.
+ */
+export const isValidLatLngTuple = (value: unknown): value is [number, number] => {
+  return Array.isArray(value) && value.length === 2 && isValidLatitude(value[0]) && isValidLongitude(value[1]);
+};
+
+/**
  * Type guard that validates a MarkerProps object at runtime
  * and narrows lat/lng from unknown to number.
  */
