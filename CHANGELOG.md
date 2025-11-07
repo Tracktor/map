@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.4](https://github.com/Tracktor/map/compare/v1.8.3...v1.8.4) (2025-11-07)
+
+
+### 🐛 Fixes
+
+* change marker anchor position from bottom to center ([3a38239](https://github.com/Tracktor/map/commit/3a3823924772dc2aa94c85f9d28c5420f6acbd7a))
+
 ### [1.8.3](https://github.com/Tracktor/map/compare/v1.8.2...v1.8.3) (2025-11-07)
 
 
