@@ -143,7 +143,7 @@ const MapView = ({
   return (
     <Box
       data-testid="mapbox-container"
-      sx={{ borderRadius: square ? 0 : 6, height, overflow: "hidden", position: "relative", width, ...containerStyle }}
+      sx={{ borderRadius: square ? 0 : 1, height, overflow: "hidden", position: "relative", width, ...containerStyle }}
     >
       <GlobalStyles styles={mapboxGlobalStyles} />
 
