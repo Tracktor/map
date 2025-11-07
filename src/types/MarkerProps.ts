@@ -1,5 +1,8 @@
+import { Theme } from "@tracktor/design-system";
 import { ComponentType, ReactNode } from "react";
 import { VariantMarker } from "@/components/Markers/Markers.tsx";
+
+export type ThemeColor = string | ((theme: Theme) => string) | `${keyof Theme["palette"]}.${string}`;
 
 interface CustomMarkerMapProps {
   geometry: {
@@ -92,6 +95,13 @@ export interface MarkerProps<T = Record<string, unknown>> {
   // biome-ignore lint/suspicious/noExplicitAny: <Icons can receive any props depending on context>
   IconComponent?: ComponentType<any>;
 
-  color?: string;
+  /**
+   * Color theme for the marker.
+   */
+  color?: ThemeColor;
+
+  /**
+   * Predefined variant for the marker styling.
+   */
   variant?: string | VariantMarker;
 }

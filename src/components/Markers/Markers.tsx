@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@tracktor/design-system";
+import { Box, Theme, useTheme } from "@tracktor/design-system";
 import { isString } from "@tracktor/react-utils";
 
 const BLACK = "#000000";
@@ -14,32 +14,58 @@ export const variantMarkerColor = {
 
 export type VariantMarker = keyof typeof variantMarkerColor;
 
+type ThemeColorPath = `${keyof Theme["palette"]}.${string}`;
+type ThemeColor = string | ((theme: Theme) => string) | ThemeColorPath;
+
 interface MarkerProps {
   variant?: string | keyof typeof variantMarkerColor;
-  color?: string;
+  color?: ThemeColor;
+  size?: number;
 }
 
 const isPredefinedVariant = (v: string): v is VariantMarker => v in variantMarkerColor;
 
-const Markers = ({ color, variant }: MarkerProps) => {
-  const { palette } = useTheme();
-  const centerColor = palette.mode === "dark" ? BLACK : WHITE;
+const Markers = ({ color, variant, size = 28 }: MarkerProps) => {
+  const theme = useTheme();
+  const centerColor = theme.palette.mode === "dark" ? BLACK : WHITE;
 
-  const markerColor =
-    (variant && isPredefinedVariant(variant) && variantMarkerColor[variant]) ||
-    color ||
-    (isString(variant) ? variant : variantMarkerColor.default);
+  const borderSize = Math.max(3, Math.round(size * 0.25));
+
+  const resolvedColor = (() => {
+    if (variant && isPredefinedVariant(variant)) {
+      return variantMarkerColor[variant];
+    }
+
+    if (!color) {
+      return variantMarkerColor.default;
+    }
+
+    if (typeof color === "function") {
+      return color(theme);
+    }
+
+    if (isString(color) && color.includes(".")) {
+      const [paletteKey, shade] = color.split(".") as [keyof Theme["palette"], string];
+      const paletteSection = theme.palette[paletteKey];
+
+      if (paletteSection && typeof paletteSection === "object" && shade in paletteSection) {
+        return (paletteSection as Record<string, string>)[shade];
+      }
+    }
+
+    return color;
+  })();
 
   return (
     <Box
       component="div"
       style={{
         backgroundColor: centerColor,
-        border: `7px solid ${markerColor}`,
+        border: `${borderSize}px solid ${resolvedColor}`,
         borderRadius: "50%",
         boxShadow: "0 0 4px rgba(0,0,0,0.3)",
-        height: 28,
-        width: 28,
+        height: size,
+        width: size,
       }}
     />
   );

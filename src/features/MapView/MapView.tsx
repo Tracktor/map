@@ -1,5 +1,5 @@
 import { Box, GlobalStyles, Skeleton, useTheme } from "@tracktor/design-system";
-import { memo, ReactElement, useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, memo, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
@@ -185,28 +185,57 @@ const MapView = ({
         >
           {/* Markers - only rendered after map fully initialized */}
           {mapLoaded &&
-            markers.filter(isValidMarker).map((m) => (
-              <Marker
-                key={m.id}
-                longitude={m.lng}
-                latitude={m.lat}
-                anchor="bottom"
-                onClick={(e) => {
-                  e.originalEvent.stopPropagation();
-                  m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
-                  onMapClick?.(m.lng, m.lat, m);
-                }}
-              >
-                <Box
-                  component="div"
-                  onMouseEnter={() => m.id && handleMarkerHover(m.id, Boolean(m.Tooltip))}
-                  onMouseLeave={() => handleMarkerHover(null)}
-                  style={{ cursor: m.Tooltip ? "pointer" : "default" }}
+            markers.filter(isValidMarker).map((m) => {
+              const size = typeof m.size === "number" ? m.size : undefined;
+
+              const iconComponent = (() => {
+                if (!m.IconComponent) {
+                  return null;
+                }
+
+                const iconProps = { ...m.iconProps };
+
+                if (size) {
+                  iconProps.width = size;
+                  iconProps.height = size;
+                }
+
+                return <m.IconComponent {...iconProps} />;
+              })();
+
+              const defaultMarker = m.IconComponent ? null : <Markers color={m.color} variant={m.variant} size={size} />;
+
+              const wrapperStyle: CSSProperties = {
+                alignItems: "center",
+                cursor: m.Tooltip ? "pointer" : "default",
+                display: "inline-flex",
+                justifyContent: "center",
+                ...(m.IconComponent && !size ? {} : size ? { height: size, width: size } : {}),
+              };
+
+              return (
+                <Marker
+                  key={m.id}
+                  longitude={m.lng}
+                  latitude={m.lat}
+                  anchor="bottom"
+                  onClick={(e) => {
+                    e.originalEvent.stopPropagation();
+                    m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
+                    onMapClick?.(m.lng, m.lat, m);
+                  }}
                 >
-                  {m.IconComponent ? <m.IconComponent {...m.iconProps} /> : <Markers color={m.color} variant={m.variant} />}
-                </Box>
-              </Marker>
-            ))}
+                  <Box
+                    component="div"
+                    onMouseEnter={() => m.id && handleMarkerHover(m.id, Boolean(m.Tooltip))}
+                    onMouseLeave={() => handleMarkerHover(null)}
+                    style={wrapperStyle}
+                  >
+                    {iconComponent || defaultMarker}
+                  </Box>
+                </Marker>
+              );
+            })}
 
           {/* Popup */}
           {mapLoaded && selectedMarker?.Tooltip && (
