@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.5](https://github.com/Tracktor/map/compare/v1.8.4...v1.8.5) (2025-11-07)
+
+
+### 🐛 Fixes
+
+* add type prop to Markers component and update defaultMarker in MapView ([f773338](https://github.com/Tracktor/map/commit/f77333806eb34a16f1480e7500e101b9c678aa13))
+
 ### [1.8.4](https://github.com/Tracktor/map/compare/v1.8.3...v1.8.4) (2025-11-07)
 
 
