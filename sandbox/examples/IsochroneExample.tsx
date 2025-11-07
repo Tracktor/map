@@ -76,6 +76,7 @@ const IsochroneExample = () => {
         {/* 🗺️ MAP */}
         <Box sx={{ flex: 1 }}>
           <MapView
+            square
             key={`${cooperativeGestures}-${doubleClickZoom}-${projection.name}-${profile}-${intervals.join(",")}`}
             height="100%"
             width="100%"

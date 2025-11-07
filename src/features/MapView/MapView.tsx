@@ -141,7 +141,10 @@ const MapView = ({
   const selectedMarker = useMemo(() => (selected ? (markers?.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
 
   return (
-    <Box data-testid="mapbox-container" sx={{ height, position: "relative", width, ...containerStyle }}>
+    <Box
+      data-testid="mapbox-container"
+      sx={{ borderRadius: square ? 0 : 6, height, overflow: "hidden", position: "relative", width, ...containerStyle }}
+    >
       <GlobalStyles styles={mapboxGlobalStyles} />
 
       {loading && (

@@ -103,7 +103,7 @@ const FeaturesExample = () => {
       <Navbar />
       <Stack direction="row" sx={{ height: "100vh", overflow: "hidden", width: "100vw" }}>
         <Box sx={{ flex: 1 }}>
-          <MapView markers={markers} features={features} fitBounds baseMapView={baseMapView} height="100%" width="100%" />
+          <MapView square markers={markers} features={features} fitBounds baseMapView={baseMapView} height="100%" width="100%" />
           <ThemeSwitch />
         </Box>
 

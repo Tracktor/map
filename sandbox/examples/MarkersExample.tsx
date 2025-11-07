@@ -112,6 +112,7 @@ const MarkersExample = () => {
         {/* 🗺️ Map */}
         <Box sx={{ flex: 1 }}>
           <MapView
+            square
             key={`${cooperativeGestures}-${doubleClickZoom}-${projection}-${projection}`}
             openPopup={openPopupId}
             markers={markers}
