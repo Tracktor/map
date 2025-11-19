@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.8](https://github.com/Tracktor/map/compare/v1.8.7...v1.8.8) (2025-11-19)
+
+
+### 🐛 Fixes
+
+* add PopupContent component for improved tooltip rendering in MapView ([1a77dca](https://github.com/Tracktor/map/commit/1a77dcaef1d2d90859626051ab768ba353f0d2d9))
+
 ### [1.8.7](https://github.com/Tracktor/map/compare/v1.8.6...v1.8.7) (2025-11-07)
 
 
