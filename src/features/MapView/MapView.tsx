@@ -10,6 +10,7 @@ import FitBounds from "@/features/Bounds/FitsBounds";
 import Isochrone from "@/features/Isochrone/Isochrone.tsx";
 import Itinerary from "@/features/Itinerary/Itinerary";
 import NearestPointItinerary from "@/features/NearestPointItinerary/NearestPointItinary";
+import PopupContent from "@/features/PopupContent/PopupContent.tsx";
 import isValidMarker from "@/types/isValidMarker.ts";
 import { MapViewProps } from "@/types/MapViewProps.ts";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
@@ -251,8 +252,8 @@ const MapView = ({
               closeOnClick={true}
               closeOnMove={false}
             >
-              <Box component="div" sx={{ minHeight: 60, minWidth: 240 }}>
-                {selectedMarker.Tooltip}
+              <Box sx={{ minHeight: 60, minWidth: 240 }}>
+                <PopupContent>{selectedMarker.Tooltip}</PopupContent>
               </Box>
             </Popup>
           )}
