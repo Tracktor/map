@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.9](https://github.com/Tracktor/map/compare/v1.8.8...v1.8.9) (2025-11-20)
+
+
+### 🐛 Fixes
+
+* handle WebGL errors in MapView with user-friendly message ([7d7f2fc](https://github.com/Tracktor/map/commit/7d7f2fc6dca1709bf9d73ec9de38a9960a66a348))
+
 ### [1.8.8](https://github.com/Tracktor/map/compare/v1.8.7...v1.8.8) (2025-11-19)
 
 
