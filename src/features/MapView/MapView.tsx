@@ -99,6 +99,7 @@ const MapView = ({
   const mapRef = useRef<MapRef | null>(null);
   const [selected, setSelected] = useState<string | number | null>(openPopup ?? null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [error, setError] = useState(false);
 
   const initialCenter = useMemo(() => {
     const [lng = 2.3522, lat = 48.8566] = isArray(center) ? center : [];
@@ -141,6 +142,29 @@ const MapView = ({
 
   const selectedMarker = useMemo(() => (selected ? (markers?.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
 
+  if (error) {
+    return (
+      <Box
+        sx={{
+          alignItems: "center",
+          bgcolor: "grey.100",
+          display: "flex",
+          height,
+          justifyContent: "center",
+          p: 2,
+          textAlign: "center",
+          width,
+        }}
+      >
+        <span>
+          🚫 <strong>Cannot display the map</strong>
+          <br />
+          Try to activate WebGL in your browser settings.
+        </span>
+      </Box>
+    );
+  }
+
   return (
     <Box
       data-testid="mapbox-container"
@@ -172,6 +196,9 @@ const MapView = ({
           onLoad={() => {
             setMapLoaded(true);
             mapRef.current?.resize();
+          }}
+          onError={() => {
+            setError(true);
           }}
           initialViewState={initialCenter}
           style={{ height: "100%", width: "100%" }}
