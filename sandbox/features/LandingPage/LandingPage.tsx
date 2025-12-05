@@ -1,13 +1,13 @@
 import { Box } from "@tracktor/design-system";
+import FeaturesPreview from "sandbox/assets/features-preview.png";
+import IsochronePreview from "sandbox/assets/isochrone-preview.png";
+import MarkerPreview from "sandbox/assets/markers-preview.png";
+import NearestPreview from "sandbox/assets/nearest-preview.png";
+import RoutePreview from "sandbox/assets/route-preview.png";
 import ApiReference from "sandbox/features/LandingPage/ApiReference";
 import CodeExample from "sandbox/features/LandingPage/CodeExample";
 import ExampleCard from "sandbox/features/LandingPage/ExampleCard";
 import Hero from "sandbox/features/LandingPage/Hero";
-import FeaturesPreview from "sandbox/public/assets/features-preview.png";
-import IsochronePreview from "sandbox/public/assets/isochrone-preview.png";
-import MarkerPreview from "sandbox/public/assets/markers-preview.png";
-import NearestPreview from "sandbox/public/assets/nearest-preview.png";
-import RoutePreview from "sandbox/public/assets/route-preview.png";
 
 const cardData = [
   { desc: "Customizable markers with tooltips.", image: MarkerPreview, path: "/markers", title: "📍 Markers" },

@@ -5,7 +5,7 @@ import App from "./App";
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
-    <BrowserRouter basename="/map">
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   </StrictMode>,
