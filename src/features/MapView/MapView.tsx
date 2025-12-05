@@ -4,6 +4,7 @@ import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
 import FeatureCollection from "@/components/FeatureCollection/FeatureCollection";
+import EmptyState from "@/components/Layout/EmptyState.tsx";
 import Markers from "@/components/Markers/Markers";
 import mapboxGlobalStyles from "@/constants/globalStyle";
 import FitBounds from "@/features/Bounds/FitsBounds";
@@ -143,26 +144,7 @@ const MapView = ({
   const selectedMarker = useMemo(() => (selected ? (markers?.find((m) => m.id === selected) ?? null) : null), [selected, markers]);
 
   if (error) {
-    return (
-      <Box
-        sx={{
-          alignItems: "center",
-          bgcolor: "grey.100",
-          display: "flex",
-          height,
-          justifyContent: "center",
-          p: 2,
-          textAlign: "center",
-          width,
-        }}
-      >
-        <span>
-          🚫 <strong>Cannot display the map</strong>
-          <br />
-          Try to activate WebGL in your browser settings.
-        </span>
-      </Box>
-    );
+    return <EmptyState width={width} height={height} />;
   }
 
   return (
@@ -216,49 +198,52 @@ const MapView = ({
         >
           {/* Markers - only rendered after map fully initialized */}
           {mapLoaded &&
-            markers.filter(isValidMarker).map((m) => {
-              const size = typeof m.size === "number" ? m.size : undefined;
+            markers.filter(isValidMarker).map((marker) => {
+              const size = typeof marker.size === "number" ? marker.size : undefined;
 
               const iconComponent = (() => {
-                if (!m.IconComponent) {
+                if (!marker.IconComponent) {
                   return null;
                 }
 
-                const iconProps = { ...m.iconProps };
+                const iconProps = { ...marker.iconProps };
 
                 if (size) {
                   iconProps.width = size;
                   iconProps.height = size;
                 }
 
-                return <m.IconComponent {...iconProps} />;
+                return <marker.IconComponent {...iconProps} />;
               })();
 
-              const defaultMarker = m.IconComponent ? null : <Markers color={m.color} variant={m.variant} size={size} type={m.type} />;
+              const defaultMarker = marker.IconComponent ? null : (
+                <Markers color={marker.color} variant={marker.variant} size={size} type={marker.type} />
+              );
 
               const wrapperStyle: CSSProperties = {
                 alignItems: "center",
-                cursor: m.Tooltip ? "pointer" : "default",
+                cursor: marker.Tooltip ? "pointer" : "default",
                 display: "inline-flex",
                 justifyContent: "center",
-                ...(m.IconComponent && !size ? {} : size ? { height: size, width: size } : {}),
+                ...(marker.IconComponent && !size ? {} : size ? { height: size, width: size } : {}),
               };
 
               return (
                 <Marker
-                  key={m.id}
-                  longitude={m.lng}
-                  latitude={m.lat}
+                  key={marker.id}
+                  longitude={marker.lng}
+                  latitude={marker.lat}
                   anchor="center"
                   onClick={(e) => {
                     e.originalEvent.stopPropagation();
-                    m.id && handleMarkerClick(m.id, Boolean(m.Tooltip));
-                    onMapClick?.(m.lng, m.lat, m);
+                    marker.id && handleMarkerClick(marker.id, Boolean(marker.Tooltip));
+                    onMapClick?.(marker.lng, marker.lat, marker);
+                    marker.onClick?.(marker);
                   }}
                 >
                   <Box
                     component="div"
-                    onMouseEnter={() => m.id && handleMarkerHover(m.id, Boolean(m.Tooltip))}
+                    onMouseEnter={() => marker.id && handleMarkerHover(marker.id, Boolean(marker.Tooltip))}
                     onMouseLeave={() => handleMarkerHover(null)}
                     style={wrapperStyle}
                   >

@@ -17,7 +17,6 @@
   },
   "scripts": {
     "sandbox": "vite --config vite.config.sandbox.ts",
-    "dev:sandbox": "vite --config vite.config.sandbox.ts",
     "build:sandbox": "vite build --config vite.config.sandbox.ts",
     "deploy:sandbox": "bun run build:sandbox && cp dist-sandbox/index.html dist-sandbox/404.html && gh-pages -d dist-sandbox",
     "build": "bunx tsc && bunx vite build",
