@@ -4,7 +4,7 @@ import { VariantMarker } from "@/components/Markers/Markers.tsx";
 
 export type ThemeColor = string | ((theme: Theme) => string) | `${keyof Theme["palette"]}.${string}`;
 
-interface CustomMarkerMapProps {
+export interface CustomMarkerMapProps {
   geometry: {
     coordinates: number[];
     type: string;
