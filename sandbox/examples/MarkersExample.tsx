@@ -99,9 +99,9 @@ const MarkersExample = () => {
   const [openPopupOnHover, setOpenPopupOnHover] = useState(false);
   const [markerVariant, setMarkerVariant] = useState<VariantMarker>("default");
 
-  // const handleMapClick = (lng: number, lat: number): void => {
-  //   console.log("Map clicked at:", { lat, lng });
-  // };
+  const handleMapClick = (lng: number, lat: number): void => {
+    console.log("Map clicked at:", { lat, lng });
+  };
 
   const markers = useMemo(() => generateMarkers(visibleMarkerCount, markerVariant), [visibleMarkerCount, markerVariant]);
 
@@ -118,7 +118,7 @@ const MarkersExample = () => {
             markers={markers}
             height="100%"
             width="100%"
-            // onMapClick={handleMapClick}
+            onMapClick={handleMapClick}
             baseMapView={baseMapView}
             cooperativeGestures={cooperativeGestures}
             doubleClickZoom={doubleClickZoom}
