@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.10](https://github.com/Tracktor/map/compare/v1.8.9...v1.8.10) (2025-12-05)
+
+
+### 🐛 Fixes
+
+* implement EmptyState component for handling WebGL errors in MapView ([8654f48](https://github.com/Tracktor/map/commit/8654f4876dd690c57eae827eda72583ba218a1ef))
+* refactor marker handling in MapView for improved readability ([fb3113d](https://github.com/Tracktor/map/commit/fb3113dce24068cd98b10066f76bdeb994a383bd))
+* remove unused dev:sandbox script from package.json ([b3a5bb7](https://github.com/Tracktor/map/commit/b3a5bb7f7aa645fac63656ca5d731bbe7a25d729))
+* simplify marker onClick handling and deprecate CustomMarkerMapProps ([c4fb51f](https://github.com/Tracktor/map/commit/c4fb51f8a0540980a3ab29c06b57323d780c094b))
+* update asset paths and remove unnecessary basename from BrowserRouter ([22a5c56](https://github.com/Tracktor/map/commit/22a5c5691d8d7ae827fd83dfbd82e6c6ce173c13))
+
 ### [1.8.9](https://github.com/Tracktor/map/compare/v1.8.8...v1.8.9) (2025-11-20)
 
 
