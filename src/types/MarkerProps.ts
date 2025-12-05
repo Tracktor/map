@@ -4,25 +4,6 @@ import { VariantMarker } from "@/components/Markers/Markers.tsx";
 
 export type ThemeColor = string | ((theme: Theme) => string) | `${keyof Theme["palette"]}.${string}`;
 
-export interface CustomMarkerMapProps {
-  geometry: {
-    coordinates: number[];
-    type: string;
-  };
-  properties: {
-    description?: string;
-    id?: string | number;
-    size: number;
-    zIndex: number;
-    pointerEvents?: string;
-    name?: string;
-    iconProps?: Record<string, unknown>;
-    onClick?: (markerData?: CustomMarkerMapProps) => void;
-    IconComponent?: ComponentType<unknown>;
-  };
-  type: string;
-}
-
 export interface MarkerProps<T = Record<string, unknown>> {
   /**
    * Optional unique identifier for the marker.
@@ -71,7 +52,7 @@ export interface MarkerProps<T = Record<string, unknown>> {
   /**
    * Function to call when the marker is clicked.
    */
-  onClick?: (markerData?: CustomMarkerMapProps) => void;
+  onClick?: (marker: MarkerProps<T>) => void;
 
   /**
    * Optional type/category of the marker (e.g., 'restaurant', 'user', etc.).
@@ -105,3 +86,8 @@ export interface MarkerProps<T = Record<string, unknown>> {
    */
   variant?: string | VariantMarker;
 }
+
+/**
+ * @deprecated Use MarkerProps instead
+ */
+export type CustomMarkerMapProps = MarkerProps;

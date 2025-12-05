@@ -14,7 +14,6 @@ import NearestPointItinerary from "@/features/NearestPointItinerary/NearestPoint
 import PopupContent from "@/features/PopupContent/PopupContent.tsx";
 import isValidMarker from "@/types/isValidMarker.ts";
 import { MapViewProps } from "@/types/MapViewProps.ts";
-import { CustomMarkerMapProps } from "@/types/MarkerProps.ts";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
 /**
@@ -239,10 +238,7 @@ const MapView = ({
                     e.originalEvent.stopPropagation();
                     marker.id && handleMarkerClick(marker.id, Boolean(marker.Tooltip));
                     onMapClick?.(marker.lng, marker.lat, marker);
-
-                    if (typeof marker.onClick === "function") {
-                      marker.onClick?.(marker as unknown as CustomMarkerMapProps);
-                    }
+                    marker.onClick?.(marker);
                   }}
                 >
                   <Box
