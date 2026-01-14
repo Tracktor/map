@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.11](https://github.com/Tracktor/map/compare/v1.8.10...v1.8.11) (2026-01-14)
+
+
+### 🐛 Fixes
+
+* set default projection to "mercator" in MapView if not provided ([4fc90c0](https://github.com/Tracktor/map/commit/4fc90c09ae2733ca40351756770f5522c53679d6))
+
 ### [1.8.10](https://github.com/Tracktor/map/compare/v1.8.9...v1.8.10) (2025-12-05)
 
 
