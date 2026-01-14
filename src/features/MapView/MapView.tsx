@@ -174,7 +174,7 @@ const MapView = ({
           cooperativeGestures={coopGestures}
           doubleClickZoom={dblZoom}
           mapStyle={coreStyle}
-          projection={projection}
+          projection={projection ? projection : "mercator"}
           onLoad={() => {
             setMapLoaded(true);
             mapRef.current?.resize();
