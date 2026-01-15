@@ -201,4 +201,16 @@ export interface MapViewProps {
 
   /** Configuration for displaying isochrones */
   isochrone?: IsochroneProps;
+
+  /**
+   * Anchor position for markers
+   * Default is "center"
+   * */
+  markerAnchor?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
+  /**
+   * Anchor position for popups
+   * Default is "top"
+   */
+  popupAnchor?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
 }

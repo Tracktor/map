@@ -95,6 +95,8 @@ const MapView = ({
   itineraryParams,
   findNearestMarker,
   isochrone,
+  markerAnchor = "center",
+  popupAnchor = "top",
 }: MapViewProps): ReactElement => {
   const theme = useTheme();
   const mapRef = useRef<MapRef | null>(null);
@@ -233,7 +235,7 @@ const MapView = ({
                   key={marker.id}
                   longitude={marker.lng}
                   latitude={marker.lat}
-                  anchor="center"
+                  anchor={markerAnchor}
                   onClick={(e) => {
                     e.originalEvent.stopPropagation();
                     marker.id && handleMarkerClick(marker.id, Boolean(marker.Tooltip));
@@ -258,7 +260,7 @@ const MapView = ({
             <Popup
               longitude={isNumber(selectedMarker.lng) ? selectedMarker.lng : 0}
               latitude={isNumber(selectedMarker.lat) ? selectedMarker.lat : 0}
-              anchor="top"
+              anchor={popupAnchor}
               onClose={() => setSelected(null)}
               maxWidth={popupMaxWidth}
               closeOnClick={true}
