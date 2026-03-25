@@ -49,7 +49,7 @@ const extractCoordsFromFeatures = (input?: FeatureCollection<Geometry> | Feature
     }
   }
 
-  return coords;
+  return coords.filter(([lng, lat]) => Number.isFinite(lng) && Number.isFinite(lat));
 };
 
 /**
@@ -96,7 +96,10 @@ const FitBounds = ({
   const featureCoords = useMemo(() => extractCoordsFromFeatures(features), [features]);
 
   const bounds = useMemo(() => {
-    const allPoints: [number, number][] = [...validMarkers.map((m) => [m.lng, m.lat] as [number, number]), ...featureCoords];
+    const allPoints: [number, number][] = [
+      ...validMarkers.map((m) => [Number(m.lng), Number(m.lat)] as [number, number]),
+      ...featureCoords,
+    ].filter(([lng, lat]) => Number.isFinite(lng) && Number.isFinite(lat)); // Filter out any coordinates that are not finite numbers (NaN, Infinity, undefined)
 
     if (allPoints.length === 0) {
       return null;
@@ -149,8 +152,15 @@ const FitBounds = ({
     // If there's only one marker, fly directly to it
     if (validMarkers.length === 1 && featureCoords.length === 0) {
       const m = validMarkers[0];
+      const lng = Number(m.lng);
+      const lat = Number(m.lat);
+
+      if (!(Number.isFinite(lng) && Number.isFinite(lat))) {
+        return;
+      }
+
       map.flyTo({
-        center: [m.lng, m.lat],
+        center: [lng, lat],
         duration: disableAnimation ? 0 : duration,
         zoom: 14,
       });
