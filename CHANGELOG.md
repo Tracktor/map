@@ -2,9 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### 🐛 Fixes
-
-* enhance marker anchor positioning logic in MapView ([4874474](https://github.com/Tracktor/map/commit/4874474ba39f25a69380f9ef61aee71a111a5dfb))
+### [1.8.17](https://github.com/Tracktor/map/compare/v1.8.16...v1.8.17) (2026-03-26)
 
 ### [1.8.12](https://github.com/Tracktor/map/compare/v1.8.11...v1.8.12) (2026-01-15)
 
