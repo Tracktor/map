@@ -1,5 +1,5 @@
-import { MapRoutingProvider } from "@/services/core/interface.ts";
-import findNearestDestination from "@/services/OSRM/findNearestDestination.ts";
+import { MapRoutingProvider } from "@/services/core/interface";
+import findNearestDestination from "@/services/OSRM/findNearestDestination";
 import getItinerary from "@/services/OSRM/getItinerary";
 
 const OSRMService: MapRoutingProvider = {

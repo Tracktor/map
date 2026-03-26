@@ -1,6 +1,6 @@
 import { Theme } from "@tracktor/design-system";
 import { ComponentType, ReactNode } from "react";
-import { VariantMarker } from "@/components/Markers/Markers.tsx";
+import { VariantMarker } from "@/components/Markers/Markers";
 
 export type ThemeColor = string | ((theme: Theme) => string) | `${keyof Theme["palette"]}.${string}`;
 

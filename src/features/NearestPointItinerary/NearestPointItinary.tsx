@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
-import RenderFeatures from "@/components/FeatureCollection/FeatureCollection.tsx";
+import RenderFeatures from "@/components/FeatureCollection/FeatureCollection";
 import Itinerary from "@/features/Itinerary/Itinerary";
 import MapboxService from "@/services/Mapbox";
 import OSRMService from "@/services/OSRM";

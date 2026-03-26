@@ -6,10 +6,9 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "allowImportingTsExtensions": true,
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
@@ -23,7 +22,8 @@
     "paths": {
       "@/*": ["src/*"],
       "example/*": ["example/*"],
-      "~/*": ["./*"]
+      "~/*": ["./*"],
+      "@tracktor/design-system": ["node_modules/@tracktor/design-system/dist/src/main.d.ts"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo"
   },

@@ -2,7 +2,7 @@ import { isArray } from "@tracktor/react-utils";
 import type { Feature, FeatureCollection } from "geojson";
 import { ReactNode } from "react";
 import { Layer, Source } from "react-map-gl";
-import LineLabel from "@/components/FeatureCollection/LineLabel.tsx";
+import LineLabel from "@/components/FeatureCollection/LineLabel";
 
 export interface LineStyle {
   color?: string;

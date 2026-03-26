@@ -2,7 +2,7 @@ import { LicenseInfo } from "@mui/x-license";
 import mapbox from "mapbox-gl";
 import { ReactNode, useEffect, useMemo } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { MapContext, MapContextProps } from "@/context/MapContext.tsx";
+import { MapContext, MapContextProps } from "@/context/MapContext";
 
 export interface MapProviderProps extends MapContextProps {
   children: ReactNode;

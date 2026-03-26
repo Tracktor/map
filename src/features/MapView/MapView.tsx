@@ -4,16 +4,16 @@ import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { isArray, isNumber } from "@tracktor/react-utils";
 import FeatureCollection from "@/components/FeatureCollection/FeatureCollection";
-import EmptyState from "@/components/Layout/EmptyState.tsx";
+import EmptyState from "@/components/Layout/EmptyState";
 import Markers from "@/components/Markers/Markers";
 import mapboxGlobalStyles from "@/constants/globalStyle";
 import FitBounds from "@/features/Bounds/FitsBounds";
-import Isochrone from "@/features/Isochrone/Isochrone.tsx";
+import Isochrone from "@/features/Isochrone/Isochrone";
 import Itinerary from "@/features/Itinerary/Itinerary";
 import NearestPointItinerary from "@/features/NearestPointItinerary/NearestPointItinary";
-import PopupContent from "@/features/PopupContent/PopupContent.tsx";
-import isValidMarker from "@/types/isValidMarker.ts";
-import { MapViewProps } from "@/types/MapViewProps.ts";
+import PopupContent from "@/features/PopupContent/PopupContent";
+import isValidMarker from "@/types/isValidMarker";
+import { MapViewProps } from "@/types/MapViewProps";
 import getCoreMapOptions, { getBaseMapStyle } from "@/utils/getCoreMapOptions";
 
 /**

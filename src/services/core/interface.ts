@@ -1,5 +1,5 @@
 import type { Feature, GeoJsonProperties, LineString } from "geojson";
-import { MapboxIsochroneResponse } from "@/services/Mapbox/getIsochrone.ts";
+import { MapboxIsochroneResponse } from "@/services/Mapbox/getIsochrone";
 
 export type RoutingProfile = "driving" | "walking" | "cycling";
 

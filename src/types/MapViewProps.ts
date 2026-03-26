@@ -3,7 +3,7 @@ import type { Feature, FeatureCollection, GeoJsonProperties, LineString, Polygon
 import type { LngLatLike } from "mapbox-gl";
 import type { ReactNode } from "react";
 import type { ProjectionSpecification as ReactMapProjection } from "react-map-gl";
-import type { RoutingProfile } from "@/services/core/interface.ts";
+import type { RoutingProfile } from "@/services/core/interface";
 import type { MarkerProps } from "@/types/MarkerProps";
 
 /* -------------------------------------------------------------------------- */

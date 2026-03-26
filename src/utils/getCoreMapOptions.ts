@@ -1,5 +1,5 @@
 import { MapOptions } from "mapbox-gl";
-import BASEMAP, { BaseMapView } from "@/constants/baseMap.ts";
+import BASEMAP, { BaseMapView } from "@/constants/baseMap";
 
 interface MapOptionsProps {
   mapStyle?: string;

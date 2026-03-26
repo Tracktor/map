@@ -1,9 +1,9 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
+import dts from "unplugin-dts/vite";
 import { defineConfig } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
-import dts from "vite-plugin-dts";
 import { dependencies, name, peerDependencies } from "./package.json";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,7 +26,7 @@ export default defineConfig({
       formats: ["es", "umd"],
       name,
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: [...Object.keys(dependencies ?? {}), ...Object.keys(peerDependencies ?? {}), "react", "react-dom"],
       output: {
         globals: {

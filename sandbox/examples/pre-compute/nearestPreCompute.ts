@@ -1,7 +1,7 @@
 import { Feature, LineString } from "geojson";
 import route1 from "sandbox/examples/pre-compute/itinerary1.json";
 import route2 from "sandbox/examples/pre-compute/itinerary2.json";
-import { NearestResult } from "@/types/MapViewProps.ts";
+import { NearestResult } from "@/types/MapViewProps";
 
 const feature1 = route1 as Feature<LineString>;
 const feature2 = route2 as Feature<LineString>;

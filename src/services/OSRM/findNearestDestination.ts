@@ -1,7 +1,7 @@
-import chunkArray from "@/services/core/chunksArray.ts";
-import { createFetchNearestInChunk } from "@/services/core/fetchNearestInChunkFactory.ts";
+import chunkArray from "@/services/core/chunksArray";
+import { createFetchNearestInChunk } from "@/services/core/fetchNearestInChunkFactory";
 import type { Destination, NearestResult, RoutingProfile } from "@/services/core/interface";
-import processInBatches from "@/services/core/processInBatches.ts";
+import processInBatches from "@/services/core/processInBatches";
 import { buildOSRMUrl, fetchOSRM } from "@/services/OSRM/client";
 
 interface OSRMTableResponse {

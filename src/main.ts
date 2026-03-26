@@ -1,10 +1,10 @@
-export { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/constants/coordinates.ts";
+export { DEFAULT_CENTER_LAT, DEFAULT_CENTER_LNG } from "@/constants/coordinates";
 export * from "@/context/MapProvider";
 export { default as MapProvider } from "@/context/MapProvider";
-export * from "@/features/MapView/MapView.tsx";
-export { default as MapView } from "@/features/MapView/MapView.tsx";
+export * from "@/features/MapView/MapView";
+export { default as MapView } from "@/features/MapView/MapView";
 export * from "@/types/isValidMarker";
 export { default as isValidMarker } from "@/types/isValidMarker";
-export * from "@/types/MapViewProps.ts";
+export * from "@/types/MapViewProps";
 export * from "@/types/MarkerProps";
-export { default as isPointInGeoJSON } from "@/utils/isPointInGeoJSON.ts";
+export { default as isPointInGeoJSON } from "@/utils/isPointInGeoJSON";

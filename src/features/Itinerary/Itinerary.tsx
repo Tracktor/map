@@ -1,6 +1,6 @@
 import type { Feature, LineString } from "geojson";
 import { useEffect, useState } from "react";
-import RenderFeatures from "@/components/FeatureCollection/FeatureCollection.tsx";
+import RenderFeatures from "@/components/FeatureCollection/FeatureCollection";
 import MapboxService from "@/services/Mapbox";
 import OSRMService from "@/services/OSRM";
 import { ItineraryParams } from "@/types/MapViewProps";

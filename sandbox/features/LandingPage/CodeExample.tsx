@@ -4,7 +4,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Paper, 
 import type { PrismTheme } from "prism-react-renderer";
 import { Highlight } from "prism-react-renderer";
 import { useState } from "react";
-import { MapView } from "@/main.ts";
+import { MapView } from "@/main";
 
 const dracula: PrismTheme = {
   plain: { backgroundColor: "transparent", color: "#e6edf3" },

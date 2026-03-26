@@ -3,7 +3,7 @@ import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "ge
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useRef } from "react";
 import { useMap } from "react-map-gl";
-import isValidMarker from "@/types/isValidMarker.ts";
+import isValidMarker from "@/types/isValidMarker";
 import { MarkerProps } from "@/types/MarkerProps";
 
 interface FitBoundsProps {
