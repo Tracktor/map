@@ -124,7 +124,7 @@ const FitBounds = ({
   useEffect(() => {
     // Skip if popup is open — prevents unwanted map jumps
     if (openPopup) {
-      previousKey.current = animationKey !== undefined ? serializeKey(animationKey) : "__initial_skip__";
+      previousKey.current = animationKey === undefined ? "__initial_skip__" : serializeKey(animationKey);
       return;
     }
 
