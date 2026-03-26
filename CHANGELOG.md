@@ -2,9 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### 🐛 Fixes
-
-* filter out non-finite coordinates in FitsBounds calculations ([99470ce](https://github.com/Tracktor/map/commit/99470ce2ad8f746f58f3d1db52f2eadb8c4eeb54))
+### [1.8.16](https://github.com/Tracktor/map/compare/v1.8.15...v1.8.16) (2026-03-26)
 
 ### [1.8.13](https://github.com/Tracktor/map/compare/v1.8.12...v1.8.13) (2026-01-15)
 
