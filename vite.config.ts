@@ -27,7 +27,7 @@ export default defineConfig({
       name,
     },
     rolldownOptions: {
-      external: [...Object.keys(dependencies ?? {}), ...Object.keys(peerDependencies ?? {}), "react", "react-dom"],
+      external: [...Object.keys(dependencies), ...Object.keys(peerDependencies), "react/jsx-runtime", "react/jsx-dev-runtime"],
       output: {
         globals: {
           "@mui/x-license": "muiXLicense",
