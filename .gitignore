@@ -28,3 +28,4 @@ dist-sandbox
 
 tsconfig.tsbuildinfo
 /CLAUDE.md
+.npmrc
