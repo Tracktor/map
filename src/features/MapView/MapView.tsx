@@ -1,8 +1,8 @@
-import { Box, GlobalStyles, Skeleton, useTheme } from "@tracktor/design-system";
+import { Box, GlobalStyles, Skeleton, useTheme } from "@getsoren/design-system";
 import { CSSProperties, memo, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import MapboxMap, { MapRef, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { isArray, isNumber } from "@tracktor/react-utils";
+import { isArray, isNumber } from "@getsoren/react-utils";
 import FeatureCollection from "@/components/FeatureCollection/FeatureCollection";
 import EmptyState from "@/components/Layout/EmptyState";
 import Markers from "@/components/Markers/Markers";

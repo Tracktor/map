@@ -1,4 +1,4 @@
-import { Theme } from "@tracktor/design-system";
+import { Theme } from "@getsoren/design-system";
 import { ComponentType, ReactNode } from "react";
 import { VariantMarker } from "@/components/Markers/Markers";
 

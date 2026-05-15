@@ -1,4 +1,4 @@
-import { isArray } from "@tracktor/react-utils";
+import { isArray } from "@getsoren/react-utils";
 import type { Feature, FeatureCollection } from "geojson";
 import { ReactNode } from "react";
 import { Layer, Source } from "react-map-gl";

@@ -1,4 +1,4 @@
-import type { SxProps } from "@tracktor/design-system";
+import type { SxProps } from "@getsoren/design-system";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, Polygon } from "geojson";
 import type { LngLatLike } from "mapbox-gl";
 import type { ReactNode } from "react";

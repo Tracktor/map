@@ -31,7 +31,7 @@ export default defineConfig({
       output: {
         globals: {
           "@mui/x-license": "muiXLicense",
-          "@tracktor/design-system": "designSystem",
+          "@getsoren/design-system": "designSystem",
           "mapbox-gl": "mapboxgl",
           react: "React",
           "react-dom": "ReactDOM",

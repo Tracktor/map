@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@tracktor/design-system";
+import { ThemeProvider } from "@getsoren/design-system";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 type ThemeMode = "light" | "dark";

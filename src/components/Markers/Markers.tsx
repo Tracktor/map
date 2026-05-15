@@ -1,5 +1,5 @@
-import { Box, Theme, useTheme } from "@tracktor/design-system";
-import { isString } from "@tracktor/react-utils";
+import { Box, Theme, useTheme } from "@getsoren/design-system";
+import { isString } from "@getsoren/react-utils";
 
 const BLACK = "#000000";
 const WHITE = "#FFFFFF";

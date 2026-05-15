@@ -1,5 +1,5 @@
 import { DarkModeRounded, LightModeRounded } from "@mui/icons-material";
-import { Box, Stack, Switch, useTheme } from "@tracktor/design-system";
+import { Box, Stack, Switch, useTheme } from "@getsoren/design-system";
 import { useThemeMode } from "sandbox/context/ThemeProvider";
 
 const ThemeSwitch = () => {

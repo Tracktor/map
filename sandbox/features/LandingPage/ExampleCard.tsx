@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@tracktor/design-system";
+import { Box, Card, CardContent, Typography } from "@getsoren/design-system";
 import { useNavigate } from "react-router-dom";
 
 interface ExampleCardProps {

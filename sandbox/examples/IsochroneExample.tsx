@@ -1,4 +1,4 @@
-import { Box, MenuItem, Select, Stack, Switch, Typography } from "@tracktor/design-system";
+import { Box, MenuItem, Select, Stack, Switch, Typography } from "@getsoren/design-system";
 import { useEffect, useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import MapSidebar from "sandbox/features/MapSideBar";

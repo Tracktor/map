@@ -1,4 +1,4 @@
-import { Theme } from "@tracktor/design-system";
+import { Theme } from "@getsoren/design-system";
 
 const mapboxGlobalStyles = (theme: Theme) => ({
   ".mapboxgl-popup-close-button": {

@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Tooltip } from "@tracktor/design-system";
+import { Button, Paper, Stack, Tooltip } from "@getsoren/design-system";
 import { Link as RouterLink } from "react-router-dom";
 
 const navItems = [

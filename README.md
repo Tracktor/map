@@ -1,27 +1,26 @@
-# 🗺️ @tracktor/map
+# 🗺️ @getsoren/map
 
 A modern, lightweight React map library built on top of Mapbox GL JS and react-map-gl. Designed for simplicity, flexibility, and visual elegance.
 
 Easily combine markers, routes, GeoJSON features, isochrones, and nearest-point calculations — all with a declarative, type-safe API.
 
-[![npm version](https://img.shields.io/npm/v/@tracktor/map.svg)](https://www.npmjs.com/package/@tracktor/map)
 [![License](https://img.shields.io/badge/license-UNLICENSED-red.svg)](LICENSE)
 
 ---
 
 ## 🚀 Installation
 ```bash
-npm install @tracktor/map
+npm install @getsoren/map
 ```
 
 or
 ```bash
-yarn add @tracktor/map
+yarn add @getsoren/map
 ```
 
 or
 ```bash
-bun add @tracktor/map
+bun add @getsoren/map
 ```
 
 ---
@@ -33,7 +32,7 @@ bun add @tracktor/map
 | `react` | 17+ / 18+ / 19+ | Core React runtime |
 | `react-dom` | 17+ / 18+ / 19+ | React DOM rendering |
 | `mapbox-gl` | ≥3.0.0 | Map rendering engine |
-| `@tracktor/design-system` | ≥4.0.0 | UI theming and components |
+| `@getsoren/design-system` | ≥4.0.0 | UI theming and components |
 | `@mui/icons-material` | * | Material UI icons |
 | `@mui/x-license` | * | MUI X license integration |
 
@@ -58,7 +57,7 @@ bun add @tracktor/map
 
 ## 🧩 Quick Start
 ```tsx
-import { MapProvider, MarkerMap } from "@tracktor/map";
+import { MapProvider, MarkerMap } from "@getsoren/map";
 
 const markers = [
     {
@@ -608,7 +607,7 @@ bun run dev:sandbox
 
 ### Project Structure
 ```
-@tracktor/map/
+@getsoren/map/
 ├── src/
 │   ├── components/       # Reusable map and UI components (Marker, Popup, etc.)
 │   ├── constants/        # Shared configuration values and styling constants
@@ -742,10 +741,10 @@ This will:
 
 ## 🧭 Links
 
-- 📦 **npm**: [@tracktor/map](https://www.npmjs.com/package/@tracktor/map)
-- 💻 **GitHub**: [@tracktor/map](https://github.com/Tracktor/map)
+- 📦 **npm**: [@getsoren/map](https://www.npmjs.com/package/@getsoren/map)
+- 💻 **GitHub**: [@getsoren/map](https://github.com/Tracktor/map)
 - 🌐 **Docs**: [tracktor.github.io/map](https://tracktor.github.io/map)
-- 🎨 **Design System**: [@tracktor/design-system](https://www.npmjs.com/package/@tracktor/design-system)
+- 🎨 **Design System**: [@getsoren/design-system](https://www.npmjs.com/package/@getsoren/design-system)
 - Sandbox Demo: [tracktor.github.io/map/sandbox](https://tracktor.github.io/map)
 
 ---
@@ -756,4 +755,4 @@ Built with:
 - [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) — Powerful map rendering
 - [react-map-gl](https://visgl.github.io/react-map-gl/) — React wrapper for Mapbox
 - [OSRM](http://project-osrm.org/) — Free routing engine
-- [@tracktor/design-system](https://www.npmjs.com/package/@tracktor/design-system) — UI components
+- [@getsoren/design-system](https://www.npmjs.com/package/@getsoren/design-system) — UI components

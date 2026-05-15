@@ -1,5 +1,5 @@
 {
-  "name": "@tracktor/map",
+  "name": "@getsoren/map",
   "description": "A React library to easily display map with multiple tools",
   "private": false,
   "license": "UNLICENSED",
@@ -8,6 +8,14 @@
   "main": "dist/main.umd.cjs",
   "module": "dist/main.js",
   "types": "dist/main.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/getsoren/map.git"
+  },
+  "bugs": {
+    "url": "https://github.com/getsoren/map/issues"
+  },
+  "homepage": "https://github.com/getsoren/map#readme",
   "exports": {
     ".": {
       "types": "./dist/main.d.ts",
@@ -24,8 +32,7 @@
     "lint:fix": "bunx biome check . --write",
     "prepublishOnly": "bun run build",
     "preview": "bunx vite preview",
-    "release": "bun run build && bun publish --access public",
-    "version": "bunx standard-version",
+    "release": "commit-and-tag-version",
     "prepare": "husky",
     "test": "bun test --preload ./test/setup.ts",
     "test:watch": "bun test --watch --preload ./test/setup.ts"
@@ -33,14 +40,11 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "@mui/icons-material": "^5.17.1",
     "@mui/x-license": "^8.6.0",
-    "@tracktor/design-system": "^4.33.3",
-    "@tracktor/react-utils": "^1.28.3",
+    "@getsoren/design-system": "^4.33.3",
+    "@getsoren/react-utils": "^1.28.3",
     "@types/react-map-gl": "^6.1.8",
     "mapbox-gl": "^3.20.0",
     "react-map-gl": "7.0.20"
@@ -48,7 +52,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
-    "@tracktor/biome-config-react": "^1.4.0",
+    "@getsoren/biome-config-react": "^1.4.0",
     "@types/jsdom": "^27.0.0",
     "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^22.14.0",
@@ -63,17 +67,17 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.9.4",
-    "standard-version": "^9.5.0",
     "typescript": "~5.8.3",
     "unplugin-dts": "^1.0.0-beta.6",
     "vite": "8.0.3",
-    "vite-plugin-css-injected-by-js": "^3.5.2"
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "commit-and-tag-version": "^12.6.0"
   },
   "peerDependencies": {
     "@mui/icons-material": "*",
     "@mui/x-license": "*",
-    "@tracktor/design-system": ">=4.0.0",
-    "@tracktor/react-utils": ">=1.0.0",
+    "@getsoren/design-system": ">=4.0.0",
+    "@getsoren/react-utils": ">=1.0.0",
     "mapbox-gl": ">=3.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
@@ -81,5 +85,9 @@
   "engines": {
     "bun": ">=1.1.0"
   },
-  "packageManager": "bun@1.1.34"
+  "packageManager": "bun@1.1.34",
+  "commit-and-tag-version": {
+    "releaseCommitMessageFormat": "chore(release): {{currentTag}} [skip ci]",
+    "tagPrefix": ""
+  }
 }

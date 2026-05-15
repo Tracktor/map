@@ -1,4 +1,4 @@
-import { Box, Button, MenuItem, Select, Stack, Typography } from "@tracktor/design-system";
+import { Box, Button, MenuItem, Select, Stack, Typography } from "@getsoren/design-system";
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 import { useCallback, useMemo, useState } from "react";
 import MapSidebar from "sandbox/features/MapSideBar";

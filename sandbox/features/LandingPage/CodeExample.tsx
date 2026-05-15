@@ -1,6 +1,6 @@
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Paper, Stack, Tooltip, Typography } from "@tracktor/design-system";
+import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Paper, Stack, Tooltip, Typography } from "@getsoren/design-system";
 import type { PrismTheme } from "prism-react-renderer";
 import { Highlight } from "prism-react-renderer";
 import { useState } from "react";
@@ -11,7 +11,7 @@ const dracula: PrismTheme = {
   styles: [],
 };
 
-const code = `import { MapView } from "@tracktor/map";
+const code = `import { MapView } from "@getsoren/map";
 
 <MapView
   center={[2.3522, 48.8566]}

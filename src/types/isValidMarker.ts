@@ -1,4 +1,4 @@
-import { isNumber, isString } from "@tracktor/react-utils";
+import { isNumber, isString } from "@getsoren/react-utils";
 import type { MarkerProps } from "@/types/MarkerProps";
 
 /**

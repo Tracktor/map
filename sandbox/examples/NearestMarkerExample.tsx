@@ -12,7 +12,7 @@ import {
   Stack,
   Switch,
   Typography,
-} from "@tracktor/design-system";
+} from "@getsoren/design-system";
 import { useMemo, useState } from "react";
 import type { ProjectionSpecification } from "react-map-gl";
 import nearestPreCompute from "sandbox/examples/pre-compute/nearestPreCompute";

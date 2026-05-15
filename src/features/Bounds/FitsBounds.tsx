@@ -1,4 +1,4 @@
-import { isArray, isNumber, isString } from "@tracktor/react-utils";
+import { isArray, isNumber, isString } from "@getsoren/react-utils";
 import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useRef } from "react";
@@ -77,7 +77,7 @@ const extractCoordsFromFeatures = (input?: FeatureCollection<Geometry> | Feature
  * - `react-map-gl` for Mapbox context.
  * - `mapbox-gl` for geometry calculations and view transitions.
  * - `isValidMarker` from local types — filters out invalid marker objects.
- * - `@tracktor/react-utils` helpers for type-safe checks.
+ * - `@getsoren/react-utils` helpers for type-safe checks.
  */
 const FitBounds = ({
   markers = [],

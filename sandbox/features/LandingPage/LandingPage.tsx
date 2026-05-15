@@ -1,4 +1,4 @@
-import { Box } from "@tracktor/design-system";
+import { Box } from "@getsoren/design-system";
 import FeaturesPreview from "sandbox/assets/features-preview.png";
 import IsochronePreview from "sandbox/assets/isochrone-preview.png";
 import MarkerPreview from "sandbox/assets/markers-preview.png";

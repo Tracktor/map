@@ -1,6 +1,6 @@
 import GitHubIcon from "@mui/icons-material/GitHub";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import { Box, Button, keyframes, Paper, Typography } from "@tracktor/design-system";
+import { Box, Button, keyframes, Paper, Typography } from "@getsoren/design-system";
 import packageJson from "../../../package.json";
 
 // --- Subtle shimmer for the title ---
@@ -94,7 +94,7 @@ const Hero = () => {
             WebkitBackgroundClip: "text",
           }}
         >
-          @tracktor/map
+          @getsoren/map
         </Typography>
 
         {/* Description */}
@@ -120,7 +120,7 @@ const Hero = () => {
             color="primary"
             size="large"
             component="a"
-            href="https://www.npmjs.com/package/@tracktor/map"
+            href="https://www.npmjs.com/package/@getsoren/map"
             target="_blank"
             startIcon={<RocketLaunchIcon />}
             sx={{

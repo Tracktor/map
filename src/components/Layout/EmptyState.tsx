@@ -1,4 +1,4 @@
-import { Box } from "@tracktor/design-system";
+import { Box } from "@getsoren/design-system";
 
 interface EmptyStateProps {
   width?: string | number;
